@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useMessage } from '../../context/message/useMessage'
 
 export const Page = () => {
