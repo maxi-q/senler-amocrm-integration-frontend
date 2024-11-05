@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { MessageContext } from './MessageContext'
+import { MessageTypes } from '../types/messages.enum'
+import { MessageContext, MessageType } from './MessageContext'
 import { ignoreSource } from './source.ignore'
 
 export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [message, setMessage] = useState<object | null>(null)
+	const [message, setMessage] = useState<MessageType | null>(null)
 
 	// Метод отправки сообщения с возможностью указания target окна и origin
 	const sendMessage = (
-		message: object,
+		message: MessageType,
 		target: Window = window,
 		origin: string = '*'
 	) => {
