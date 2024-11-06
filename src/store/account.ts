@@ -12,7 +12,7 @@ interface CountStore {
   setAccount: () => void;
 }
 
-const useCountStore = create<CountStore>((set) => ({
+const useAccountStore = create<CountStore>((set) => ({
   account: {
     user_id: '',
     group_id: '',
@@ -22,5 +22,5 @@ const useCountStore = create<CountStore>((set) => ({
   setAccount: () => set((state) => (state))
 }));
 
-export default useCountStore
+export default useAccountStore
 

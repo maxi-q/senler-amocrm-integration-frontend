@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react'
 import { sendAuthCode } from '../../api/auth/amosrm'
 import AmoAuthLink from '../../components/AmoAuthButton'
 import { useMessage } from '../../messages/messageProvider/useMessage'
+import useAccountStore from '../../store/account'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
+	const account = useAccountStore()
+	console.log(account.account)
 	const [data, setData] = useState('')
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
