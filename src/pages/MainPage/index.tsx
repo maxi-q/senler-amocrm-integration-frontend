@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react'
-import { sendAuthCode } from '../../api/auth/amosrm'
 import AmoAuthLink from '../../components/AmoAuthButton'
 import { useMessage } from '../../messages/messageProvider/useMessage'
-import useAccountStore from '../../store/account'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
-	const account = useAccountStore()
-	console.log(account.account)
 	const [data, setData] = useState('')
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,33 +15,43 @@ export const Page = () => {
 		sendMessage({ type: 'AmoAuthCode', data: data }, window.parent)
 	}
 
-	const sendCode = ({
-		code,
-		referer,
-	}: {
-		code: string
-		referer: string
-	}) => {
-		sendMessage({ type: 'AmoAuthCode', data: {code, referer} }, window.parent)
-
-		sendAuthCode({
-			code: code,
-			group_id: '',
-			referer: referer,
-			senler_token: '',
-		}).then(data => {
-			console.log(data)
-		})
+	const sendCode = ({ code, referer, }: { code: string; referer: string }) => {
+		console.log(code, referer)
+		sendMessage({ type: 'AmoAuthCode', data: {code, referer} }, window.parent) 
 	}
 
 	useEffect(() => {
 		if (!message) return
-		if (message.type == 'AmoAuthCode') {
-			console.warn('Я получил AmoAuthCode')
+
+		if(message.request.type == 'getData' ) {
+      
+      // const public_settings: string =  JSON.parse(localStorage.getItem('public_settings') || '');
+      // const private_settings: privateSetting[] = JSON.parse(localStorage.getItem('private_settings') || '');
+
+			const data: any = {
+				id: new Date().getTime() + Math.round(Math.random() * 9999),
+				request: {type: 'getData'},
+				response: {
+					payload: {
+						step_info: 'step_info',
+						integration_private: JSON.stringify({
+							test_data: 'data'
+						}),
+						integration_public: JSON.stringify({
+							test_data: "A1",
+						}),
+					},
+					success: true
+				},
+				time: new Date().getTime()
+			}
+
+			sendMessage(data, window.parent)
 		}
-		if (message.type == 'AmoAuthCodeError') {
-			console.warn('Я получил AmoAuthCodeError')
+		if(message.request.type == 'setData' ) {
+			console.log(message)
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [message])
 
 	return (
@@ -54,7 +60,7 @@ export const Page = () => {
 				<AmoAuthLink
 					clientId={'adbd9a9c-ad32-4dff-9d77-fb7003f79161'}
 					redirectUri={
-						'https://96a9-2a00-1fa1-4e50-dccf-78e2-3a4d-cf85-9f40.ngrok-free.app/two'
+						'https://550e-188-233-12-159.ngrok-free.app/two'
 					}
 					onAuthSuccess={code => sendCode(code)}
 				/>
@@ -68,3 +74,4 @@ export const Page = () => {
 		</div>
 	)
 }
+

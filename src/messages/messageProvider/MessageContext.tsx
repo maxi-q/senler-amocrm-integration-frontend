@@ -1,13 +1,13 @@
 import { createContext } from 'react'
 import { MessageTypes } from '../types/messages.enum'
 
-export type MessageType = { type: keyof typeof MessageTypes; data: any }
+export type MessageType = { type: keyof typeof MessageTypes; payload: any }
 
 interface MessageContextProps {
-	message: MessageType | null
-	sendMessage: (message: MessageType, target?: Window, origin?: string) => void
+	message: any | null
+	sendMessage: (message: any, target?: Window, origin?: string) => void
 }
-
+	
 export const MessageContext = createContext<MessageContextProps | undefined>(
 	undefined
 )

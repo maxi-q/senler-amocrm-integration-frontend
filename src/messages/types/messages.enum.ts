@@ -1,4 +1,5 @@
 export const enum MessageTypes {
 	AmoAuthCode = 'AmoAuthCode',
-  AmoAuthCodeError = 'AmoAuthCodeError'
+  AmoAuthCodeError = 'AmoAuthCodeError',
+  getData = 'getData'
 }

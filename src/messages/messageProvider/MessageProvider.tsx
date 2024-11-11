@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { MessageTypes } from '../types/messages.enum'
 import { MessageContext, MessageType } from './MessageContext'
 import { ignoreSource } from './source.ignore'
 
 export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [message, setMessage] = useState<MessageType | null>(null)
+	const [message, setMessage] = useState<any | null>(null)
 
 	// Метод отправки сообщения с возможностью указания target окна и origin
 	const sendMessage = (
@@ -14,7 +13,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 		target: Window = window,
 		origin: string = '*'
 	) => {
-		target.postMessage(message, origin)
+		target.postMessage(JSON.parse(JSON.stringify(message)), origin)
 	}
 
 	useEffect(() => {
