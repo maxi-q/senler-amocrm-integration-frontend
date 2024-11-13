@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import AmoAuthLink from '../../components/AmoAuthButton'
 import { useMessage } from '../../messages/messageProvider/useMessage'
+import { ServerMessage } from './components/ServerMessage'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
 	const [data, setData] = useState('')
+	const [publicText, setPublicText] = useState('');
+	const [privateText, setPrivateText] = useState('');
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setData(e.target.value)
@@ -27,19 +30,14 @@ export const Page = () => {
       
       // const public_settings: string =  JSON.parse(localStorage.getItem('public_settings') || '');
       // const private_settings: privateSetting[] = JSON.parse(localStorage.getItem('private_settings') || '');
-
+			console.log(message.id)
 			const data: any = {
-				id: new Date().getTime() + Math.round(Math.random() * 9999),
-				request: {type: 'getData'},
+				id: message.id,
+				request: message.request,
 				response: {
 					payload: {
-						step_info: 'step_info',
-						integration_private: JSON.stringify({
-							test_data: 'data'
-						}),
-						integration_public: JSON.stringify({
-							test_data: "A1",
-						}),
+						private: privateText,
+						public: publicText,
 					},
 					success: true
 				},
@@ -49,11 +47,21 @@ export const Page = () => {
 			sendMessage(data, window.parent)
 		}
 		if(message.request.type == 'setData' ) {
-			console.log(message)
+			console.log('setData ', message)
+			const payload = message.request.payload
+			setPublicText(JSON.parse(payload.public))
+			setPrivateText(JSON.parse(payload.private))
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [message])
 
+	
+
+	const handleClear = () => {
+		setPublicText('');
+		setPrivateText('');
+	};
+	
 	return (
 		<div>
 			<div style={{ width: '100%', marginBottom: '10px' }}>
@@ -69,8 +77,53 @@ export const Page = () => {
 			<div style={{ width: '100%', marginBottom: '10px' }}>
 				<input value={data} onChange={handleChange} />
 			</div>
-			<button onClick={handleClick}>Send Message</button>
-			{message && <div>Получено сообщение: {JSON.stringify(message)}</div>}
+			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Public</label>
+				<textarea
+					value={publicText}
+					onChange={(e) => setPublicText(e.target.value)}
+					rows={4}
+					style={{
+						width: '100%',
+						padding: '10px',
+						border: '1px solid #ccc',
+						borderRadius: '4px',
+						resize: 'vertical'
+					}}
+				/>
+			</div>
+			
+			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Private</label>
+				<textarea
+					value={privateText}
+					onChange={(e) => setPrivateText(e.target.value)}
+					rows={4}
+					style={{
+						width: '100%',
+						padding: '10px',
+						border: '1px solid #ccc',
+						borderRadius: '4px',
+						resize: 'vertical'
+					}}
+				/>
+			</div>
+			
+			<button
+				onClick={handleClear}
+				style={{
+					padding: '10px 20px',
+					backgroundColor: '#ff4d4f',
+					color: '#fff',
+					border: 'none',
+					borderRadius: '4px',
+					cursor: 'pointer'
+				}}
+			>
+				Удалить всё
+			</button>
+			<ServerMessage message={message}/>
+			{/* {message && <div>Получено сообщение: {JSON.stringify(message)}</div>} */}
 		</div>
 	)
 }
