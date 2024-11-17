@@ -88,7 +88,20 @@ const AmoAuthPopup: React.FC<AmoAuthPopupProps> = ({
 		}, 500)
 	}
 
-	return <button onClick={openAuthPopup}>Войти через AmoCRM</button>
+	return (
+		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
+			<div className="flex items-center ">
+				<div className="m-2 mt-2 mb-2"></div>
+
+				<div>
+					<span data-role="header_account_text" >Подключить AmoSRM</span>
+					{/* <svg className="dropdown-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M8 11L13 6.41176L11.5333 5L8 8.17647L4.46667 5L3 6.41176L8 11Z" fill="black"></path>
+					</svg>  */}
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default AmoAuthPopup

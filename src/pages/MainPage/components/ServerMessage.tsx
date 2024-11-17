@@ -16,7 +16,8 @@ export const ServerMessage: React.FC<ServerMessageProps> = ({ message }) => {
         border: '1px solid #ccc',
         borderRadius: '4px',
         whiteSpace: 'pre-wrap',
-        textAlign: 'start'
+        textAlign: 'start',
+        margin: '10px auto',
       }}
     >
       {JSON.stringify(message, null, 2)}

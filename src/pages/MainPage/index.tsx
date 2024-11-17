@@ -14,13 +14,14 @@ export const Page = () => {
 		setData(e.target.value)
 	}
 
-	const handleClick = () => {
-		sendMessage({ type: 'AmoAuthCode', data: data }, window.parent)
-	}
+	// const handleClick = () => {
+	// 	sendMessage({ type: 'AmoAuthCode', data: data }, window.parent)
+	// }
 
 	const sendCode = ({ code, referer, }: { code: string; referer: string }) => {
 		console.log(code, referer)
-		sendMessage({ type: 'AmoAuthCode', data: {code, referer} }, window.parent) 
+		sendMessage({ type: 'AmoAuthCode', data: {code, referer} }, window.parent)
+		setPrivateText(JSON.stringify({code, referer}))
 	}
 
 	useEffect(() => {
@@ -66,9 +67,9 @@ export const Page = () => {
 		<div>
 			<div style={{ width: '100%', marginBottom: '10px' }}>
 				<AmoAuthLink
-					clientId={'adbd9a9c-ad32-4dff-9d77-fb7003f79161'}
+					clientId={'7979b14f-f5f1-4579-9d3c-64f583d351b3'}
 					redirectUri={
-						'https://550e-188-233-12-159.ngrok-free.app/two'
+						'https://bf58-188-233-10-136.ngrok-free.app/two'
 					}
 					onAuthSuccess={code => sendCode(code)}
 				/>
@@ -108,21 +109,26 @@ export const Page = () => {
 					}}
 				/>
 			</div>
-			
-			<button
-				onClick={handleClear}
-				style={{
-					padding: '10px 20px',
-					backgroundColor: '#ff4d4f',
-					color: '#fff',
-					border: 'none',
-					borderRadius: '4px',
-					cursor: 'pointer'
-				}}
-			>
-				Удалить всё
-			</button>
+
 			<ServerMessage message={message}/>
+
+			<div className='flex justify-end max-w-[400px] mx-auto'>
+				<button
+					onClick={handleClear}
+					style={{
+						padding: '10px 20px',
+						backgroundColor: '#ff4d4f',
+						color: '#fff',
+						border: 'none',
+						borderRadius: '4px',
+						cursor: 'pointer',
+					}}
+				>
+					Удалить всё
+				</button>
+			</div>
+			
+			
 			{/* {message && <div>Получено сообщение: {JSON.stringify(message)}</div>} */}
 		</div>
 	)
