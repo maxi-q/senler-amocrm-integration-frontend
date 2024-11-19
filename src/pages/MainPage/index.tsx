@@ -7,18 +7,10 @@ import { sendAuthCode } from '../../api/auth/amosrm'
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
-	const [data, setData] = useState('')
 	const [publicText, setPublicText] = useState('');
 	const [privateText, setPrivateText] = useState('');
 	const [token, setToken] = useState('');
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setData(e.target.value)
-	}
-
-	// const handleClick = () => {
-	// 	sendMessage({ type: 'AmoAuthCode', data: data }, window.parent)
-	// }
 
 	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
 		const url = window.location.href;
