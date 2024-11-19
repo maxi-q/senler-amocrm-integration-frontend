@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AmoAuthLink from '../../components/AmoAuthButton'
 import { useMessage } from '../../messages/messageProvider/useMessage'
 import { ServerMessage } from './components/ServerMessage'
+import { sendAuthCode } from '../../api/auth/amosrm'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
@@ -9,6 +10,7 @@ export const Page = () => {
 	const [data, setData] = useState('')
 	const [publicText, setPublicText] = useState('');
 	const [privateText, setPrivateText] = useState('');
+	const [token, setToken] = useState('');
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setData(e.target.value)
@@ -18,27 +20,36 @@ export const Page = () => {
 	// 	sendMessage({ type: 'AmoAuthCode', data: data }, window.parent)
 	// }
 
-	const sendCode = ({ code, referer, }: { code: string; referer: string }) => {
-		console.log(code, referer)
-		sendMessage({ type: 'AmoAuthCode', data: {code, referer} }, window.parent)
-		setPrivateText(JSON.stringify({code, referer}))
+	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
+		const url = window.location.href;
+		const params = new URLSearchParams(new URL(url).search);
+		const groupId = params.get('group_id') || '';
+
+		sendAuthCode({
+			senlerAccessToken: token,
+			senlerVkGroupId: groupId,
+			amoCrmDomain: referer,
+			amoCrmAuthorizationCode: code
+		})
 	}
 
 	useEffect(() => {
 		if (!message) return
 
-		if(message.request.type == 'getData' ) {
-      
-      // const public_settings: string =  JSON.parse(localStorage.getItem('public_settings') || '');
-      // const private_settings: privateSetting[] = JSON.parse(localStorage.getItem('private_settings') || '');
-			console.log(message.id)
+		if(message?.request?.type == 'getData' ) {
+
 			const data: any = {
 				id: message.id,
 				request: message.request,
 				response: {
 					payload: {
-						private: privateText,
-						public: publicText,
+						private: {
+							privateText
+						},
+						public: {
+							publicText,
+							token
+						},
 					},
 					success: true
 				},
@@ -47,11 +58,17 @@ export const Page = () => {
 
 			sendMessage(data, window.parent)
 		}
-		if(message.request.type == 'setData' ) {
+		if(message?.request?.type == 'setData' ) {
 			console.log('setData ', message)
 			const payload = message.request.payload
-			setPublicText(JSON.parse(payload.public))
-			setPrivateText(JSON.parse(payload.private))
+			if(payload.private) {
+				setPrivateText(JSON.parse(payload.private || '""')?.privateText)
+			}
+			if(payload.public) {
+				setPublicText(JSON.parse(payload.public)?.publicText)
+				setToken(JSON.parse(payload.public)?.token)
+			}
+			console.log(payload)
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [message])
@@ -61,23 +78,33 @@ export const Page = () => {
 	const handleClear = () => {
 		setPublicText('');
 		setPrivateText('');
-	};
-	
+	}
+
 	return (
 		<div>
-			<div style={{ width: '100%', marginBottom: '10px' }}>
+			<div style={{ width: '100%', marginBottom: '50px' }}>
 				<AmoAuthLink
-					clientId={'7979b14f-f5f1-4579-9d3c-64f583d351b3'}
-					redirectUri={
-						'https://bf58-188-233-10-136.ngrok-free.app/two'
-					}
+					clientId={import.meta.env.VITE_CLIENT_ID || ''}
+					redirectUri={`${import.meta.env.VITE_REDIRECT_URI}/two`}
 					onAuthSuccess={code => sendCode(code)}
 				/>
 			</div>
 
-			<div style={{ width: '100%', marginBottom: '10px' }}>
-				<input value={data} onChange={handleChange} />
+			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Token</label>
+				<input
+					value={token}
+					onChange={(e) => setToken(e.target.value)}
+					style={{
+						width: '100%',
+						padding: '10px',
+						border: '1px solid #ccc',
+						borderRadius: '4px',
+						resize: 'vertical'
+					}}
+				/>
 			</div>
+
 			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
 				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Public</label>
 				<textarea

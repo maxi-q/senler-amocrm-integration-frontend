@@ -1,26 +1,24 @@
 import axios from "axios";
 
 export const sendAuthCode = async ({
-	code,
-	referer,
-	group_id,
-	senler_token
+	senlerAccessToken,
+	senlerVkGroupId,
+	amoCrmDomain,
+	amoCrmAuthorizationCode
 }: {
-	code: string
-	referer: string
-	group_id: string
-	senler_token: string
-}) => {
-	console.log(referer);
-
+	senlerAccessToken: string,
+	senlerVkGroupId: string,
+	amoCrmDomain: string,
+	amoCrmAuthorizationCode: string
+  }) => {
 	try {
 		const response = await axios.post(
-			`https://amosrm-senler.ru/auth/code`,
+			`${import.meta.env.VITE_SERVER_URI}/users`,
 			JSON.stringify({
-				code,
-				referer,
-				group_id,
-				senler_token
+				senlerAccessToken,
+				senlerVkGroupId,
+				amoCrmDomain,
+				amoCrmAuthorizationCode
 			}),
 			{
 				headers: {
