@@ -1,13 +1,11 @@
-FROM node:22-bullseye as build 
+FROM node:20.17.0 
  
 WORKDIR /app 
  
-COPY package*.json pnpm-lock.yaml ./ 
+COPY package*.json ./ 
  
-RUN npm install -g pnpm@latest && \ 
-    pnpm config set fetch-timeout 60000 && \ 
-    pnpm add --frozen-lockfile 
+RUN npm install 
  
 COPY . ./ 
  
-RUN pnpm build
+RUN npm run build
