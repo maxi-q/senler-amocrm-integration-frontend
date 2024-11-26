@@ -6,7 +6,7 @@ COPY package*.json pnpm-lock.yaml ./
  
 RUN npm install -g pnpm@latest && \ 
     pnpm config set fetch-timeout 60000 && \ 
-    pnpm install --frozen-lockfile 
+    pnpm add --frozen-lockfile 
  
 COPY . ./ 
  
