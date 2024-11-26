@@ -10,4 +10,4 @@ RUN npm install -g pnpm@latest && \
  
 COPY . ./ 
  
-RUN pnpm run build
+RUN pnpm build
