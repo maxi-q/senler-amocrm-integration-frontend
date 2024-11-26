@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react'
-import AmoAuthLink from '../../components/AmoAuthButton'
+
 import { useMessage } from '../../messages/messageProvider/useMessage'
+
+import AmoAuthLink from '../../components/AmoAuthButton'
+import { TextField } from './components/TextField'
 import { ServerMessage } from './components/ServerMessage'
 import { sendAuthCode } from '../../api/auth/amosrm'
-import { TextField } from './components/TextField'
 
 import styles from './styles.module.css'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
-	const [publicText, setPublicText] = useState('');
-	const [privateText, setPrivateText] = useState('');
-	const [token, setToken] = useState('');
-
+	const [publicText, setPublicText] = useState('')
+	const [privateText, setPrivateText] = useState('')
+	const [token, setToken] = useState('')
 
 	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
-		const url = window.location.href;
-		const params = new URLSearchParams(new URL(url).search);
-		const groupId = params.get('group_id') || '';
+		const url = window.location.href
+		const params = new URLSearchParams(new URL(url).search)
+		const groupId = params.get('group_id') || ''
 
 		sendAuthCode({
 			senlerAccessToken: token,
@@ -64,10 +65,7 @@ export const Page = () => {
 				setToken(JSON.parse(payload.public)?.token)
 			}
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [message])
-
-	
 
 	const handleClear = () => {
 		setPublicText('');
@@ -83,7 +81,7 @@ export const Page = () => {
 					onAuthSuccess={code => sendCode(code)}
 				/>
 			</div>
-			
+
       <TextField label={'Token'} value={token} setValue={setToken} />
       <TextField label={'Public'} value={publicText} setValue={setPublicText} />
       <TextField label={'Private'} value={privateText} setValue={setPrivateText} />
@@ -98,8 +96,7 @@ export const Page = () => {
 					Удалить всё
 				</button>
 			</div>
-			
-			
+
 			{/* {message && <div>Получено сообщение: {JSON.stringify(message)}</div>} */}
 		</div>
 	)

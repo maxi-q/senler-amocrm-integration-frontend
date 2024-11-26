@@ -6,5 +6,5 @@ export const useMessage = () => {
   if (!context) {
     throw new Error('useMessage must be used within a MessageProvider');
   }
-  return context;
+  return context
 };
