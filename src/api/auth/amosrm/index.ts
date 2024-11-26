@@ -13,21 +13,22 @@ export const sendAuthCode = async ({
   }) => {
 	try {
 		const response = await axios.post(
-			`${import.meta.env.VITE_SERVER_URI}/users`,
+			`${import.meta.env.VITE_SERVER_URI}/api/users`,
 			JSON.stringify({
 				senlerAccessToken,
 				senlerVkGroupId,
 				amoCrmDomain,
-				amoCrmAuthorizationCode
+				amoCrmAuthorizationCode,
 			}),
 			{
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
 				}
 			}
 		);
 
 		console.log(response);
+
 		return response.data;
 	} catch (error) {
 		console.log("Error fetching access token:", error);

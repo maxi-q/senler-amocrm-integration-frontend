@@ -3,6 +3,9 @@ import AmoAuthLink from '../../components/AmoAuthButton'
 import { useMessage } from '../../messages/messageProvider/useMessage'
 import { ServerMessage } from './components/ServerMessage'
 import { sendAuthCode } from '../../api/auth/amosrm'
+import { TextField } from './components/TextField'
+
+import styles from './styles.module.css'
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
@@ -29,7 +32,6 @@ export const Page = () => {
 		if (!message) return
 
 		if(message?.request?.type == 'getData' ) {
-
 			const data: any = {
 				id: message.id,
 				request: message.request,
@@ -50,17 +52,17 @@ export const Page = () => {
 
 			sendMessage(data, window.parent)
 		}
+
 		if(message?.request?.type == 'setData' ) {
-			console.log('setData ', message)
 			const payload = message.request.payload
+
 			if(payload.private) {
-				setPrivateText(JSON.parse(payload.private || '""')?.privateText)
+				setPrivateText(JSON.parse(payload.private)?.privateText)
 			}
 			if(payload.public) {
 				setPublicText(JSON.parse(payload.public)?.publicText)
 				setToken(JSON.parse(payload.public)?.token)
 			}
-			console.log(payload)
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [message])
@@ -81,67 +83,17 @@ export const Page = () => {
 					onAuthSuccess={code => sendCode(code)}
 				/>
 			</div>
-
-			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
-				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Token</label>
-				<input
-					value={token}
-					onChange={(e) => setToken(e.target.value)}
-					style={{
-						width: '100%',
-						padding: '10px',
-						border: '1px solid #ccc',
-						borderRadius: '4px',
-						resize: 'vertical'
-					}}
-				/>
-			</div>
-
-			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
-				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Public</label>
-				<textarea
-					value={publicText}
-					onChange={(e) => setPublicText(e.target.value)}
-					rows={4}
-					style={{
-						width: '100%',
-						padding: '10px',
-						border: '1px solid #ccc',
-						borderRadius: '4px',
-						resize: 'vertical'
-					}}
-				/>
-			</div>
 			
-			<div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
-				<label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>Private</label>
-				<textarea
-					value={privateText}
-					onChange={(e) => setPrivateText(e.target.value)}
-					rows={4}
-					style={{
-						width: '100%',
-						padding: '10px',
-						border: '1px solid #ccc',
-						borderRadius: '4px',
-						resize: 'vertical'
-					}}
-				/>
-			</div>
+      <TextField label={'Token'} value={token} setValue={setToken} />
+      <TextField label={'Public'} value={publicText} setValue={setPublicText} />
+      <TextField label={'Private'} value={privateText} setValue={setPrivateText} />
 
 			<ServerMessage message={message}/>
 
 			<div className='flex justify-end max-w-[400px] mx-auto'>
 				<button
 					onClick={handleClear}
-					style={{
-						padding: '10px 20px',
-						backgroundColor: '#ff4d4f',
-						color: '#fff',
-						border: 'none',
-						borderRadius: '4px',
-						cursor: 'pointer',
-					}}
+					className={styles.clearButton}
 				>
 					Удалить всё
 				</button>
