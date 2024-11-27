@@ -4,10 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN rm -rf /app/dist
-
 RUN npm install
 
 COPY . ./
 
-RUN npm run build
+RUN npm run build -- --outDir=temp
+
+RUN rm -rf /app/dist/*
+
+CMD cp -r /app/temp/* /app/dist/
