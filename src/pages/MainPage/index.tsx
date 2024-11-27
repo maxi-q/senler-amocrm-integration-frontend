@@ -8,8 +8,10 @@ import { ServerMessage } from './components/ServerMessage'
 import { sendAuthCode } from '../../api/auth/amosrm'
 
 import styles from './styles.module.css'
+
 console.log('process.env', process.env)
 console.log('import.meta.env', import.meta.env)
+
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
