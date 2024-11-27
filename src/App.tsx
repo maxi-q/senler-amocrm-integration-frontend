@@ -6,6 +6,8 @@ import { MessageProvider } from './messages/messageProvider/MessageProvider'
 import AmoAuthRedirect from './pages/AmoAuthRedirect'
 import { Page } from './pages/MainPage'
 
+console.log('123')
+
 function App() {
 	return (
 		<MessageProvider>
