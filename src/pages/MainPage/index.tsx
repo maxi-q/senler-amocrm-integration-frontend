@@ -9,8 +9,6 @@ import { sendAuthCode } from '../../api/auth/amosrm'
 
 import styles from './styles.module.css'
 
-alert('hi')
-
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
 
