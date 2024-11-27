@@ -1,5 +1,8 @@
 FROM node:20.17.0
 
+ARG VITE_CLIENT_ID
+ARG VITE_REDIRECT_URI
+
 WORKDIR /app
 
 COPY package*.json ./
