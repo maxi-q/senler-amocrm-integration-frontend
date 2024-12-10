@@ -14,7 +14,7 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route path='' element={<Page />} />
-					<Route path='two' element={<AmoAuthRedirect />} />
+					<Route path='to' element={<AmoAuthRedirect />} />
 					<Route path='*' element={<h1>not found</h1>} />
 				</Routes>
 			</BrowserRouter>
