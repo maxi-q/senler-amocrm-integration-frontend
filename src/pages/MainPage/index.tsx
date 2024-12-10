@@ -80,7 +80,7 @@ export const Page = () => {
 			<div style={{ width: '100%', marginBottom: '50px' }}>
 				<AmoAuthLink
 					clientId={import.meta.env.VITE_CLIENT_ID || ''}
-					redirectUri={`${import.meta.env.VITE_REDIRECT_URI}/two`}
+					redirectUri={`${import.meta.env.VITE_REDIRECT_URI}/`}
 					onAuthSuccess={code => sendCode(code)}
 				/>
 			</div>
