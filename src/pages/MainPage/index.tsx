@@ -18,6 +18,7 @@ export const Page = () => {
 	const [publicText, setPublicText] = useState('')
 	const [privateText, setPrivateText] = useState('')
 	const [token, setToken] = useState('')
+	const [type, setType] = useState('')
 
 	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
 		const url = window.location.href
@@ -46,8 +47,10 @@ export const Page = () => {
 						},
 						public: {
 							publicText,
-							token
+							token,
+              type
 						},
+            description: 'Настроенная интеграция'
 					},
 					success: true
 				},
@@ -66,6 +69,7 @@ export const Page = () => {
 			if(payload.public) {
 				setPublicText(JSON.parse(payload.public)?.publicText)
 				setToken(JSON.parse(payload.public)?.token)
+        setType(JSON.parse(payload.public)?.type)
 			}
 		}
 	}, [message])
@@ -86,6 +90,7 @@ export const Page = () => {
 			</div>
 
       <TextField label={'Token'} value={token} setValue={setToken} />
+      <TextField label={'Type'} value={token} setValue={setType} />
       <TextField label={'Public'} value={publicText} setValue={setPublicText} />
       <TextField label={'Private'} value={privateText} setValue={setPrivateText} />
 
