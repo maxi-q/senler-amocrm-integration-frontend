@@ -51,7 +51,7 @@ export const Page = () => {
               type
 						},
             description: 'description',
-            command_title: 'command_title 2',
+            command_title: 'command_title 3',
 					},
 					success: true
 				},
