@@ -8,9 +8,16 @@ import { ServerMessage } from './components/ServerMessage'
 import { sendAuthCode } from '../../api/auth/amosrm'
 
 import styles from './styles.module.css'
+import { SelectField } from './components/SelectField'
+import EditableTable from './components/KeyValueInput'
 
 // console.log('process.env', process.env)
 // console.log('import.meta.env', import.meta.env)
+
+enum BotStepType {
+  SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
+  SendDataToSenler = 'SEND_DATA_TO_SENLER',
+}
 
 export const Page = () => {
 	const { message, sendMessage } = useMessage()
@@ -20,11 +27,18 @@ export const Page = () => {
 	const [token, setToken] = useState('')
 	const [type, setType] = useState('')
 
+  const [data, setData] = useState([
+    { id1: 'value1', id2: 'value2' },
+    { id1: 'value3', id2: 'value4' },
+  ]);
+
+  const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
+
 	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
 		const url = window.location.href
 		const params = new URLSearchParams(new URL(url).search)
 		const groupId = params.get('group_id') || ''
-
+    
 		sendAuthCode({
 			senlerAccessToken: token,
 			senlerVkGroupId: groupId,
@@ -48,7 +62,8 @@ export const Page = () => {
 						public: {
 							publicText,
 							token,
-              type
+              type,
+              stepType
 						},
             description: 'description',
             command: 'command',
@@ -91,10 +106,22 @@ export const Page = () => {
 				/>
 			</div>
 
+      <SelectField label={'Тип шага'} value={stepType} setValue={setStepType} options={[{
+        label: BotStepType.SendDataToAmoCrm,
+        value: BotStepType.SendDataToAmoCrm
+      },
+      {
+        label: BotStepType.SendDataToSenler,
+        value: BotStepType.SendDataToSenler
+      }
+      ]}/>
+
       <TextField label={'Token'} value={token} setValue={setToken} />
       <TextField label={'Type'} value={token} setValue={setType} />
       <TextField label={'Public'} value={publicText} setValue={setPublicText} />
       <TextField label={'Private'} value={privateText} setValue={setPrivateText} />
+
+      <EditableTable data={data} changeData={setData} />
 
 			<ServerMessage message={message}/>
 
@@ -106,8 +133,6 @@ export const Page = () => {
 					Удалить всё
 				</button>
 			</div>
-
-			{/* {message && <div>Получено сообщение: {JSON.stringify(message)}</div>} */}
 		</div>
 	)
 }
