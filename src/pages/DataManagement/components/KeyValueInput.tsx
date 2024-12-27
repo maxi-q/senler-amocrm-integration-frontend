@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface IDataRow {
-  id1: string;
-  id2: string;
+  from: string;
+  to: string;
 }
 
 interface IEditableTableProps {
@@ -17,8 +17,23 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
     setCurrentData((prevData) => {
       const updatedData = [...prevData];
       updatedData[rowIndex] = { ...updatedData[rowIndex], [key]: newValue };
+      changeData(updatedData);
       return updatedData;
     });
+  };
+
+  const handleAddRow = () => {
+    setCurrentData(prevData => [
+      ...prevData,
+      {
+        from: '',
+        to: '',
+      }
+    ]);
+  };
+
+  const handleDeleteRow = (rowIndex: number) => {
+    setCurrentData((prevData) => prevData.filter((_, index) => index !== rowIndex));
   };
 
   const handleSave = () => {
@@ -30,8 +45,9 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ padding: '8px', border: '1px solid #ccc' }}>ID1</th>
-            <th style={{ padding: '8px', border: '1px solid #ccc' }}>ID2</th>
+            <th style={{ padding: '8px', border: '1px solid #ccc' }}>from</th>
+            <th style={{ padding: '8px', border: '1px solid #ccc' }}>to</th>
+            <th style={{ padding: '8px', border: '1px solid #ccc' }}>Удалить</th> {/* Новый заголовок */}
           </tr>
         </thead>
         <tbody>
@@ -40,8 +56,8 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
               <td style={{ padding: '8px', border: '1px solid #ccc' }}>
                 <input
                   type="text"
-                  value={row.id1}
-                  onChange={(e) => handleValueChange(rowIndex, 'id1', e.target.value)}
+                  value={row.from}
+                  onChange={(e) => handleValueChange(rowIndex, 'from', e.target.value)}
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -53,8 +69,8 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
               <td style={{ padding: '8px', border: '1px solid #ccc' }}>
                 <input
                   type="text"
-                  value={row.id2}
-                  onChange={(e) => handleValueChange(rowIndex, 'id2', e.target.value)}
+                  value={row.to}
+                  onChange={(e) => handleValueChange(rowIndex, 'to', e.target.value)}
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -63,10 +79,41 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
                   }}
                 />
               </td>
+              <td style={{ padding: '8px', border: '1px solid #ccc', textAlign: 'center' }}>
+                <button
+                  onClick={() => handleDeleteRow(rowIndex)}
+                  style={{
+                    padding: '4px 8px',
+                    backgroundColor: '#f44336',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                  title="Удалить строку"
+                >
+                  X
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div style={{ marginTop: '20px' }}>
+        <button
+          onClick={handleAddRow}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Add Row
+        </button>
+      </div>
       <div style={{ marginTop: '20px' }}>
         <button
           onClick={handleSave}

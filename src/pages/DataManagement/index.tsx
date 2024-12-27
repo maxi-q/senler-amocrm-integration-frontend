@@ -9,17 +9,14 @@ import { sendAuthCode } from '../../api/auth/amosrm'
 
 import styles from './styles.module.css'
 import { SelectField } from './components/SelectField'
-import EditableTable from './components/KeyValueInput'
-
-// console.log('process.env', process.env)
-// console.log('import.meta.env', import.meta.env)
+import { SendDataToAmoCrm } from './modules/SendDataToAmoCrm'
 
 enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
 
-export const Page = () => {
+export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
 
 	const [publicText, setPublicText] = useState('')
@@ -28,17 +25,22 @@ export const Page = () => {
 	const [type, setType] = useState('')
 
   const [data, setData] = useState([
-    { id1: 'value1', id2: 'value2' },
-    { id1: 'value3', id2: 'value4' },
+    { from: 'value1', to: 'value2' },
+    { from: 'value3', to: 'value4' },
   ]);
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
+
+  const router = {
+    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={data} setData={setData} />,
+    [BotStepType.SendDataToSenler]: <>hello</>,
+  }
 
 	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
 		const url = window.location.href
 		const params = new URLSearchParams(new URL(url).search)
 		const groupId = params.get('group_id') || ''
-    
+
 		sendAuthCode({
 			senlerAccessToken: token,
 			senlerVkGroupId: groupId,
@@ -81,12 +83,17 @@ export const Page = () => {
 			const payload = message.request.payload
 
 			if(payload.private) {
-				setPrivateText(JSON.parse(payload.private)?.privateText)
+        const privateData = JSON.parse(payload.private)
+
+				setPrivateText(privateData?.privateText)
 			}
+
 			if(payload.public) {
-				setPublicText(JSON.parse(payload.public)?.publicText)
-				setToken(JSON.parse(payload.public)?.token)
-        setType(JSON.parse(payload.public)?.type)
+        const publicData = JSON.parse(payload.public)
+
+				setPublicText(publicData?.publicText)
+				setToken(publicData?.token)
+        setType(publicData?.type)
 			}
 		}
 	}, [message])
@@ -106,22 +113,22 @@ export const Page = () => {
 				/>
 			</div>
 
-      <SelectField label={'Тип шага'} value={stepType} setValue={setStepType} options={[{
-        label: BotStepType.SendDataToAmoCrm,
-        value: BotStepType.SendDataToAmoCrm
-      },
-      {
-        label: BotStepType.SendDataToSenler,
-        value: BotStepType.SendDataToSenler
-      }
+      <SelectField label={'Тип шага'} value={stepType} setValue={setStepType} options={[
+        {
+          label: BotStepType.SendDataToAmoCrm,
+          value: BotStepType.SendDataToAmoCrm
+        },
+        {
+          label: BotStepType.SendDataToSenler,
+          value: BotStepType.SendDataToSenler
+        }
       ]}/>
 
       <TextField label={'Token'} value={token} setValue={setToken} />
-      <TextField label={'Type'} value={token} setValue={setType} />
-      <TextField label={'Public'} value={publicText} setValue={setPublicText} />
-      <TextField label={'Private'} value={privateText} setValue={setPrivateText} />
 
-      <EditableTable data={data} changeData={setData} />
+      {
+        router[stepType]
+      }
 
 			<ServerMessage message={message}/>
 
