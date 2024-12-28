@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-interface IDataRow {
+export interface IDataRow {
   from: string;
   to: string;
 }

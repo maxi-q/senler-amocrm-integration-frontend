@@ -1,29 +1,25 @@
-import { useState } from 'react'
-import EditableTable from '../components/KeyValueInput'
-import { TextField } from '../components/TextField'
+import EditableTable, { IDataRow } from '../components/KeyValueInput'
+import React from 'react'
+import { DataManagementRouter } from '..'
+
+export interface SendDataToAmoCrmData {
+  data?: IDataRow[],
+}
 
 interface SendDataToAmoCrm {
-  data: Array<{
-    from: string;
-    to: string;
-  }>,
-  setData: React.Dispatch<React.SetStateAction<{
-    from: string;
-    to: string;
-}[]>>
+  data?: IDataRow[],
+  setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
 }
 
 export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
 
-	const [privateText, setPrivateText] = useState('')
+  const setSendDataToAmoCrmData = (data: IDataRow[]) => {
+    props.setData(p => ({...p, sendDataToAmoCrm: { data }}))
+  }
 
 	return (
 		<div>
-      <TextField label={'Some lable'} value={privateText} setValue={setPrivateText} />
-
-      <EditableTable data={props.data} changeData={props.setData} />
-
-
+      <EditableTable data={props.data || []} changeData={setSendDataToAmoCrmData} />
 		</div>
 	)
 }

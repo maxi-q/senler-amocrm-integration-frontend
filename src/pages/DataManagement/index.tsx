@@ -5,49 +5,34 @@ import { useMessage } from '../../messages/messageProvider/useMessage'
 import AmoAuthLink from '../../components/AmoAuthButton'
 import { TextField } from './components/TextField'
 import { ServerMessage } from './components/ServerMessage'
-import { sendAuthCode } from '../../api/auth/amosrm'
 
-import styles from './styles.module.css'
 import { SelectField } from './components/SelectField'
-import { SendDataToAmoCrm } from './modules/SendDataToAmoCrm'
+import { SendDataToAmoCrm, SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
+import { sendCode } from './helpers/sendCode'
 
 enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
 
+export interface DataManagementRouter {
+  sendDataToAmoCrm?: SendDataToAmoCrmData,
+  sendDataToSenler?: undefined
+}
+
 export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
 
-	const [publicText, setPublicText] = useState('')
-	const [privateText, setPrivateText] = useState('')
-	const [token, setToken] = useState('')
-	const [type, setType] = useState('')
-
-  const [data, setData] = useState([
-    { from: 'value1', to: 'value2' },
-    { from: 'value3', to: 'value4' },
-  ]);
-
+  const [token, setToken] = useState('')
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
 
+  const [publicData, setPublicData] = useState<DataManagementRouter>()
+  const [privateData, setPrivateData] = useState<object>()
+
   const router = {
-    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={data} setData={setData} />,
+    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData?.sendDataToAmoCrm?.data} setData={setPublicData} />,
     [BotStepType.SendDataToSenler]: <>hello</>,
   }
-
-	const sendCode = ({ code, referer }: { code: string; referer: string }) => {
-		const url = window.location.href
-		const params = new URLSearchParams(new URL(url).search)
-		const groupId = params.get('group_id') || ''
-
-		sendAuthCode({
-			senlerAccessToken: token,
-			senlerVkGroupId: groupId,
-			amoCrmDomain: referer,
-			amoCrmAuthorizationCode: code
-		})
-	}
 
 	useEffect(() => {
 		if (!message) return
@@ -59,13 +44,12 @@ export const DataManagement = () => {
 				response: {
 					payload: {
 						private: {
-							privateText
+							...privateData
 						},
 						public: {
-							publicText,
 							token,
-              type,
-              stepType
+              stepType,
+              ...publicData
 						},
             description: 'description',
             command: 'command',
@@ -83,25 +67,17 @@ export const DataManagement = () => {
 			const payload = message.request.payload
 
 			if(payload.private) {
-        const privateData = JSON.parse(payload.private)
-
-				setPrivateText(privateData?.privateText)
+				setPrivateData(JSON.parse(payload.private))
 			}
 
 			if(payload.public) {
         const publicData = JSON.parse(payload.public)
-
-				setPublicText(publicData?.publicText)
-				setToken(publicData?.token)
-        setType(publicData?.type)
+        setToken(publicData?.token)
+        setStepType(publicData?.stepType)
+				setPublicData(publicData)
 			}
 		}
 	}, [message])
-
-	const handleClear = () => {
-		setPublicText('');
-		setPrivateText('');
-	}
 
 	return (
 		<div>
@@ -109,7 +85,7 @@ export const DataManagement = () => {
 				<AmoAuthLink
 					clientId={import.meta.env.VITE_CLIENT_ID || ''}
 					redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-					onAuthSuccess={code => sendCode(code)}
+					onAuthSuccess={code => sendCode({...code, token})}
 				/>
 			</div>
 
@@ -131,15 +107,6 @@ export const DataManagement = () => {
       }
 
 			<ServerMessage message={message}/>
-
-			<div className='flex justify-end max-w-[400px] mx-auto'>
-				<button
-					onClick={handleClear}
-					className={styles.clearButton}
-				>
-					Удалить всё
-				</button>
-			</div>
 		</div>
 	)
 }
