@@ -3,7 +3,7 @@ import axios from "axios";
 export const sendAuthCode = async ({
 	senlerAccessToken,
 	senlerVkGroupId,
-	amoCrmDomain,
+	amoCrmDomain: amoCrmDomainName,
 	amoCrmAuthorizationCode
 }: {
 	senlerAccessToken: string,
@@ -17,7 +17,7 @@ export const sendAuthCode = async ({
 			JSON.stringify({
 				senlerAccessToken,
 				senlerVkGroupId,
-				amoCrmDomain,
+				amoCrmDomainName,
 				amoCrmAuthorizationCode,
 			}),
 			{
