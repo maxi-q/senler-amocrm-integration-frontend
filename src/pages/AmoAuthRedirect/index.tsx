@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 
 const AmoAuthRedirect = () => {
 	useEffect(() => {
-		window.close()
+    alert('close')
+		// window.close()
 	}, [])
 
 	return <h2>Завершение авторизации...</h2>
