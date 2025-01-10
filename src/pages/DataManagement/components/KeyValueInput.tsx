@@ -10,7 +10,7 @@ interface IEditableTableProps {
   changeData: (updatedData: IDataRow[]) => void;
 }
 
-const EditableTable = ({ data, changeData }: IEditableTableProps) => {
+const EditableTable = ({ data = [], changeData }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {

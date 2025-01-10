@@ -16,8 +16,6 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
     props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: { ...data }}))
   }
 
-	return (
-    <EditableTable data={props.data || []} changeData={setSendDataToAmoCrmData} />
-	)
+	return <EditableTable data={props.data[BotStepType.SendDataToAmoCrm]} changeData={setSendDataToAmoCrmData} />
 }
 
