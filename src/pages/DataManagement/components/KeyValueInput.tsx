@@ -36,10 +36,6 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
     setCurrentData((prevData) => prevData.filter((_, index) => index !== rowIndex));
   };
 
-  const handleSave = () => {
-    changeData(currentData);
-  };
-
   return (
     <div style={{ width: '100%', maxWidth: '800px', margin: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -47,7 +43,7 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
           <tr>
             <th style={{ padding: '8px', border: '1px solid #ccc' }}>from</th>
             <th style={{ padding: '8px', border: '1px solid #ccc' }}>to</th>
-            <th style={{ padding: '8px', border: '1px solid #ccc' }}>Удалить</th> {/* Новый заголовок */}
+            <th style={{ padding: '8px', border: '1px solid #ccc' }}>Удалить</th>
           </tr>
         </thead>
         <tbody>
@@ -112,21 +108,6 @@ const EditableTable = ({ data, changeData }: IEditableTableProps) => {
           }}
         >
           Add Row
-        </button>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <button
-          onClick={handleSave}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          Save
         </button>
       </div>
     </div>

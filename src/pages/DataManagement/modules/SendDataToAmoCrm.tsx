@@ -1,26 +1,23 @@
 import EditableTable, { IDataRow } from '../components/KeyValueInput'
 import React from 'react'
-import { DataManagementRouter } from '..'
+import { BotStepType, DataManagementRouter } from '..'
 
-export interface SendDataToAmoCrmData {
-  data?: IDataRow[],
-}
+export type SendDataToAmoCrmData = IDataRow[]
+
 
 interface SendDataToAmoCrm {
-  data?: IDataRow[],
+  data?: any,
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
 }
 
 export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
 
   const setSendDataToAmoCrmData = (data: IDataRow[]) => {
-    props.setData(p => ({...p, sendDataToAmoCrm: { data }}))
+    props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: { ...data }}))
   }
 
 	return (
-		<div>
-      <EditableTable data={props.data || []} changeData={setSendDataToAmoCrmData} />
-		</div>
+    <EditableTable data={props.data || []} changeData={setSendDataToAmoCrmData} />
 	)
 }
 

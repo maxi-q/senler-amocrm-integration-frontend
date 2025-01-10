@@ -7,18 +7,24 @@ import { TextField } from './components/TextField'
 import { ServerMessage } from './components/ServerMessage'
 
 import { SelectField } from './components/SelectField'
-import { SendDataToAmoCrm, SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
+import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
 import { sendCode } from './helpers/sendCode'
 
-enum BotStepType {
+export enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
 
-export interface DataManagementRouter {
-  sendDataToAmoCrm?: SendDataToAmoCrmData,
-  sendDataToSenler?: undefined
-}
+type SendDataToSenlerData = { }
+
+export type DataManagementRouter = {
+  [key in BotStepType]?
+    : key extends BotStepType.SendDataToAmoCrm
+    ? SendDataToAmoCrmData
+    : key extends BotStepType.SendDataToSenler
+    ? SendDataToSenlerData
+    : never;
+};
 
 export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
@@ -30,7 +36,7 @@ export const DataManagement = () => {
   const [privateData, setPrivateData] = useState<object>()
 
   const router = {
-    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData?.sendDataToAmoCrm?.data} setData={setPublicData} />,
+    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
     [BotStepType.SendDataToSenler]: <>hello</>,
   }
 
@@ -38,6 +44,9 @@ export const DataManagement = () => {
 		if (!message) return
 
 		if(message?.request?.type == 'getData' ) {
+      if (!publicData) return
+      const syncableVariables = publicData[stepType]
+
 			const data: any = {
 				id: message.id,
 				request: message.request,
@@ -48,8 +57,8 @@ export const DataManagement = () => {
 						},
 						public: {
 							token,
-              stepType,
-              ...publicData
+              type: stepType,
+              syncableVariables
 						},
             description: 'description',
             command: 'command',
