@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface IDataRow {
   from: string;
@@ -12,6 +12,12 @@ interface IEditableTableProps {
 
 const EditableTable = ({ data = [], changeData }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
+
+  useEffect(()=>{
+    console.log(currentData)
+  }, [currentData])
+
+  console.log(currentData)
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {
@@ -47,7 +53,7 @@ const EditableTable = ({ data = [], changeData }: IEditableTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {currentData.map((row, rowIndex) => (
+          {currentData?.map((row, rowIndex) => (
             <tr key={rowIndex}>
               <td style={{ padding: '8px', border: '1px solid #ccc' }}>
                 <input
