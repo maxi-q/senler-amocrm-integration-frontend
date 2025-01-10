@@ -13,7 +13,7 @@ export const sendAuthCode = async ({
   }) => {
 	try {
 		const response = await axios.post(
-			`/api/users`,
+			`/api/senlerGroups`,
 			JSON.stringify({
 				senlerAccessToken,
 				senlerVkGroupId,
