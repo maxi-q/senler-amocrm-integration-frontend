@@ -38,10 +38,20 @@ export const DataManagement = () => {
   const [page, setPage] = useState(<></>)
 
   useEffect(()=>{
-    const router = {
-      [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
-      [BotStepType.SendDataToSenler]: <>hello</>,
+
+    const handler = {
+      get: function (target: any, name: any) {
+        return Object.prototype.hasOwnProperty.call(target, name) ? target[name] : Object.entries(target)[0];
+      },
     }
+
+    const router = new Proxy(
+      {
+        [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
+        [BotStepType.SendDataToSenler]: <>hello</>,
+      },
+      handler
+    )
 
     setPage(router[stepType])
   }, [publicData, stepType])
