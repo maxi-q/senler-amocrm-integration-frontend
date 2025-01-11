@@ -44,7 +44,7 @@ export const DataManagement = () => {
     }
 
     setPage(router[stepType])
-  }, [publicData])
+  }, [publicData, stepType])
 
 	useEffect(() => {
 		if (!message) return
