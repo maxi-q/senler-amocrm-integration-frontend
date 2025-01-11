@@ -35,13 +35,15 @@ export const DataManagement = () => {
   const [publicData, setPublicData] = useState<DataManagementRouter>()
   const [privateData, setPrivateData] = useState<object>()
 
-  const router = {
-    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
-    [BotStepType.SendDataToSenler]: <>hello</>,
-  }
+  const [page, setPage] = useState(<></>)
 
   useEffect(()=>{
-    console.log(publicData)
+    const router = {
+      [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
+      [BotStepType.SendDataToSenler]: <>hello</>,
+    }
+
+    setPage(router[stepType])
   }, [publicData])
 
 	useEffect(() => {
@@ -116,9 +118,8 @@ export const DataManagement = () => {
 
       <TextField label={'Token'} value={token} setValue={setToken} />
 
-      {
-        router[stepType]
-      }
+      { page }
+
       1: {stepType}
 			<ServerMessage message={message}/>
 		</div>
