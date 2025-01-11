@@ -11,7 +11,6 @@ interface SendDataToAmoCrm {
 }
 
 export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
-
   const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
     props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }

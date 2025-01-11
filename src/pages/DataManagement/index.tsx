@@ -35,10 +35,26 @@ export const DataManagement = () => {
   const [publicData, setPublicData] = useState<DataManagementRouter>()
   const [privateData, setPrivateData] = useState<object>()
 
-  const router = {
-    [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
-    [BotStepType.SendDataToSenler]: <>hello</>,
-  }
+  const [page, setPage] = useState(<></>)
+
+  useEffect(()=>{
+
+    const handler = {
+      get: function (target: any, name: any) {
+        return Object.prototype.hasOwnProperty.call(target, name) ? target[name] : Object.entries(target)[0];
+      },
+    }
+
+    const router = new Proxy(
+      {
+        [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
+        [BotStepType.SendDataToSenler]: <>hello</>,
+      },
+      handler
+    )
+
+    setPage(router[stepType])
+  }, [publicData, stepType])
 
 	useEffect(() => {
 		if (!message) return
@@ -53,21 +69,21 @@ export const DataManagement = () => {
 				response: {
 					payload: {
 						private: {
-							...privateData
+							...privateData,
 						},
 						public: {
-							token,
+              ...publicData,
+              token,
               type: stepType,
               syncableVariables,
-              publicData
 						},
             description: 'description',
             command: 'command',
-            title: 'title'
+            title: 'title',
 					},
-					success: true
+					success: true,
 				},
-				time: new Date().getTime()
+				time: new Date().getTime(),
 			}
 
 			sendMessage(data, window.parent)
@@ -83,8 +99,8 @@ export const DataManagement = () => {
 			if(payload.public) {
         const publicData = JSON.parse(payload.public)
         setToken(publicData?.token)
-        setStepType(publicData?.stepType)
-				setPublicData(publicData)
+        setStepType(publicData?.type)
+        setPublicData(publicData)
 			}
 		}
 	}, [message])
@@ -112,9 +128,7 @@ export const DataManagement = () => {
 
       <TextField label={'Token'} value={token} setValue={setToken} />
 
-      {
-        router[stepType]
-      }
+      { page }
 
 			<ServerMessage message={message}/>
 		</div>
