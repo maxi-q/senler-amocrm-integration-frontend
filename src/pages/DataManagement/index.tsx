@@ -83,7 +83,7 @@ export const DataManagement = () => {
 			if(payload.public) {
         const publicData = JSON.parse(payload.public)
         setToken(publicData?.token)
-        setStepType(publicData?.stepType)
+        setStepType(publicData?.type)
 				setPublicData(publicData)
 			}
 		}
