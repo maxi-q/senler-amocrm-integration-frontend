@@ -11,10 +11,10 @@ interface SendDataToAmoCrm {
 }
 
 export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
-
   const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
     props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
+  console.log(props, props?.data, props?.data[BotStepType.SendDataToAmoCrm])
 
 	return <EditableTable data={props.data && props.data[BotStepType.SendDataToAmoCrm]} changeData={setSendDataToAmoCrmData} />
 }

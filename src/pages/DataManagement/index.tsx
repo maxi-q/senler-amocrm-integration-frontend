@@ -59,7 +59,7 @@ export const DataManagement = () => {
 							token,
               type: stepType,
               syncableVariables,
-              publicData,
+              ...publicData,
 						},
             description: 'description',
             command: 'command',
@@ -84,7 +84,7 @@ export const DataManagement = () => {
         const publicData = JSON.parse(payload.public)
         setToken(publicData?.token)
         setStepType(publicData?.type)
-				setPublicData(publicData)
+        setPublicData(publicData)
 			}
 		}
 	}, [message])
