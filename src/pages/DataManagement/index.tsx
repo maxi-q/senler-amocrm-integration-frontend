@@ -53,21 +53,21 @@ export const DataManagement = () => {
 				response: {
 					payload: {
 						private: {
-							...privateData
+							...privateData,
 						},
 						public: {
 							token,
               type: stepType,
               syncableVariables,
-              publicData
+              publicData,
 						},
             description: 'description',
             command: 'command',
-            title: 'title'
+            title: 'title',
 					},
-					success: true
+					success: true,
 				},
-				time: new Date().getTime()
+				time: new Date().getTime(),
 			}
 
 			sendMessage(data, window.parent)
@@ -115,7 +115,7 @@ export const DataManagement = () => {
       {
         router[stepType]
       }
-
+      1: {stepType}
 			<ServerMessage message={message}/>
 		</div>
 	)
