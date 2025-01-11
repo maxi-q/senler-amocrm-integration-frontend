@@ -40,6 +40,10 @@ export const DataManagement = () => {
     [BotStepType.SendDataToSenler]: <>hello</>,
   }
 
+  useEffect(()=>{
+    console.log(publicData)
+  }, [publicData])
+
 	useEffect(() => {
 		if (!message) return
 
