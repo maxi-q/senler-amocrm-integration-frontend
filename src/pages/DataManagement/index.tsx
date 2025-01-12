@@ -72,10 +72,10 @@ export const DataManagement = () => {
 							...privateData,
 						},
 						public: {
+              ...publicData,
 							token,
               type: stepType,
               syncableVariables,
-              ...publicData,
 						},
             description: 'description',
             command: 'command',
