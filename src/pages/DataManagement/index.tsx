@@ -87,6 +87,7 @@ export const DataManagement = () => {
 			}
 
       console.log(data)
+      console.error(data)
 
 			sendMessage(data, window.parent)
 		}
