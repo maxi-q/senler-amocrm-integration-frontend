@@ -73,7 +73,7 @@ export const DataManagement = () => {
 						},
 						public: {
               ...publicData,
-							token,
+              token,
               type: stepType,
               syncableVariables,
 						},
@@ -85,9 +85,6 @@ export const DataManagement = () => {
 				},
 				time: new Date().getTime(),
 			}
-
-      console.log(JSON.stringify(data))
-      console.error(data)
 
 			sendMessage(data, window.parent)
 		}
@@ -133,7 +130,6 @@ export const DataManagement = () => {
 
       { page }
 
-      1: {stepType}
 			<ServerMessage message={message}/>
 		</div>
 	)
