@@ -86,7 +86,7 @@ export const DataManagement = () => {
 				time: new Date().getTime(),
 			}
 
-      console.log(data)
+      console.log(JSON.stringify(data))
       console.error(data)
 
 			sendMessage(data, window.parent)
