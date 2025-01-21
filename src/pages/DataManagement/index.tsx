@@ -10,16 +10,14 @@ import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
 import { sendCode } from './helpers/sendCode'
 
+import styles from './styles.module.css'
+
 export enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
 
 type SendDataToSenlerData = { }
-
-const styles = {
-  container: { width: '100%', marginBottom: '50px' },
-};
 
 export type DataManagementRouter = {
   [key in BotStepType]?
@@ -97,7 +95,7 @@ export const DataManagement = () => {
 
 	return (
     <div>
-      <div style={styles.container}>
+      <div className={styles.container}>
         <AmoAuthLink
           clientId={import.meta.env.VITE_CLIENT_ID || ''}
           redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
