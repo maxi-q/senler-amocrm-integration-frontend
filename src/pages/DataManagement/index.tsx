@@ -17,6 +17,10 @@ export enum BotStepType {
 
 type SendDataToSenlerData = { }
 
+const styles = {
+  container: { width: '100%', marginBottom: '50px' },
+};
+
 export type DataManagementRouter = {
   [key in BotStepType]?
     : key extends BotStepType.SendDataToAmoCrm
@@ -35,103 +39,88 @@ export const DataManagement = () => {
   const [publicData, setPublicData] = useState<DataManagementRouter>()
   const [privateData, setPrivateData] = useState<object>()
 
-  const [page, setPage] = useState(<></>)
-
-  useEffect(()=>{
-
-    const handler = {
-      get: function (target: any, name: any) {
-        return Object.prototype.hasOwnProperty.call(target, name) ? target[name] : Object.entries(target)[0];
-      },
+  const getDefaultComponent = (type: BotStepType) => {
+    switch (type) {
+        case BotStepType.SendDataToAmoCrm:
+            return <SendDataToAmoCrm data={publicData} setData={setPublicData} />;
+        case BotStepType.SendDataToSenler:
+            return <>hello</>;
+        default:
+            return <>Тип не передан</>;
     }
-
-    const router = new Proxy(
-      {
-        [BotStepType.SendDataToAmoCrm]: <SendDataToAmoCrm data={publicData} setData={setPublicData} />,
-        [BotStepType.SendDataToSenler]: <>hello</>,
-      },
-      handler
-    )
-
-    setPage(router[stepType])
-  }, [publicData, stepType])
+  };
 
 	useEffect(() => {
-		if (!message) return
+    const handleGetData = () => {
+      if (!publicData) return;
+      const syncableVariables = publicData[stepType];
 
-		if(message?.request?.type == 'getData' ) {
-      if (!publicData) return
-      const syncableVariables = publicData[stepType]
-
-			const data: any = {
-				id: message.id,
-				request: message.request,
-				response: {
-					payload: {
-						private: {
-							...privateData,
-						},
-						public: {
-              ...publicData,
+      const data = {
+        id: message.id,
+        request: message.request,
+        response: {
+          payload: {
+            private: { ...privateData },
+            public: {
               token,
               type: stepType,
               syncableVariables,
-						},
+              ...publicData,
+            },
             description: 'description',
             command: 'command',
             title: 'title',
-					},
-					success: true,
-				},
-				time: new Date().getTime(),
-			}
+          },
+          success: true,
+        },
+        time: new Date().getTime(),
+      };
 
-			sendMessage(data, window.parent)
-		}
+      sendMessage(data, window.parent);
+    };
 
-		if(message?.request?.type == 'setData' ) {
-			const payload = message.request.payload
+    const handleSetData = () => {
+      const { private: privatePayload, public: publicPayload } = message.request.payload;
+      if (privatePayload) setPrivateData(JSON.parse(privatePayload));
+      if (publicPayload) {
+        const parsedPublicData = JSON.parse(publicPayload);
+        setToken(parsedPublicData.token);
+        setStepType(parsedPublicData.type);
+        setPublicData(parsedPublicData);
+      }
+    };
 
-			if(payload.private) {
-				setPrivateData(JSON.parse(payload.private))
-			}
-
-			if(payload.public) {
-        const publicData = JSON.parse(payload.public)
-        setToken(publicData?.token)
-        setStepType(publicData?.type)
-        setPublicData(publicData)
-			}
-		}
-	}, [message])
+    if (!message) return;
+    if (message.request?.type === 'getData') handleGetData();
+    if (message.request?.type === 'setData') handleSetData();
+  }, [message]);
 
 	return (
-		<div>
-			<div style={{ width: '100%', marginBottom: '50px' }}>
-				<AmoAuthLink
-					clientId={import.meta.env.VITE_CLIENT_ID || ''}
-					redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-					onAuthSuccess={code => sendCode({...code, token})}
-				/>
-			</div>
+    <div>
+      <div style={styles.container}>
+        <AmoAuthLink
+          clientId={import.meta.env.VITE_CLIENT_ID || ''}
+          redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
+          onAuthSuccess={(code) => sendCode({ ...code, token })}
+        />
+    </div>
 
-      <SelectField label={'Тип шага'} value={stepType} setValue={setStepType} options={[
-        {
-          label: BotStepType.SendDataToAmoCrm,
-          value: BotStepType.SendDataToAmoCrm
-        },
-        {
-          label: BotStepType.SendDataToSenler,
-          value: BotStepType.SendDataToSenler
-        }
-      ]}/>
+    <SelectField
+      label="Тип шага"
+      value={stepType}
+      setValue={setStepType}
+      options={[
+        { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
+        { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
+      ]}
+    />
 
-      <TextField label={'Token'} value={token} setValue={setToken} />
+    <TextField label="Token" value={token} setValue={setToken} />
 
-      { page }
+    {getDefaultComponent(stepType)}
 
-			<ServerMessage message={message}/>
-		</div>
-	)
+    <ServerMessage message={message} />
+  </div>
+  )
 }
 
