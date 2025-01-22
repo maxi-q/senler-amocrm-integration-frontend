@@ -1,4 +1,4 @@
-import { sendAuthCode } from "../../../api/auth/amosrm";
+import { sendAuthCode } from "../../../api/auth/amocrm";
 
 export const sendCode = ({ code, referer, token }: { code: string; referer: string; token: string }) => {
   const url = window.location.href

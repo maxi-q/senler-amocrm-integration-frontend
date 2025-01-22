@@ -9,7 +9,7 @@ export const ServerMessage: React.FC<ServerMessageProps> = ({ message }) => {
     <div
       style={{
         maxWidth: '400px',
-        maxHeight: '200px', 
+        maxHeight: '200px',
         overflowX: 'auto',
         overflowY: 'auto',
         padding: '10px',
