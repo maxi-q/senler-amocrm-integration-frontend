@@ -7,7 +7,7 @@ export const sendCode = ({ code, referer, token }: { code: string; referer: stri
 
   sendAuthCode({
     senlerAccessToken: token,
-    senlerVkGroupId: groupId,
+    senlerGroupId: groupId,
     amoCrmDomain: referer,
     amoCrmAuthorizationCode: code
   })
