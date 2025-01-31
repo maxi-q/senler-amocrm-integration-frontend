@@ -62,8 +62,8 @@ export const DataManagement = () => {
             public: {
               token,
               type: stepType,
-              syncableVariables,
               ...publicData,
+              syncableVariables,
             },
             description: 'description',
             command: 'command',
