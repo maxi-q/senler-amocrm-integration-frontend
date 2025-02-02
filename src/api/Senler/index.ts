@@ -17,8 +17,9 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFiel
         }
       }
     );
-
+    console.log('csrfToken', csrfToken)
     console.log('getSenlerGroupFields', response.data)
+
     return response.data;
   } catch (error) {
     console.error("Error fetching Senler group fields:", error);
