@@ -2,7 +2,6 @@ import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import React, { useEffect, useState } from 'react'
 
 import { getAmoCRMFields } from '@/api/Backend/fields'
-import { getSenlerGroupFields } from '@/api/Senler'
 import { DataManagementRouter, BotStepType } from '../..'
 import { useMessage } from '@/messages/messageProvider/useMessage'
 
