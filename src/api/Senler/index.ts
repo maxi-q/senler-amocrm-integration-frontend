@@ -4,7 +4,8 @@ import { GetSenlerGroupFieldsDto } from "./index.dto";
 export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFieldsDto) => {
   try {
     const csrfToken = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
+    console.log('csrfToken', csrfToken)
+    
     const response = await axios.get(
       `https://senler.ru/ajax/cabinet/select2vars`,
       {
@@ -17,7 +18,7 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFiel
         }
       }
     );
-    console.log('csrfToken', csrfToken)
+    
     console.log('getSenlerGroupFields', response.data)
 
     return response.data;
