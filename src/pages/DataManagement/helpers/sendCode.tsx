@@ -4,11 +4,13 @@ export const sendCode = ({ code, referer, token }: { code: string; referer: stri
   const url = window.location.href
   const params = new URLSearchParams(new URL(url).search)
   const groupId = params.get('group_id') || ''
+  const sign = params.get('sign') || ''
 
   sendAuthCode({
     senlerAccessToken: token,
     senlerGroupId: groupId,
     amoCrmDomain: referer,
-    amoCrmAuthorizationCode: code
+    amoCrmAuthorizationCode: code,
+    senlerSign: sign
   })
 }

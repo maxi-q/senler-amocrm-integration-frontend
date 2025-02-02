@@ -27,7 +27,7 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFiel
     const csrfToken = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
     const response = await axios.get(
-      `/api/integration/getAmoFields`,
+      `/https://senler.ru/ajax/cabinet/select2vars`,
       {
         params: {
           group_id: senlerGroupId

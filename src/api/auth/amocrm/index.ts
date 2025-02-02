@@ -4,12 +4,14 @@ export const sendAuthCode = async ({
 	senlerAccessToken,
 	senlerGroupId,
 	amoCrmDomain: amoCrmDomainName,
-	amoCrmAuthorizationCode
+	amoCrmAuthorizationCode,
+  senlerSign
 }: {
 	senlerAccessToken: string,
 	senlerGroupId: string,
 	amoCrmDomain: string,
 	amoCrmAuthorizationCode: string
+  senlerSign: string
   }) => {
 	try {
 		const response = await axios.post(
@@ -19,6 +21,7 @@ export const sendAuthCode = async ({
 				senlerGroupId,
 				amoCrmDomainName,
 				amoCrmAuthorizationCode,
+        senlerSign
 			}),
 			{
 				headers: {
