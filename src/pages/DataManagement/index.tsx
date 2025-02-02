@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react'
 
 import { useMessage } from '../../messages/messageProvider/useMessage'
 
-import AmoAuthLink from '../../components/AmoAuthButton'
 import { TextField } from './components/TextField'
 import { ServerMessage } from './components/ServerMessage'
 
 import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
-import { sendCode } from './helpers/sendCode'
 
-import styles from './styles.module.css'
 
 export enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
@@ -95,30 +92,24 @@ export const DataManagement = () => {
 
 	return (
     <div>
-      <div className={styles.container}>
-        <AmoAuthLink
-          clientId={import.meta.env.VITE_CLIENT_ID || ''}
-          redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-          onAuthSuccess={(code) => sendCode({ ...code, token })}
-        />
+      {/* AmoCRM */}
+
+      <SelectField
+        label="Тип шага"
+        value={stepType}
+        setValue={setStepType}
+        options={[
+          { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
+          { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
+        ]}
+      />
+
+      <TextField label="Token" value={token} setValue={setToken} />
+
+      {getDefaultComponent(stepType)}
+
+      <ServerMessage message={message} />
     </div>
-
-    <SelectField
-      label="Тип шага"
-      value={stepType}
-      setValue={setStepType}
-      options={[
-        { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
-        { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
-      ]}
-    />
-
-    <TextField label="Token" value={token} setValue={setToken} />
-
-    {getDefaultComponent(stepType)}
-
-    <ServerMessage message={message} />
-  </div>
   )
 }
 

@@ -12,6 +12,8 @@ interface CountStore {
   setAccount: () => void;
 }
 
+// использовать для sign и др.параметров
+
 const useAccountStore = create<CountStore>((set) => ({
   account: {
     user_id: '',

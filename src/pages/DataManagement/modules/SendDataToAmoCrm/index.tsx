@@ -1,10 +1,11 @@
-import EditableTable, { IDataRow } from '../components/KeyValueInput'
+import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import React, { useEffect, useState } from 'react'
-import { BotStepType, DataManagementRouter } from '..'
-import { getAmoCRMFields, getSenlerGroupFields } from '../../../api/senelerGroup/fields'
+
+import { getAmoCRMFields } from '@/api/Backend/fields'
+import { getSenlerGroupFields } from '@/api/Senler'
+import { DataManagementRouter, BotStepType } from '../..'
 
 export type SendDataToAmoCrmData = IDataRow[]
-
 
 interface SendDataToAmoCrm {
   data?: any,
