@@ -4,7 +4,7 @@ import { GetSenlerGroupFieldsDto } from "./index.dto";
 export const getSenlerGroupFields = async ({ sign }: GetSenlerGroupFieldsDto) => {
 	try {
 		const response = await axios.get(
-			`/api/getAmoFields`,
+			`/api/integration/getAmoFields`,
 			{
         params: {
           sign
