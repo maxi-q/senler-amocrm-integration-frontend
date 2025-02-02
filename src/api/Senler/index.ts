@@ -13,12 +13,12 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFiel
         },
         headers: {
           "Content-Type": "application/json",
-          'X-Csrf-Token': csrfToken,
+          "X-Csrf-Token": csrfToken,
         }
       }
     );
 
-    console.log(response.data)
+    console.log('getSenlerGroupFields', response.data)
     return response.data;
   } catch (error) {
     console.error("Error fetching Senler group fields:", error);
