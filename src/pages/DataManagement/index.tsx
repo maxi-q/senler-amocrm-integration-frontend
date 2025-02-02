@@ -7,6 +7,7 @@ import { ServerMessage } from './components/ServerMessage'
 
 import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
+import AmoCRM from './modules/AmoCRM'
 
 
 export enum BotStepType {
@@ -93,6 +94,7 @@ export const DataManagement = () => {
 	return (
     <div>
       {/* AmoCRM */}
+      <AmoCRM token={token} />
 
       <SelectField
         label="Тип шага"
