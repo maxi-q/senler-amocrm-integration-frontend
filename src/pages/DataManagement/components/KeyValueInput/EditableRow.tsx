@@ -9,13 +9,13 @@ interface IEditableRowProps {
   rowIndex: number;
   onValueChange: (rowIndex: number, key: keyof IDataRow, newValue: string) => void;
   onDelete: (rowIndex: number) => void;
-  amoCRMFields: IAmoCRMField[]
-  senlerFields: ISenlerField[]
+  amoCRMFields?: IAmoCRMField[]
+  senlerFields?: ISenlerField[]
 }
 
 const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields, senlerFields }: IEditableRowProps) => {
-  const amoCRMFieldsOptions = amoCRMFields.map(field => ({ value: field.id, label: field.name }))
-  const senlerFieldsOptions = senlerFields.map(field => ({ value: field.id, label: field.text }))
+  const amoCRMFieldsOptions = amoCRMFields?.map(field => ({ value: field.id, label: field.name }))
+  const senlerFieldsOptions = senlerFields?.map(field => ({ value: field.id, label: field.text }))
 
   return (
     <tr>
