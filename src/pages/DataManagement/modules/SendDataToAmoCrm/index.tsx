@@ -1,18 +1,20 @@
-import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import React, { useEffect, useState } from 'react'
 
 import { getAmoCRMFields } from '@/api/Backend/fields'
-import { DataManagementRouter, BotStepType } from '../..'
 import { useMessage } from '@/messages/messageProvider/useMessage'
+import { getUrlParams } from '@/helpers'
+
+import EditableTable, { IDataRow } from '../../components/KeyValueInput'
+import { DataManagementRouter, BotStepType } from '../..'
 
 export type SendDataToAmoCrmData = IDataRow[]
 
-interface SendDataToAmoCrm {
+export interface SendDataToAmoCrm {
   data?: any,
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
 }
 
-interface SenlerFieldsResponseDto {
+export interface SenlerFieldsResponse {
     items: Array<
         {
             id: string,
@@ -33,47 +35,48 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
 
 	const { message, sendMessage } = useMessage()
 
+  const sendListMessageData = (senlerGroupId: string) => {
+    const id = Date.now() + Math.round(Math.random() * 9999);
+    const data = {
+      id,
+      request: {
+        type: "CallApiMethod",
+        method: `/vars/list?group_id=${senlerGroupId}`,
+      },
+      time: Date.now(),
+    };
+
+    return data
+  };
+
+  const getOrThrowAmoCRMFields = async (sign: string) => {
+    try {
+      const amoFields = await getAmoCRMFields({ sign });
+      setAmoCRMFields(amoFields);
+    } catch (error) {
+      console.error("Error fetching amoCRM fields:", error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
-    const url = window.location.href
-    const params = new URLSearchParams(new URL(url).search)
+    const { sign, senlerGroupId } = getUrlParams();
 
-    const sign = params.get('sign') || '';
-    const senlerGroupId = params.get('group_id') || '';
+    if (!sign || !senlerGroupId) {
+      console.error("Missing required parameters: 'sign' or 'group_id'");
+      return;
+    }
 
-    (async () => {
-      if (!sign || !senlerGroupId) {
-        console.error("Missing required parameters: 'sign' or 'group_id'")
-        return
-      }
+    getOrThrowAmoCRMFields(sign);
 
-      try {
-        const amoFields = await getAmoCRMFields({ sign })
-
-        setAmoCRMFields(amoFields)
-      } catch (error) {
-        console.error("Error fetching data:")
-        throw error
-      }
-    })()
-
-    const id = new Date().getTime() + Math.round(Math.random() * 9999);
-
-    const data = {
-      id: id,
-      request: {
-        "type": "CallApiMethod",
-        "method": `/vars/list?group_id=${senlerGroupId}`,
-      },
-      time: new Date().getTime(),
-    };
+    const data = sendListMessageData(senlerGroupId)
 
     sendMessage(data, window.parent);
   }, [])
 
   useEffect(() =>{
     const handleSetSenlerFields = () => {
-      const senlerFieldsResponse: SenlerFieldsResponseDto = message.request.payload;
+      const senlerFieldsResponse: SenlerFieldsResponse = message.request.payload;
       setSenlerFields(senlerFieldsResponse)
     };
 

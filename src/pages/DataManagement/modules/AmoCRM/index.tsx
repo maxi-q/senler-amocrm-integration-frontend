@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import AmoCRMProfile from './components/AmoCRMProfile';
 import { Loader } from './components/Loader';
 import { checkRegistration } from '../../../../api/Backend/checkRegistration';
+import { getUrlParams } from '@/helpers';
 
 const AmoCRM = ({ token }: { token: string }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,9 +13,7 @@ const AmoCRM = ({ token }: { token: string }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const url = window.location.href
-      const params = new URLSearchParams(new URL(url).search)
-      const sign = params.get('sign') || ''
+      const { sign } = getUrlParams()
 
       const isValidSign = await checkRegistration({sign})
 

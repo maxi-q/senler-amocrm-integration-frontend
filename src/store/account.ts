@@ -25,4 +25,3 @@ const useAccountStore = create<CountStore>((set) => ({
 }));
 
 export default useAccountStore
-
