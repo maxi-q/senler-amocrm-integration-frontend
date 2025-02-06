@@ -1,41 +1,29 @@
 import { memo } from 'react';
 import { IDataRow } from '.';
+import { IAmoCRMField } from '@/api/Backend/fields';
+import { ISenlerField } from '../../modules/SendDataToAmoCrm';
+import MySelect from './SelectField';
 
 interface IEditableRowProps {
   row: IDataRow;
   rowIndex: number;
   onValueChange: (rowIndex: number, key: keyof IDataRow, newValue: string) => void;
   onDelete: (rowIndex: number) => void;
+  amoCRMFields: IAmoCRMField[]
+  senlerFields: ISenlerField[]
 }
 
-const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete }: IEditableRowProps) => {
+const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields, senlerFields }: IEditableRowProps) => {
+  const amoCRMFieldsOptions = amoCRMFields.map(field => ({ value: field.id, label: field.name }))
+  const senlerFieldsOptions = senlerFields.map(field => ({ value: field.id, label: field.text }))
+
   return (
     <tr>
       <td>
-        <input
-          type="text"
-          value={row.from}
-          onChange={(e) => onValueChange(rowIndex, 'from', e.target.value)}
-          style={{
-            width: '100%',
-            padding: '8px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-          }}
-        />
+        <MySelect value={row.from} rowIndex={rowIndex} onValueChange={onValueChange} options={amoCRMFieldsOptions} label='Senler' sourceKey='from'/>
       </td>
       <td>
-        <input
-          type="text"
-          value={row.to}
-          onChange={(e) => onValueChange(rowIndex, 'to', e.target.value)}
-          style={{
-            width: '100%',
-            padding: '8px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-          }}
-        />
+        <MySelect value={row.to} rowIndex={rowIndex} onValueChange={onValueChange} options={senlerFieldsOptions} label='AmoCRM' sourceKey='to'/>
       </td>
       <td>
         <button

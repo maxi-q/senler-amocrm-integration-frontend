@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { getAmoCRMFields } from '@/api/Backend/fields'
+import { IAmoCRMField, getAmoCRMFields } from '@/api/Backend/fields'
 import { useMessage } from '@/messages/messageProvider/useMessage'
 import { getUrlParams } from '@/helpers'
 
@@ -14,24 +14,24 @@ export interface SendDataToAmoCrm {
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
 }
 
+export interface ISenlerField {
+  id: string,
+  text: string,
+  contain: string,
+  selected: boolean,
+  disabled: boolean
+}
+
 export interface SenlerFieldsResponse {
-    items: Array<
-        {
-            id: string,
-            text: string,
-            contain: string,
-            selected: boolean,
-            disabled: boolean
-        }
-    >,
+    items: Array<ISenlerField>,
     success: boolean,
     count: number,
     end: boolean
 }
 
 export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
-  const [amoCRMFields, setAmoCRMFields] = useState({})
-  const [senlerFields, setSenlerFields] = useState({})
+  const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
+  const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
 	const { message, sendMessage } = useMessage()
 
@@ -77,21 +77,24 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
   useEffect(() =>{
     const handleSetSenlerFields = () => {
       const senlerFieldsResponse: SenlerFieldsResponse = message.request.payload;
-      setSenlerFields(senlerFieldsResponse)
+      setSenlerFields(senlerFieldsResponse.items)
     };
 
     if (!message) return;
     if (message.request?.type === 'CallApiMethod') handleSetSenlerFields();
   }, [message])
 
-  useEffect(() => {
-    console.log(amoCRMFields, senlerFields)
-  }, [amoCRMFields, senlerFields])
-
   const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
     props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
 
-	return <EditableTable data={props.data && props.data[BotStepType.SendDataToAmoCrm]} changeData={setSendDataToAmoCrmData} />
+	return (
+    <EditableTable
+      data={props.data && props.data[BotStepType.SendDataToAmoCrm]}
+      changeData={setSendDataToAmoCrmData}
+      amoCRMFields={amoCRMFields}
+      senlerFields={senlerFields}
+    />
+)
 }
 

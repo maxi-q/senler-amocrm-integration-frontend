@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import EditableRow from './EditableRow';
+import { IAmoCRMField } from '@/api/Backend/fields';
+import { ISenlerField } from '../../modules/SendDataToAmoCrm';
 
 export interface IDataRow {
   from: string;
@@ -9,9 +11,11 @@ export interface IDataRow {
 interface IEditableTableProps {
   data: IDataRow[];
   changeData: (updatedData: IDataRow[]) => void;
+  amoCRMFields: IAmoCRMField[],
+  senlerFields: ISenlerField[]
 }
 
-const EditableTable = ({ data = [], changeData }: IEditableTableProps) => {
+const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
@@ -52,6 +56,8 @@ const EditableTable = ({ data = [], changeData }: IEditableTableProps) => {
               rowIndex={rowIndex}
               onValueChange={handleValueChange}
               onDelete={handleDeleteRow}
+              amoCRMFields={amoCRMFields}
+              senlerFields={senlerFields}
             />
           ))}
         </tbody>
