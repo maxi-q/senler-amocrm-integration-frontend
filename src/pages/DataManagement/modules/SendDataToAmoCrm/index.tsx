@@ -76,7 +76,7 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
 
   useEffect(() =>{
     const handleSetSenlerFields = () => {
-      const senlerFieldsResponse: SenlerFieldsResponse = message.request.payload;
+      const senlerFieldsResponse: SenlerFieldsResponse = message.response.payload;
       setSenlerFields(senlerFieldsResponse.items)
     };
 
