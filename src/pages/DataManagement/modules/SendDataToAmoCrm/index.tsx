@@ -29,13 +29,11 @@ export interface SenlerFieldsResponse {
     end: boolean
 }
 
-export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
+export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
 	const { message, sendMessage } = useMessage()
-
-  console.log(props.data)
 
   const sendListMessageData = (senlerGroupId: string) => {
     const id = Date.now() + Math.round(Math.random() * 9999);
@@ -87,12 +85,16 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
   }, [message])
 
   const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
-    props.setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
+    setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
+
+  useEffect(() => {
+    console.log('data', data)
+  }, [data])
 
 	return (
     <EditableTable
-      data={props.data && props.data[BotStepType.SendDataToAmoCrm]}
+      data={data && data[BotStepType.SendDataToAmoCrm]}
       changeData={setSendDataToAmoCrmData}
       amoCRMFields={amoCRMFields}
       senlerFields={senlerFields}

@@ -110,8 +110,6 @@ export const DataManagement = () => {
 
       {getDefaultComponent(stepType)}
 
-      <SendDataToAmoCrm data={publicData} setData={setPublicData} />
-
       <ServerMessage message={message} />
     </div>
   )
