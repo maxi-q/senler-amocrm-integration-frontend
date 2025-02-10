@@ -17,5 +17,5 @@ export interface saveMessage {
         "description": string,
     },
     "success": boolean
-    
+
 }

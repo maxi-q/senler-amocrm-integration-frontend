@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { useMessage } from '../../messages/messageProvider/useMessage'
 
-import { TextField } from './components/TextField'
+import { InputField, TextField } from './components/TextField'
 import { ServerMessage } from './components/ServerMessage'
 
 import { SelectField } from './components/SelectField'
@@ -106,9 +106,11 @@ export const DataManagement = () => {
         ]}
       />
 
-      <TextField label="Token" value={token} setValue={setToken} />
+      <InputField label="Token" value={token} setValue={setToken} />
 
       {getDefaultComponent(stepType)}
+
+      <SendDataToAmoCrm data={publicData} setData={setPublicData} />
 
       <ServerMessage message={message} />
     </div>

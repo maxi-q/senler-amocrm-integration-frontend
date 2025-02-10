@@ -35,6 +35,8 @@ export const SendDataToAmoCrm = (props: SendDataToAmoCrm) => {
 
 	const { message, sendMessage } = useMessage()
 
+  console.log(props.data)
+
   const sendListMessageData = (senlerGroupId: string) => {
     const id = Date.now() + Math.round(Math.random() * 9999);
     const data = {

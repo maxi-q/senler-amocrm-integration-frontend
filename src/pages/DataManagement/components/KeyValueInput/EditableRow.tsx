@@ -20,10 +20,10 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields
   return (
     <tr>
       <td>
-        <MySelect value={row.to} rowIndex={rowIndex} onValueChange={onValueChange} options={senlerFieldsOptions} label='Senler' sourceKey='from'/>
+        <MySelect value={row.from} rowIndex={rowIndex} onValueChange={onValueChange} options={amoCRMFieldsOptions} label='Senler' sourceKey='from'/>
       </td>
       <td>
-        <MySelect value={row.from} rowIndex={rowIndex} onValueChange={onValueChange} options={amoCRMFieldsOptions} label='AmoCRM' sourceKey='to'/>
+        <MySelect value={row.to} rowIndex={rowIndex} onValueChange={onValueChange} options={senlerFieldsOptions} label='AmoCRM' sourceKey='to'/>
       </td>
       <td>
         <button
