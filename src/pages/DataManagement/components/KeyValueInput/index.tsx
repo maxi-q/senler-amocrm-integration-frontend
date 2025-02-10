@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditableRow from './EditableRow';
 import { IAmoCRMField } from '@/api/Backend/fields';
 import { ISenlerField } from '../../modules/SendDataToAmoCrm';
@@ -17,6 +17,11 @@ interface IEditableTableProps {
 
 const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
+
+  useEffect(() => {
+    console.log('data', data)
+    console.log('currentData', currentData)
+  }, [data, currentData])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {
