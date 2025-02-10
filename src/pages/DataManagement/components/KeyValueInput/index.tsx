@@ -19,9 +19,8 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
-    console.log('data', data)
-    console.log('currentData', currentData)
-  }, [data, currentData])
+    setCurrentData(data)
+  }, [data])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {

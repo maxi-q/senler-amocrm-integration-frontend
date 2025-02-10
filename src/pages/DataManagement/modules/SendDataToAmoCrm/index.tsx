@@ -88,8 +88,6 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
     setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
 
-  
-
 	return (
     <EditableTable
       data={data && data[BotStepType.SendDataToAmoCrm]}

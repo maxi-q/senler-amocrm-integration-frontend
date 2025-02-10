@@ -8,6 +8,7 @@ import { ServerMessage } from './components/ServerMessage'
 import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
 import AmoCRM from './modules/AmoCRM'
+import { Loader } from './modules/AmoCRM/components/Loader'
 
 
 export enum BotStepType {
@@ -34,6 +35,8 @@ export const DataManagement = () => {
 
   const [publicData, setPublicData] = useState<DataManagementRouter>()
   const [privateData, setPrivateData] = useState<object>()
+
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
   const getDefaultComponent = (type: BotStepType) => {
     switch (type) {
@@ -84,6 +87,7 @@ export const DataManagement = () => {
         setStepType(parsedPublicData.type);
         setPublicData(parsedPublicData);
       }
+      setDataIsLoaded(true)
     };
 
     if (!message) return;
@@ -108,7 +112,7 @@ export const DataManagement = () => {
 
       <InputField label="Token" value={token} setValue={setToken} />
 
-      {getDefaultComponent(stepType)}
+      { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
 
       <ServerMessage message={message} />
     </div>
