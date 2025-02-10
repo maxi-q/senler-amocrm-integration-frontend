@@ -26,7 +26,7 @@ export const SelectField = ({ label, value, setValue, options }: ISelectField) =
           fontSize: '14px',
         }}
       >
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
           </option>

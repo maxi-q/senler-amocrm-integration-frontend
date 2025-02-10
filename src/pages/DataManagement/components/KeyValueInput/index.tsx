@@ -53,7 +53,7 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
           </tr>
         </thead>
         <tbody>
-          {currentData.map((row, rowIndex) => (
+          {currentData?.map((row, rowIndex) => (
             <EditableRow
               key={rowIndex}
               row={row}
