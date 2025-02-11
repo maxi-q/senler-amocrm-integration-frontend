@@ -20,6 +20,7 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
 
   useEffect(() => {
     setCurrentData(data)
+    console.log('data112 ', data)
   }, [data])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
@@ -53,7 +54,7 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
           </tr>
         </thead>
         <tbody>
-          {currentData?.map((row, rowIndex) => (
+          {/* {currentData?.map((row, rowIndex) => (
             <EditableRow
               key={rowIndex}
               row={row}
@@ -63,7 +64,7 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
               amoCRMFields={amoCRMFields}
               senlerFields={senlerFields}
             />
-          ))}
+          ))} */}
         </tbody>
       </table>
       <button onClick={handleAddRow}>Add Row</button>
