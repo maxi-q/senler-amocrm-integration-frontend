@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import EditableRow from './EditableRow';
 import { IAmoCRMField } from '@/api/Backend/fields';
 import { ISenlerField } from '../../modules/SendDataToAmoCrm';
 
