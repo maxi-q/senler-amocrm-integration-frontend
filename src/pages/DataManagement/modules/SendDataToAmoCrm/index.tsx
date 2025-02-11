@@ -52,7 +52,11 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
   const getOrThrowAmoCRMFields = async (sign: string) => {
     try {
       const amoFields = await getAmoCRMFields({ sign });
-      console.log('amoFields', amoFields)
+
+      if (!Array.isArray(amoFields)) {
+        throw new Error('amoFields is not an array');
+      }
+
       setAmoCRMFields(amoFields);
     } catch (error) {
       console.error("Error fetching amoCRM fields:", error);

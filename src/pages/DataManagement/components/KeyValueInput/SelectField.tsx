@@ -29,11 +29,11 @@ const MySelect = ({ value, label, rowIndex, onValueChange, options, sourceKey }:
         ) : (
           <>
             <option value="">Выберите значение</option>
-            {/* {options?.map((item, index) => (
+            {options?.map((item, index) => (
               <option key={index} value={item.value}>
                 {item.label}
               </option>
-            ))} */}
+            ))}
           </>
         )}
       </select>
