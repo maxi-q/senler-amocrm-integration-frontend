@@ -11,6 +11,7 @@ interface ISelectField {
 }
 
 export const SelectField = ({ label, value, setValue, options }: ISelectField) => {
+  console.log('options2', options)
   return (
     <div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
       <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>{label}</label>
@@ -26,11 +27,11 @@ export const SelectField = ({ label, value, setValue, options }: ISelectField) =
           fontSize: '14px',
         }}
       >
-        {options?.map((option, index) => (
+        {/* {options?.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
           </option>
-        ))}
+        ))} */}
       </select>
     </div>
   );
