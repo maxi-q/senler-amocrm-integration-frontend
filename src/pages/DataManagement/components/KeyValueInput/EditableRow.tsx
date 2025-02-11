@@ -14,9 +14,9 @@ interface IEditableRowProps {
 }
 
 const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields, senlerFields }: IEditableRowProps) => {
+  console.log('amoCRMFields', amoCRMFields, senlerFields)
   const amoCRMFieldsOptions = amoCRMFields?.map(field => ({ value: field.id, label: field.name }))
   const senlerFieldsOptions = senlerFields?.map(field => ({ value: field.id, label: field.text }))
-  console.log('amoCRMFields', amoCRMFields, senlerFields)
   console.log(amoCRMFieldsOptions, senlerFieldsOptions, row, onValueChange)
   return (
     <tr>
