@@ -44,7 +44,7 @@ export const getAmoCRMFields = async ({ sign }: getAmoCRMFields): Promise<IAmoCR
         }
       }
     );
-
+    console.log('response.data', response.data)
     return response.data;
   } catch (error) {
     console.error("Error fetching AmoCRM fields:", error);
