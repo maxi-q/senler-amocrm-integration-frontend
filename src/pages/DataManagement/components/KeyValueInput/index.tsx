@@ -26,7 +26,7 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {
       const updatedData = [...prevData];
-      updatedData[rowIndex] = { ...updatedData[rowIndex], [+key]: newValue };
+      updatedData[rowIndex] = { ...updatedData[rowIndex], [key]: newValue };
       changeData(updatedData);
       return updatedData;
     });
