@@ -1,4 +1,4 @@
-// import { memo } from 'react';
+import { memo } from 'react';
 import { IDataRow } from '.';
 import { IAmoCRMField } from '@/api/Backend/fields';
 import { ISenlerField } from '../../modules/SendDataToAmoCrm';
@@ -13,7 +13,7 @@ interface IEditableRowProps {
   senlerFields?: ISenlerField[]
 }
 
-const EditableRow = (({ row, rowIndex, onValueChange, onDelete, amoCRMFields = [], senlerFields = [] }: IEditableRowProps) => {
+const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields = [], senlerFields = [] }: IEditableRowProps) => {
   console.log('amoCRMFields', amoCRMFields, senlerFields)
   const amoCRMFieldsOptions = amoCRMFields?.map(field => ({ value: field.id, label: field.name }))
   const senlerFieldsOptions = senlerFields?.map(field => ({ value: field.id, label: field.text }))
