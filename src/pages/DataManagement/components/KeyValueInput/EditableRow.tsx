@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { IDataRow } from '.';
 import { IAmoCRMField } from '@/api/Backend/fields';
 import { ISenlerField } from '../../modules/SendDataToAmoCrm';
-import MySelect from './SelectField';
+// import MySelect from './SelectField';
 
 interface IEditableRowProps {
   row: IDataRow;
@@ -17,14 +17,15 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, amoCRMFields
   const amoCRMFieldsOptions = amoCRMFields?.map(field => ({ value: field.id, label: field.name }))
   const senlerFieldsOptions = senlerFields?.map(field => ({ value: field.id, label: field.text }))
 
+  console.log(amoCRMFieldsOptions, senlerFieldsOptions, row, onValueChange)
   return (
     <tr>
-      <td>
+      {/* <td>
         <MySelect value={row.from} rowIndex={rowIndex} onValueChange={onValueChange} options={amoCRMFieldsOptions} label='Senler' sourceKey='from'/>
       </td>
       <td>
         <MySelect value={row.to} rowIndex={rowIndex} onValueChange={onValueChange} options={senlerFieldsOptions} label='AmoCRM' sourceKey='to'/>
-      </td>
+      </td> */}
       <td>
         <button
           onClick={() => onDelete(rowIndex)}
