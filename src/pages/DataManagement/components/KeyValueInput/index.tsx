@@ -20,8 +20,11 @@ const EditableTable = ({ data = [] }: IEditableTableProps) => {
   useEffect(() => {
     setCurrentData(data)
     console.log('data112 ', data)
-    console.log(currentData)
   }, [data])
+
+  useEffect(() => {
+    console.log('currentData', currentData)
+  }, [currentData])
 
   // const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
   //   setCurrentData((prevData) => {
