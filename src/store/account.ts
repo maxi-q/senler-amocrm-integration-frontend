@@ -7,21 +7,23 @@ interface Account {
   context: string
 }
 
-interface CountStore {
+interface AccountStore {
   account: Account;
-  setAccount: () => void;
+  isAmoCRMAuthenticated: boolean,
+  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => void;
 }
 
 // использовать для sign и др.параметров
 
-const useAccountStore = create<CountStore>((set) => ({
+const useAccountStore = create<AccountStore>((set) => ({
   account: {
     user_id: '',
     group_id: '',
     auth: '',
     context: ''
   },
-  setAccount: () => set((state) => (state))
+  isAmoCRMAuthenticated: false,
+  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => set(() => ({ isAmoCRMAuthenticated: isAmoCRMAuthenticated }))
 }));
 
 export default useAccountStore

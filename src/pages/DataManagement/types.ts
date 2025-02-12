@@ -10,7 +10,7 @@ export interface privateSetting {
 export interface saveMessage {
     "payload": {
         "public": string,
-        "private": 
+        "private":
             string
         ,
         "command": string,

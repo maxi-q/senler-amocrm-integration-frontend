@@ -9,6 +9,7 @@ import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
 import AmoCRM from './modules/AmoCRM'
 import { Loader } from './modules/AmoCRM/components/Loader'
+import useAccountStore from '@/store/account'
 
 
 export enum BotStepType {
@@ -29,6 +30,7 @@ export type DataManagementRouter = {
 
 export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
+  const { isAmoCRMAuthenticated } = useAccountStore()
 
   const [token, setToken] = useState('')
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
@@ -99,20 +101,24 @@ export const DataManagement = () => {
     <div>
       {/* AmoCRM */}
       <AmoCRM token={token} />
+      {
+        isAmoCRMAuthenticated &&
+        <>
+          <SelectField
+            label="Тип шага"
+            value={stepType}
+            setValue={setStepType}
+            options={[
+              { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
+              { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
+            ]}
+          />
 
-      <SelectField
-        label="Тип шага"
-        value={stepType}
-        setValue={setStepType}
-        options={[
-          { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
-          { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
-        ]}
-      />
+          <InputField label="Token" value={token} setValue={setToken} />
 
-      <InputField label="Token" value={token} setValue={setToken} />
-
-      { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
+          { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
+        </>
+      }
 
       <ServerMessage message={message} />
     </div>

@@ -1,15 +1,16 @@
 import styles from './styles.module.css';
-import AmoAuthLink from './components/AmoAuthButton';
+import AmoAuthLink, { IOnAuthSuccess } from './components/AmoAuthButton';
 import { sendCode } from './helpers/sendCode';
 import { useEffect, useState } from 'react';
 import AmoCRMProfile from './components/AmoCRMProfile';
 import { Loader } from './components/Loader';
 import { checkRegistration } from '../../../../api/Backend/checkRegistration';
 import { getUrlParams } from '@/helpers';
+import useAccountStore from '@/store/account';
 
 const AmoCRM = ({ token }: { token: string }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAmoCRMAuthenticated, setIsAmoCRMAuthenticated } = useAccountStore()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -17,19 +18,26 @@ const AmoCRM = ({ token }: { token: string }) => {
 
       const isValidSign = await checkRegistration({sign})
 
-      setIsAuthenticated(isValidSign)
+      setIsAmoCRMAuthenticated(isValidSign)
       setIsLoading(false);
     };
 
     checkAuth();
   }, []);
 
+  const RegisterAndCheckAccess = async (code: IOnAuthSuccess) => {
+    const successRegistration = await sendCode({ ...code, token })
+    if (successRegistration) {
+      setIsAmoCRMAuthenticated(true)
+    }
+  }
+
   const renderAuthLink = () => {
     return (
       <AmoAuthLink
         clientId={import.meta.env.VITE_CLIENT_ID || ''}
         redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-        onAuthSuccess={(code) => sendCode({ ...code, token })}
+        onAuthSuccess={RegisterAndCheckAccess}
       />
     );
   };
@@ -43,8 +51,8 @@ const AmoCRM = ({ token }: { token: string }) => {
   return (
     <div className={styles.container}>
       {isLoading && <Loader />}
-      {!isAuthenticated && !isLoading && renderAuthLink()}
-      {isAuthenticated && !isLoading && renderAuthenticatedContent()}
+      {!isAmoCRMAuthenticated && !isLoading && renderAuthLink()}
+      {isAmoCRMAuthenticated && !isLoading && renderAuthenticatedContent()}
     </div>
   );
 };

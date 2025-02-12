@@ -1,4 +1,11 @@
+import useAccountStore from '@/store/account'
 import React from 'react'
+
+export interface IOnAuthSuccess {
+  code: string
+  state: string
+  referer: string
+}
 
 interface AmoAuthPopupProps {
 	clientId: string
@@ -8,15 +15,11 @@ interface AmoAuthPopupProps {
 		code,
 		state,
 		referer,
-	}: {
-		code: string
-		state: string
-		referer: string
-	}) => void
+	}: IOnAuthSuccess) => void
 	onAuthError?: (error: string) => void
 }
 
-const AmoAuthPopup: React.FC<AmoAuthPopupProps> = ({
+const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
 	clientId,
 	redirectUri,
 	onAuthSuccess,
@@ -90,4 +93,4 @@ const AmoAuthPopup: React.FC<AmoAuthPopupProps> = ({
 	)
 }
 
-export default AmoAuthPopup
+export default AmoAuthLink
