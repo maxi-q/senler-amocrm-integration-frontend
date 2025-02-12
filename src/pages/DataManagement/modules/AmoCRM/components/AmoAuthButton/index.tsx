@@ -1,4 +1,3 @@
-import useAccountStore from '@/store/account'
 import React from 'react'
 
 export interface IOnAuthSuccess {
