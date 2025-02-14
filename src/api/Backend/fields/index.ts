@@ -10,7 +10,7 @@ export class IAmoCRMField {
   "type": string
   "account_id": number
   "code": string
-  "sort": number
+  "sort": number | null
   "is_api_only": boolean
   "enums": null
   "group_id": string

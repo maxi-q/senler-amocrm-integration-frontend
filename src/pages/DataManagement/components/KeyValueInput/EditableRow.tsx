@@ -14,10 +14,10 @@ interface IEditableRowProps {
 }
 
 const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [], fromFields = [] }: IEditableRowProps) => {
-  const label = (field: IAmoCRMField | ISenlerField) => field instanceof IAmoCRMField ? field.name : field.text
+  const label = (field: IAmoCRMField | ISenlerField) => field instanceof ISenlerField ? field.text : field.name
 
-  console.log(toFields, toFields[0] && label(toFields[0]), toFields[0] instanceof IAmoCRMField)
-  console.log(fromFields, fromFields[0] && label(fromFields[0]), fromFields[0] instanceof IAmoCRMField)
+  console.log(toFields, toFields[0] && label(toFields[0]), toFields[0] instanceof ISenlerField)
+  console.log(fromFields, fromFields[0] && label(fromFields[0]), fromFields[0] instanceof ISenlerField)
 
   const amoCRMFieldsOptions = toFields?.map(field => ({ value: field.id, label: label(field) }))
   const senlerFieldsOptions = fromFields?.map(field => ({ value: field.id, label: label(field) }))
