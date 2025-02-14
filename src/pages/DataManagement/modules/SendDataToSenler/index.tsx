@@ -51,7 +51,7 @@ export const SendDataToSenler = ({ data, setData }: SendDataToSenler) => {
         throw new Error('amoFields is not an array');
       }
 
-      setAmoCRMFields(amoFields);
+      setAmoCRMFields(amoFields.map(field => new IAmoCRMField(field)));
     } catch (error) {
       console.error("Error fetching amoCRM fields:", error);
       throw error;

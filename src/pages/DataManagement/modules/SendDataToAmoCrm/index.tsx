@@ -76,7 +76,7 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
   useEffect(() =>{
     const handleSetSenlerFields = () => {
       const senlerFieldsResponse: SenlerFieldsResponse = message.response.payload;
-      setSenlerFields(senlerFieldsResponse.items)
+      setSenlerFields(senlerFieldsResponse.items.map(field => new ISenlerField(field)))
     };
 
     if (!message) return;
