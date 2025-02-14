@@ -86,15 +86,15 @@ export const SendDataToSenler = ({ data, setData }: SendDataToSenler) => {
   const setSendDataToSenlerData = (data: SendDataToSenlerData) => {
     setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
   }
-  console.log('senler', data && data[BotStepType.SendDataToSenler], data)
+
 	return (
     <>
-    {false ? <EditableTable
-      data={data && data[BotStepType.SendDataToSenler]}
-      changeData={setSendDataToSenlerData}
-      toFields={senlerFields}
-      fromFields={amoCRMFields}
-    />: <></>}
+      <EditableTable
+        data={data && data[BotStepType.SendDataToSenler]}
+        changeData={setSendDataToSenlerData}
+        toFields={senlerFields}
+        fromFields={amoCRMFields}
+      />
     </>
   )
 }

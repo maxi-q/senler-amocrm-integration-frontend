@@ -86,6 +86,7 @@ export const DataManagement = () => {
         const parsedPublicData = JSON.parse(publicPayload);
         setToken(parsedPublicData.token);
         setStepType(parsedPublicData.type);
+        if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
         setPublicData(parsedPublicData);
       }
       setDataIsLoaded(true)
