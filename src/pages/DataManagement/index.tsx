@@ -62,9 +62,9 @@ export const DataManagement = () => {
           payload: {
             private: { ...privateData },
             public: {
+              ...publicData,
               token,
               type: stepType,
-              ...publicData,
               syncableVariables,
             },
             description: 'description',
