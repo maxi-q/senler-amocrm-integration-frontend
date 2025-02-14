@@ -86,7 +86,7 @@ export const SendDataToSenler = ({ data, setData }: SendDataToSenler) => {
   const setSendDataToSenlerData = (data: SendDataToSenlerData) => {
     setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
   }
-  console.log('-------123------------')
+  console.log('senler', data && data[BotStepType.SendDataToSenler], data)
 	return (
     <>
     {false ? <EditableTable
