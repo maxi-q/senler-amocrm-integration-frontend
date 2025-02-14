@@ -7,6 +7,7 @@ import { ServerMessage } from './components/ServerMessage'
 
 import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
+import { SendDataToSenler, type SendDataToSenlerData } from './modules/SendDataToSenler'
 import AmoCRM from './modules/AmoCRM'
 import { Loader } from './modules/AmoCRM/components/Loader'
 import useAccountStore from '@/store/account'
@@ -16,8 +17,6 @@ export enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
-
-type SendDataToSenlerData = { }
 
 export type DataManagementRouter = {
   [key in BotStepType]?
@@ -45,7 +44,7 @@ export const DataManagement = () => {
         case BotStepType.SendDataToAmoCrm:
             return <SendDataToAmoCrm data={publicData} setData={setPublicData} />;
         case BotStepType.SendDataToSenler:
-            return <>hello</>;
+            return <SendDataToSenler data={publicData} setData={setPublicData} />;
         default:
             return <>Тип не передан</>;
     }

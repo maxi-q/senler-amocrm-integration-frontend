@@ -11,11 +11,11 @@ export interface IDataRow {
 interface IEditableTableProps {
   data: IDataRow[];
   changeData: (updatedData: IDataRow[]) => void;
-  amoCRMFields: IAmoCRMField[],
-  senlerFields: ISenlerField[]
+  toFields: IAmoCRMField[] | ISenlerField[],
+  fromFields: IAmoCRMField[] | ISenlerField[],
 }
 
-const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IEditableTableProps) => {
+const EditableTable = ({ data = [], changeData, toFields, fromFields }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
@@ -61,8 +61,8 @@ const EditableTable = ({ data = [], changeData, amoCRMFields, senlerFields }: IE
               rowIndex={rowIndex}
               onValueChange={handleValueChange}
               onDelete={handleDeleteRow}
-              amoCRMFields={amoCRMFields}
-              senlerFields={senlerFields}
+              toFields={toFields}
+              fromFields={fromFields}
             />
           ))}
         </tbody>

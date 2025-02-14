@@ -7,19 +7,19 @@ import { getUrlParams } from '@/helpers'
 import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import { DataManagementRouter, BotStepType } from '../..'
 
-export type SendDataToAmoCrmData = IDataRow[]
+export type SendDataToSenlerData = IDataRow[]
 
-export interface SendDataToAmoCrm {
+export interface SendDataToSenler {
   data?: any,
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
 }
 
-export class ISenlerField {
-  "id": string
-  "text": string
-  "contain": string
-  "selected": boolean
-  "disabled": boolean
+export interface ISenlerField {
+  id: string,
+  text: string,
+  contain: string,
+  selected: boolean,
+  disabled: boolean
 }
 
 export interface SenlerFieldsResponse {
@@ -29,7 +29,7 @@ export interface SenlerFieldsResponse {
     end: boolean
 }
 
-export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
+export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
@@ -89,7 +89,7 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
     if (message.request?.type === 'CallApiMethod') handleSetSenlerFields();
   }, [message])
 
-  const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
+  const setSendDataToAmoCrmData = (data: SendDataToSenlerData) => {
     setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
 
@@ -97,8 +97,8 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
     <EditableTable
       data={data && data[BotStepType.SendDataToAmoCrm]}
       changeData={setSendDataToAmoCrmData}
-      toFields={amoCRMFields}
-      fromFields={senlerFields}
+      toFields={senlerFields}
+      fromFields={amoCRMFields}
     />
 )
 }
