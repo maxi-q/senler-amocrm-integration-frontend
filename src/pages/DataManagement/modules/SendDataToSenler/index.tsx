@@ -88,12 +88,14 @@ export const SendDataToSenler = ({ data, setData }: SendDataToSenler) => {
   }
   console.log('-------123------------')
 	return (
-    <EditableTable
+    <>
+    {false ? <EditableTable
       data={data && data[BotStepType.SendDataToSenler]}
       changeData={setSendDataToSenlerData}
       toFields={senlerFields}
       fromFields={amoCRMFields}
-    />
+    />: <></>}
+    </>
   )
 }
 
