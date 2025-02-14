@@ -7,20 +7,13 @@ import { getUrlParams } from '@/helpers'
 import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import { DataManagementRouter, BotStepType } from '../..'
 import { IAmoCRMField } from '@/api/Backend/fields/fields.dto'
+import { ISenlerField } from '../SendDataToAmoCrm/SendDataToAmoCrm.dto'
 
 export type SendDataToSenlerData = IDataRow[]
 
 export interface SendDataToSenler {
   data?: any,
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
-}
-
-export interface ISenlerField {
-  id: string,
-  text: string,
-  contain: string,
-  selected: boolean,
-  disabled: boolean
 }
 
 export interface SenlerFieldsResponse {
@@ -83,7 +76,7 @@ export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
   useEffect(() =>{
     const handleSetSenlerFields = () => {
       const senlerFieldsResponse: SenlerFieldsResponse = message.response.payload;
-      setSenlerFields(senlerFieldsResponse.items)
+      setSenlerFields(senlerFieldsResponse.items.map(field => new ISenlerField(field)))
     };
 
     if (!message) return;
@@ -103,4 +96,6 @@ export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
     />
   )
 }
+
+export { ISenlerField }
 

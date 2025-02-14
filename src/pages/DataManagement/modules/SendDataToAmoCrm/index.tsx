@@ -7,7 +7,7 @@ import { getUrlParams } from '@/helpers'
 import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import { DataManagementRouter, BotStepType } from '../..'
 import { IAmoCRMField } from '@/api/Backend/fields/fields.dto'
-import { ISenlerField } from '../SendDataToSenler'
+import { ISenlerField } from './SendDataToAmoCrm.dto'
 
 export type SendDataToAmoCrmData = IDataRow[]
 
