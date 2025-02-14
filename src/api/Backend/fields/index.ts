@@ -1,34 +1,8 @@
 import axios from "axios";
+import { IAmoCRMField } from "./fields.dto";
 
 interface getAmoCRMFields {
   sign: string;
-}
-
-export class IAmoCRMField {
-  "id": string
-  "name": string
-  "type": string
-  "account_id": number
-  "code": string
-  "sort": number | null
-  "is_api_only": boolean
-  "enums": null
-  "group_id": string
-  "required_statuses": Array<string>
-  "is_deletable": boolean
-  "is_predefined": boolean
-  "entity_type": string
-  "tracking_callback": null
-  "remind": null
-  "triggers": Array<string>
-  "currency": null
-  "hidden_statuses": Array<string>
-  "chained_lists": null
-  "_links": {
-      "self": {
-          "href": string
-      }
-  }
 }
 
 export const getAmoCRMFields = async ({ sign }: getAmoCRMFields): Promise<IAmoCRMField[]> => {

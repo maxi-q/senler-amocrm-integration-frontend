@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react'
 
-import { IAmoCRMField, getAmoCRMFields } from '@/api/Backend/fields'
+import { getAmoCRMFields } from '@/api/Backend/fields'
 import { useMessage } from '@/messages/messageProvider/useMessage'
 import { getUrlParams } from '@/helpers'
 
 import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import { DataManagementRouter, BotStepType } from '../..'
+import { IAmoCRMField } from '@/api/Backend/fields/fields.dto'
+import { ISenlerField } from '../SendDataToSenler'
 
 export type SendDataToAmoCrmData = IDataRow[]
 
 export interface SendDataToAmoCrm {
   data?: any,
   setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
-}
-
-export class ISenlerField {
-  "id": string
-  "text": string
-  "contain": string
-  "selected": boolean
-  "disabled": boolean
 }
 
 export interface SenlerFieldsResponse {
@@ -57,7 +51,7 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
         throw new Error('amoFields is not an array');
       }
 
-      setAmoCRMFields(amoFields);
+      setAmoCRMFields(amoFields.map(field => new IAmoCRMField(field)));
     } catch (error) {
       console.error("Error fetching amoCRM fields:", error);
       throw error;

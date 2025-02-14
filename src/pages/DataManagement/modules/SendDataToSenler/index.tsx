@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-import { IAmoCRMField, getAmoCRMFields } from '@/api/Backend/fields'
+import { getAmoCRMFields } from '@/api/Backend/fields'
 import { useMessage } from '@/messages/messageProvider/useMessage'
 import { getUrlParams } from '@/helpers'
 
 import EditableTable, { IDataRow } from '../../components/KeyValueInput'
 import { DataManagementRouter, BotStepType } from '../..'
+import { IAmoCRMField } from '@/api/Backend/fields/fields.dto'
 
 export type SendDataToSenlerData = IDataRow[]
 

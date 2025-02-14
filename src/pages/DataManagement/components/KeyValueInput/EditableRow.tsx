@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { IDataRow } from '.';
-import { IAmoCRMField } from '@/api/Backend/fields';
-import { ISenlerField } from '../../modules/SendDataToAmoCrm';
 import MySelect from './SelectField';
+import { IAmoCRMField } from '@/api/Backend/fields/fields.dto';
+import { ISenlerField } from '../../modules/SendDataToAmoCrm/SendDataToAmoCrm.dto';
 
 interface IEditableRowProps {
   row: IDataRow;
