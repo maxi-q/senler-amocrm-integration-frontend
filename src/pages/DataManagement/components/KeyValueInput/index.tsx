@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import EditableRow from './EditableRow';
 import { IAmoCRMField } from '@/api/Backend/fields/fields.dto';
 import { ISenlerField } from '../../modules/SendDataToSenler';
@@ -15,7 +15,7 @@ interface IEditableTableProps {
   fromFields: IAmoCRMField[] | ISenlerField[],
 }
 
-const EditableTable = ({ data = [], changeData, toFields, fromFields }: IEditableTableProps) => {
+const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
@@ -70,6 +70,6 @@ const EditableTable = ({ data = [], changeData, toFields, fromFields }: IEditabl
       <button onClick={handleAddRow}>Add Row</button>
     </div>
   );
-};
+});
 
 export default EditableTable;
