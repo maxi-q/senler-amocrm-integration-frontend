@@ -23,7 +23,7 @@ export interface SenlerFieldsResponse {
     end: boolean
 }
 
-export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
+export const SendDataToSenler = ({ data, setData }: SendDataToSenler) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
@@ -83,14 +83,14 @@ export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
     if (message.request?.type === 'CallApiMethod') handleSetSenlerFields();
   }, [message])
 
-  const setSendDataToAmoCrmData = (data: SendDataToSenlerData) => {
-    setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
+  const setSendDataToSenlerData = (data: SendDataToSenlerData) => {
+    setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
 
 	return (
     <EditableTable
-      data={data && data[BotStepType.SendDataToSenler]}
-      changeData={setSendDataToAmoCrmData}
+      data={data && data[BotStepType.SendDataToAmoCrm]}
+      changeData={setSendDataToSenlerData}
       toFields={senlerFields}
       fromFields={amoCRMFields}
     />
