@@ -20,7 +20,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
 
   useEffect(() => {
     setCurrentData(data)
-    console.log('data112 ', data)
+    console.log('data112 ', data, changeData, toFields, fromFields)
   }, [data])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
