@@ -100,6 +100,6 @@ export const SendDataToSenler = ({data, setData}: SendDataToSenler) => {
       toFields={senlerFields}
       fromFields={amoCRMFields}
     />
-)
+  )
 }
 
