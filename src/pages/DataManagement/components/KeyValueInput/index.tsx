@@ -47,9 +47,9 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th>from</th>
-            <th>to</th>
-            <th>Удалить</th>
+            <th>Откуда</th>
+            <th>Куда</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

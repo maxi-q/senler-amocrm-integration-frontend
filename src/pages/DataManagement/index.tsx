@@ -109,18 +109,18 @@ export const DataManagement = () => {
             value={stepType}
             setValue={setStepType}
             options={[
-              { label: BotStepType.SendDataToAmoCrm, value: BotStepType.SendDataToAmoCrm },
-              { label: BotStepType.SendDataToSenler, value: BotStepType.SendDataToSenler },
+              { label: "Отправка данных в Амо СРМ", value: BotStepType.SendDataToAmoCrm },
+              { label: "Отправка данных в Сенлер", value: BotStepType.SendDataToSenler },
             ]}
           />
 
-          <InputField label="Token" value={token} setValue={setToken} />
+          <InputField label="Senler Токен" value={token} setValue={setToken} />
 
           { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
         </>
       }
 
-      <ServerMessage message={message} />
+      {/* <ServerMessage message={message} /> */}
     </div>
   )
 }
