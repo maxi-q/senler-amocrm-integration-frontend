@@ -16,7 +16,7 @@ const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey }: MySele
   const isLoad = Boolean(options);
   // console.log('options', options)
   return (
-    <div className="mb-4">
+    <div>
       {/* <label className="block mb-2 font-bold">{label}</label> */}
       <select
         onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
