@@ -114,7 +114,7 @@ export const DataManagement = () => {
             ]}
           />
 
-          <InputField label="Senler Токен" value={token} setValue={setToken} />
+          {/* <InputField label="Senler Токен" value={token} setValue={setToken} /> */}
 
           { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
         </>

@@ -66,7 +66,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
           ))}
         </tbody>
       </table>
-      <button onClick={handleAddRow}>Add Row</button>
+      <button onClick={handleAddRow} className=''>Добавить соответствие</button>
     </div>
   );
 });
