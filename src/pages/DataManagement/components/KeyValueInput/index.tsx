@@ -66,7 +66,12 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
           ))}
         </tbody>
       </table>
-      <button onClick={handleAddRow} className=''>Добавить соответствие</button>
+      <button
+        onClick={handleAddRow}
+        className="px-4 py-2 bg-[#025aa5] text-white rounded-md hover:bg-[#024a8a] transition-colors duration-200"
+      >
+        Добавить соответствие
+      </button>
     </div>
   );
 });
