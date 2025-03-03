@@ -2,7 +2,7 @@ import { IDataRow } from '.';
 
 interface MySelectProps {
   value: string;
-  label: string;
+  label?: string;
   rowIndex: number;
   onValueChange: (rowIndex: number, key: keyof IDataRow, newValue: string) => void;
   sourceKey: keyof IDataRow;
@@ -12,12 +12,12 @@ interface MySelectProps {
   }[];
 }
 
-const MySelect = ({ value, label, rowIndex, onValueChange, options, sourceKey }: MySelectProps) => {
+const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey }: MySelectProps) => {
   const isLoad = Boolean(options);
   // console.log('options', options)
   return (
     <div className="mb-4">
-      <label className="block mb-2 font-bold">{label}</label>
+      {/* <label className="block mb-2 font-bold">{label}</label> */}
       <select
         onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
         className="w-full p-2 border border-gray-300 rounded"

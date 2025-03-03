@@ -25,30 +25,28 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
 
   return (
     <tr>
-      <td>
+      <td className='w-[47%]'>
         <MySelect
           value={row.from}
           rowIndex={rowIndex}
           onValueChange={onValueChange}
           options={senlerFieldsOptions}
-          label="Senler"
           sourceKey="from"
         />
       </td>
-      <td>
+      <td className='w-[47%]'>
         <MySelect
           value={row.to}
           rowIndex={rowIndex}
           onValueChange={onValueChange}
           options={amoCRMFieldsOptions}
-          label="AmoCRM"
           sourceKey="to"
         />
       </td>
-      <td>
+      <td className='w-[6%]'>
         <button
           onClick={() => onDelete(rowIndex)}
-          className={styles["delete-button"]}
+          className={styles['delete-button']}
           title="Удалить строку"
         >
           X
