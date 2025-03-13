@@ -14,9 +14,9 @@ const AmoCRM = ({ token }: { token: string }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { sign } = getUrlParams()
+      const { senlerGroupId } = getUrlParams()
 
-      const isValidSign = await checkRegistration({sign})
+      const isValidSign = await checkRegistration({senlerGroupId})
 
       setIsAmoCRMAuthenticated(isValidSign)
       setIsLoading(false);

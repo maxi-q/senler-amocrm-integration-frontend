@@ -1,12 +1,12 @@
 import axios from "axios";
 import { CheckRegistrationDto } from "./index.dto";
 
-export const checkRegistration = async ({ sign }: CheckRegistrationDto) => {
+export const checkRegistration = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
     await axios.get(
-      `/api/senlerGroups/${sign}`,
+      `/api/senlerGroups/${senlerGroupId}`,
       {
-        params: { field: 'senlerSign' }
+        params: { field: 'senlerGroupId' }
       }
     );
 

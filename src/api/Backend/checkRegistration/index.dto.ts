@@ -1,4 +1,4 @@
 export interface CheckRegistrationDto {
-  sign: string;
+  senlerGroupId: string;
 }
 
