@@ -13,7 +13,7 @@ interface ISelectField {
 export const SelectField = ({ label, value, setValue, options }: ISelectField) => {
   console.log('options2', options)
   return (
-    <div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+    <div style={{ width: '100%', margin: 'auto' }}>
       <label style={{ fontWeight: 'bold', marginBottom: '8px', display: 'block' }}>{label}</label>
       <select
         value={value}

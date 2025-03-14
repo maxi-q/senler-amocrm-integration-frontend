@@ -6,7 +6,7 @@ interface ITextField {
 
 export const TextField = ({label, value, setValue}: ITextField) => {
   return (
-    <div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+    <div style={{ width: '100%', margin: 'auto' }}>
 				<label style={{ fontWeight: 'bold', marginTop: '8px', display: 'block' }}>{label}</label>
 				<textarea
 					value={value}
@@ -26,7 +26,7 @@ export const TextField = ({label, value, setValue}: ITextField) => {
 
 export const InputField = ({label, value, setValue}: ITextField) => {
   return (
-    <div style={{ width: '100%', maxWidth: '400px', margin: 'auto' }}>
+    <div style={{ width: '100%', margin: 'auto' }}>
 				<label style={{ fontWeight: 'bold', marginTop: '8px', display: 'block' }}>{label}</label>
 				<textarea
 					value={value}
