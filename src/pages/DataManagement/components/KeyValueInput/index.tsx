@@ -68,7 +68,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
       </table>
       <button
         onClick={handleAddRow}
-        className="px-4 py-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200"
+        className="px-4 py-2 mt-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200"
       >
         Добавить соответствие
       </button>

@@ -24,7 +24,7 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
   const senlerFieldsOptions = fromFields.map(field => ({ value: field.id, label: getLabel(field) }));
 
   return (
-    <tr>
+    <tr className='my-2'>
       <td className='w-[47%]'>
         <MySelect
           value={row.from}
