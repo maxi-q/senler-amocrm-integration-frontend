@@ -1,8 +1,7 @@
 import { memo } from 'react';
 import { IDataRow } from '.';
 import MySelect from './SelectField';
-import { IAmoCRMField } from '@/api/Backend/fields/fields.dto';
-import { ISenlerField } from '../../modules/SendDataToAmoCrm/SendDataToAmoCrm.dto';
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
 
 import styles from './styles.module.css'
 

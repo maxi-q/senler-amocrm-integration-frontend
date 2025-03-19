@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { useMessage } from '../../messages/messageProvider/useMessage'
+import useAccountStore from '@/store/account'
+import { useMessage } from '@/messages/messageProvider'
 
-// import { InputField } from './components/TextField'
-// import { ServerMessage } from './components/ServerMessage'
-
-import { SelectField } from './components/SelectField'
 import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
 import { SendDataToSenler, type SendDataToSenlerData } from './modules/SendDataToSenler'
-import AmoCRM from './modules/AmoCRM'
 import { Loader } from './modules/AmoCRM/components/Loader'
-import useAccountStore from '@/store/account'
+import { AmoCRM } from './modules/AmoCRM'
+
+import { SelectField } from './components/SelectField'
 
 
 export enum BotStepType {
@@ -67,9 +65,9 @@ export const DataManagement = () => {
               type: stepType,
               syncableVariables,
             },
-            description: 'description',
-            command: 'command',
-            title: 'title',
+            description: 'Интеграция подключена',
+            command: stepType,
+            title: stepType,
           },
           success: true,
         },
@@ -81,12 +79,15 @@ export const DataManagement = () => {
 
     const handleSetData = () => {
       const { private: privatePayload, public: publicPayload } = message.request.payload;
+
       if (privatePayload) setPrivateData(JSON.parse(privatePayload));
       if (publicPayload) {
         const parsedPublicData = JSON.parse(publicPayload);
+
         setToken(parsedPublicData.token);
         setStepType(parsedPublicData.type);
         if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
+
         setPublicData(parsedPublicData);
       }
       setDataIsLoaded(true)
@@ -99,7 +100,6 @@ export const DataManagement = () => {
 
 	return (
     <div>
-      {/* AmoCRM */}
       <AmoCRM token={token} />
       {
         isAmoCRMAuthenticated &&
@@ -109,8 +109,8 @@ export const DataManagement = () => {
             value={stepType}
             setValue={setStepType}
             options={[
-              { label: "Отправка данных в Амо СРМ", value: BotStepType.SendDataToAmoCrm },
-              { label: "Отправка данных в Сенлер", value: BotStepType.SendDataToSenler },
+              { label: "Отправка данных в amoCRM", value: BotStepType.SendDataToAmoCrm },
+              { label: "Отправка данных в Senler", value: BotStepType.SendDataToSenler },
             ]}
           />
 

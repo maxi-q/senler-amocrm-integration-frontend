@@ -1,47 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getAmoCRMFields } from '@/api/Backend/fields'
-import { useMessage } from '@/messages/messageProvider/useMessage'
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto'
+import { useMessage } from '@/messages/messageProvider'
 import { getUrlParams } from '@/helpers'
 
-import EditableTable, { IDataRow } from '../../components/KeyValueInput'
-import { DataManagementRouter, BotStepType } from '../..'
-import { IAmoCRMField } from '@/api/Backend/fields/fields.dto'
-import { ISenlerField } from './SendDataToAmoCrm.dto'
+import { ISendDataToAmoCrm, SendDataToAmoCrmData } from './index.types'
+import EditableTable from '../../components/KeyValueInput'
+import { BotStepType } from '../..'
+import { transformDataToListMessage } from '../../helpers/helpers'
+import { SenlerFieldsResponse } from '../../types'
 
-export type SendDataToAmoCrmData = IDataRow[]
-
-export interface SendDataToAmoCrm {
-  data?: any,
-  setData: React.Dispatch<React.SetStateAction<DataManagementRouter | undefined>>
-}
-
-export interface SenlerFieldsResponse {
-    items: Array<ISenlerField>,
-    success: boolean,
-    count: number,
-    end: boolean
-}
-
-export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
+const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
 	const { message, sendMessage } = useMessage()
-
-  const sendListMessageData = (senlerGroupId: string) => {
-    const id = Date.now() + Math.round(Math.random() * 9999);
-    const data = {
-      id,
-      request: {
-        type: "CallApiMethod",
-        method: `/vars/list?group_id=${senlerGroupId}`,
-      },
-      time: Date.now(),
-    };
-
-    return data
-  };
 
   const getOrThrowAmoCRMFields = async (sign: string) => {
     try {
@@ -68,7 +42,7 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
 
     getOrThrowAmoCRMFields(sign);
 
-    const data = sendListMessageData(senlerGroupId)
+    const data = transformDataToListMessage(senlerGroupId)
 
     sendMessage(data, window.parent);
   }, [])
@@ -86,7 +60,7 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
   const setSendDataToAmoCrmData = (data: SendDataToAmoCrmData) => {
     setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
   }
-  console.log('amo', data && data[BotStepType.SendDataToAmoCrm], data)
+
 	return (
     <EditableTable
       data={data && data[BotStepType.SendDataToAmoCrm]}
@@ -94,6 +68,9 @@ export const SendDataToAmoCrm = ({data, setData}: SendDataToAmoCrm) => {
       toFields={amoCRMFields}
       fromFields={senlerFields}
     />
-)
+  )
 }
+
+export { SendDataToAmoCrm }
+export type { SendDataToAmoCrmData }
 

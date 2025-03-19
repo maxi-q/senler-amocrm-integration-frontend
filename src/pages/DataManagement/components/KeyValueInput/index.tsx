@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import EditableRow from './EditableRow';
-import { IAmoCRMField } from '@/api/Backend/fields/fields.dto';
-import { ISenlerField } from '../../modules/SendDataToSenler';
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
+
 
 export interface IDataRow {
   from: string;

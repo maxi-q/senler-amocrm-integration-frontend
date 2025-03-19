@@ -7,7 +7,7 @@ interface MessageContextProps {
 	message: any | null
 	sendMessage: (message: any, target?: Window, origin?: string) => void
 }
-	
+
 export const MessageContext = createContext<MessageContextProps | undefined>(
 	undefined
 )

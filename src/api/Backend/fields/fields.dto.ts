@@ -72,3 +72,25 @@ export class IAmoCRMField {
     this._links = data._links;
   }
 }
+
+export class ISenlerField {
+  id: string;
+  text: string;
+  contain: string;
+  selected: boolean;
+  disabled: boolean;
+
+  constructor(data: {
+    id: string;
+    text: string;
+    contain: string;
+    selected?: boolean;
+    disabled?: boolean;
+  }) {
+    this.id = data.id;
+    this.text = data.text;
+    this.contain = data.contain;
+    this.selected = data.selected ?? false;
+    this.disabled = data.disabled ?? false;
+  }
+}

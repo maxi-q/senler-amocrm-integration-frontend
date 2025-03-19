@@ -1,14 +1,17 @@
-import styles from './styles.module.css';
-import AmoAuthLink, { IOnAuthSuccess } from './components/AmoAuthButton';
-import { sendCode } from './helpers/sendCode';
 import { useEffect, useState } from 'react';
+
+import { checkRegistration } from '@/api/Backend/checkRegistration';
+import useAccountStore from '@/store/account';
+import { getUrlParams } from '@/helpers';
+
+import AmoAuthLink, { IOnAuthSuccess } from './components/AmoAuthButton';
 import AmoCRMProfile from './components/AmoCRMProfile';
 import { Loader } from './components/Loader';
-import { checkRegistration } from '../../../../api/Backend/checkRegistration';
-import { getUrlParams } from '@/helpers';
-import useAccountStore from '@/store/account';
+import { sendCode } from './helpers/sendCode';
 
-const AmoCRM = ({ token }: { token: string }) => {
+import styles from './styles.module.css';
+
+export const AmoCRM = ({ token }: { token: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { isAmoCRMAuthenticated, setIsAmoCRMAuthenticated } = useAccountStore()
 
@@ -57,4 +60,3 @@ const AmoCRM = ({ token }: { token: string }) => {
   );
 };
 
-export default AmoCRM;

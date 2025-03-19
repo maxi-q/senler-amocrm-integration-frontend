@@ -1,5 +1,4 @@
 const AmoCRMProfile = () => {
-
   return (
     <div className="accounts_dropdown flex justify-start p-3 flex-row">
       <div className="flex items-center ">

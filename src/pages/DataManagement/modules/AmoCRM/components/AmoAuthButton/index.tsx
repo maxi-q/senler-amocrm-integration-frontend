@@ -1,5 +1,3 @@
-import React from 'react'
-
 export interface IOnAuthSuccess {
   code: string
   state: string
@@ -18,13 +16,12 @@ interface AmoAuthPopupProps {
 	onAuthError?: (error: string) => void
 }
 
-const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
+const AmoAuthLink = ({
 	clientId,
 	redirectUri,
 	onAuthSuccess,
 	onAuthError,
-}) => {
-	// Генерация URL для авторизации
+}: AmoAuthPopupProps) => {
 	const generateAuthUrl = () => {
 		const authUrl = new URL('https://www.amocrm.ru/oauth')
 		authUrl.searchParams.append('client_id', clientId)
@@ -33,7 +30,6 @@ const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
 		return authUrl.toString()
 	}
 
-	// Открытие всплывающего окна для авторизации
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
 		const popup = window.open(authUrl, 'amoAuthPopup', 'width=600,height=600')
@@ -55,7 +51,6 @@ const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
 			}
 
 			try {
-				// Если `code` присутствует в URL, авторизация прошла успешно
 				const urlParams = new URLSearchParams(popup.location.search)
 				const code = urlParams.get('code')
 				const state = urlParams.get('state') || ''
@@ -73,9 +68,8 @@ const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
 					popup.close()
 					clearInterval(timer)
 				}
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			} catch (err) {
-				// Инициализация окна еще не завершена — продолжаем ждать
+			} catch (error) {
+        console.error(error)
 			}
 		}, 500)
 	}
@@ -83,9 +77,8 @@ const AmoAuthLink: React.FC<AmoAuthPopupProps> = ({
 	return (
 		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
 			<div className="flex items-center ">
-				<div className="m-2 mt-2 mb-2"></div>
-				<div>
-					<span data-role="header_account_text" >Подключить AmoSRM</span>
+				<div className="ms-2">
+					<span data-role="header_account_text">Подключить amoCRM</span>
 				</div>
 			</div>
 		</div>

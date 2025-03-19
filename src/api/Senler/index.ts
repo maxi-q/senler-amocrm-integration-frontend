@@ -1,11 +1,10 @@
 import axios from "axios";
-import { GetSenlerGroupFieldsDto } from "./index.dto";
+import { IGetSenlerGroupFields } from "./index.types";
 
-export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFieldsDto) => {
+export const getSenlerGroupFields = async ({ senlerGroupId }: IGetSenlerGroupFields) => {
   try {
     const csrfToken = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    console.log('csrfToken', csrfToken)
-    
+
     const response = await axios.get(
       `https://senler.ru/ajax/cabinet/select2vars`,
       {
@@ -17,9 +16,7 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: GetSenlerGroupFiel
           "X-Csrf-Token": csrfToken,
         }
       }
-    );
-    
-    console.log('getSenlerGroupFields', response.data)
+    )
 
     return response.data;
   } catch (error) {

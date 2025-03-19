@@ -1,8 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import './styles/settings.css'
+import './styles/output.css'
 
-import { MessageProvider } from './messages/messageProvider/MessageProvider'
+import { MessageProvider } from './messages/messageProvider'
 import AmoAuthRedirect from './pages/AmoAuthRedirect'
 import { DataManagement  } from './pages/DataManagement'
 

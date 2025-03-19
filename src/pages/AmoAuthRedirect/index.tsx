@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 
 const AmoAuthRedirect = () => {
 	useEffect(() => {
-    alert('close')
 		window.close()
 	}, [])
 

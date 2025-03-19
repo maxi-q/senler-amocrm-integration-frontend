@@ -13,8 +13,6 @@ interface AccountStore {
   setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => void;
 }
 
-// использовать для sign и др.параметров
-
 const useAccountStore = create<AccountStore>((set) => ({
   account: {
     user_id: '',

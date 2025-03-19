@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CheckRegistrationDto } from "./index.dto";
+import { CheckRegistrationDto } from "./index.types";
 
 export const checkRegistration = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
