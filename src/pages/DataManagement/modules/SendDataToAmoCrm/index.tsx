@@ -17,9 +17,9 @@ const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
 
 	const { message, sendMessage } = useMessage()
 
-  const getOrThrowAmoCRMFields = async (sign: string) => {
+  const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
     try {
-      const amoFields = await getAmoCRMFields({ sign });
+      const amoFields = await getAmoCRMFields({ senlerGroupId });
 
       if (!Array.isArray(amoFields)) {
         throw new Error('amoFields is not an array');
@@ -33,14 +33,14 @@ const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
   };
 
   useEffect(() => {
-    const { sign, senlerGroupId } = getUrlParams();
+    const { senlerGroupId } = getUrlParams();
 
-    if (!sign || !senlerGroupId) {
+    if (!senlerGroupId) {
       console.error("Missing required parameters: 'sign' or 'group_id'");
       return;
     }
 
-    getOrThrowAmoCRMFields(sign);
+    getOrThrowAmoCRMFields(senlerGroupId);
 
     const data = transformDataToListMessage(senlerGroupId)
 

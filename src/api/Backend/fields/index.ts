@@ -2,16 +2,16 @@ import axios from "axios";
 import { IAmoCRMField } from "./fields.dto";
 
 interface getAmoCRMFields {
-  sign: string;
+  senlerGroupId: string;
 }
 
-export const getAmoCRMFields = async ({ sign }: getAmoCRMFields): Promise<IAmoCRMField[]> => {
+export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promise<IAmoCRMField[]> => {
   try {
     const response = await axios.get(
       `/api/integration/getAmoFields`,
       {
         params: {
-          sign
+          senlerGroupId
         },
         headers: {
           "Content-Type": "application/json",
