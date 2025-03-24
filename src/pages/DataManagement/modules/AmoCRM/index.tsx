@@ -28,7 +28,7 @@ export const AmoCRM = ({ token }: { token: string }) => {
     checkAuth();
   }, []);
 
-  const RegisterAndCheckAccess = async (code: IOnAuthSuccess) => {
+  const registerAndCheckAccess = async (code: IOnAuthSuccess) => {
     const successRegistration = await sendCode({ ...code, token })
     if (successRegistration) {
       setIsAmoCRMAuthenticated(true)
@@ -40,7 +40,7 @@ export const AmoCRM = ({ token }: { token: string }) => {
       <AmoAuthLink
         clientId={import.meta.env.VITE_CLIENT_ID || ''}
         redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-        onAuthSuccess={RegisterAndCheckAccess}
+        onAuthSuccess={registerAndCheckAccess}
       />
     );
   };
