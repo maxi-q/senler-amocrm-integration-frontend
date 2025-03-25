@@ -1,27 +1,29 @@
 import { create } from 'zustand';
 
 interface Account {
-  user_id: string,
-  group_id: string,
-  auth: string,
-  context: string
+  amoCrmDomainName: string
+  id: string
+  senlerGroupId: number
+  senlerGroupVkId?: number
 }
 
 interface AccountStore {
-  account: Account;
+  senlerGroup: Account;
   isAmoCRMAuthenticated: boolean,
   setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => void;
+  setSenlerGroup: (senlerGroup: Account) => void
 }
 
 const useAccountStore = create<AccountStore>((set) => ({
-  account: {
-    user_id: '',
-    group_id: '',
-    auth: '',
-    context: ''
+  senlerGroup: {
+    amoCrmDomainName: '',
+    id: '',
+    senlerGroupId: 0,
+    senlerGroupVkId: 0
   },
   isAmoCRMAuthenticated: false,
-  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => set(() => ({ isAmoCRMAuthenticated: isAmoCRMAuthenticated }))
+  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => set(() => ({ isAmoCRMAuthenticated: isAmoCRMAuthenticated })),
+  setSenlerGroup: (senlerGroup: Account) => set(() => ({ senlerGroup: senlerGroup }))
 }));
 
 export default useAccountStore

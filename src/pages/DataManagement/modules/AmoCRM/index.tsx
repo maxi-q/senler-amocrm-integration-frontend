@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { checkRegistration } from '@/api/Backend/checkRegistration';
+import { checkRegistrationAndReturnData } from '@/api/Backend/checkRegistration';
 import useAccountStore from '@/store/account';
 import { getUrlParams } from '@/helpers';
 
@@ -13,15 +13,16 @@ import styles from './styles.module.css';
 
 export const AmoCRM = ({ token }: { token: string }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { isAmoCRMAuthenticated, setIsAmoCRMAuthenticated } = useAccountStore()
+  const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
 
   useEffect(() => {
     const checkAuth = async () => {
       const { senlerGroupId } = getUrlParams()
 
-      const isValidSign = await checkRegistration({senlerGroupId})
+      const isValidSign = await checkRegistrationAndReturnData({senlerGroupId})
 
-      setIsAmoCRMAuthenticated(isValidSign)
+      if (isValidSign.data) setSenlerGroup(isValidSign.data)
+      setIsAmoCRMAuthenticated(isValidSign.ok)
       setIsLoading(false);
     };
 
@@ -47,7 +48,7 @@ export const AmoCRM = ({ token }: { token: string }) => {
 
   const renderAuthenticatedContent = () => {
     return (
-      <AmoCRMProfile />
+      <AmoCRMProfile amoCrmDomainName={senlerGroup.amoCrmDomainName}/>
     );
   };
 

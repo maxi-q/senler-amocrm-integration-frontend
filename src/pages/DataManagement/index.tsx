@@ -16,6 +16,11 @@ export enum BotStepType {
   SendDataToSenler = 'SEND_DATA_TO_SENLER',
 }
 
+let BotStepRuName = {
+  [BotStepType.SendDataToAmoCrm]: 'Отправка данных в amoCRM',
+  [BotStepType.SendDataToSenler]: 'Отправка данных в senler',
+}
+
 export type DataManagementRouter = {
   [key in BotStepType]?
     : key extends BotStepType.SendDataToAmoCrm
@@ -67,7 +72,7 @@ export const DataManagement = () => {
             },
             description: 'Интеграция подключена',
             command: stepType,
-            title: stepType,
+            title: BotStepRuName[stepType],
           },
           success: true,
         },

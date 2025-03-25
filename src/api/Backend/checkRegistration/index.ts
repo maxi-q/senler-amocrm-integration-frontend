@@ -1,24 +1,31 @@
 import axios from "axios";
 import { CheckRegistrationDto } from "./index.types";
 
-export const checkRegistration = async ({ senlerGroupId }: CheckRegistrationDto) => {
+type checkRegistrationAndReturnData = {
+  amoCrmDomainName: string
+  id: string
+  senlerGroupId: number
+  senlerGroupVkId?: number
+}
+
+export const checkRegistrationAndReturnData = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
-    await axios.get(
+    const result = await axios.get<checkRegistrationAndReturnData>(
       `/api/senlerGroups/${senlerGroupId}`,
       {
         params: { field: 'senlerGroupId' }
       }
     );
 
-    return true;
+    return {ok: true, data: result.data};
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       console.warn("Registration not found, 404 received.");
-      return false
+      return {ok: false, data: null}
     }
     console.error("Something went wrong:", error);
 
     alert('Error fetching AmoCRM checkRegistration');
-    return false;
+    return {ok: false, data: null};
   }
 };

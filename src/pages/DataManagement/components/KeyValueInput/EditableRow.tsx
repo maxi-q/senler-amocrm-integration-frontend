@@ -48,7 +48,9 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
           className={styles['delete-button']}
           title="Удалить строку"
         >
-          X
+          <svg style={{width: "24px", height: "24px"}} viewBox="0 0 24 24">
+            <path fill='#fff' d="M8 4v-2h8v2h5v2h-18v-2h5zm-3 16v-14h14v14q0 1.25-.875 2.125t-2.125.875h-8q-1.25 0-2.125-.875t-.875-2.125zm2-2h10v-12h-10v12z"/>
+          </svg>
         </button>
       </td>
     </tr>
