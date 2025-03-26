@@ -71,7 +71,7 @@ export const DataManagement = () => {
               syncableVariables,
             },
             description: 'Интеграция подключена',
-            command: stepType,
+            command: BotStepRuName[stepType],
             title: BotStepRuName[stepType],
           },
           success: true,
