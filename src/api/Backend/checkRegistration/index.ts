@@ -23,9 +23,7 @@ export const checkRegistrationAndReturnData = async ({ senlerGroupId }: CheckReg
       console.warn("Registration not found, 404 received.");
       return {ok: false, data: null}
     }
-    console.error("Something went wrong:", error);
-
-    alert('Error fetching AmoCRM checkRegistration');
+    console.error("Error fetching AmoCRM checkRegistration. Something went wrong:", error);
     return {ok: false, data: null};
   }
 };
