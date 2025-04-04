@@ -32,10 +32,14 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
   };
 
   const handleAddRow = () => {
-    setCurrentData((prevData) => [
-      ...prevData,
-      { from: '', to: '' },
-    ]);
+    setCurrentData((prevData) => {
+      const newData = [
+        ...prevData,
+        { from: '', to: '' },
+      ]
+      changeData(newData)
+      return newData
+    });
   };
 
   const handleDeleteRow = (rowIndex: number) => {
