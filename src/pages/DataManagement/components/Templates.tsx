@@ -10,6 +10,7 @@ interface ITemplates {
 
 export const Templates = ({data, setData}: ITemplates) => {
   const [templates, setTemplates] = useState<integrationStepTemplate[]>([])
+  const [senlerGroupIdW, setSenlerGroupIdW] = useState<string>()
   const { senlerGroupId } = getUrlParams()
 
   const onChangeTemplate = (template_id: string) => {
@@ -22,12 +23,14 @@ export const Templates = ({data, setData}: ITemplates) => {
       const result = await getSenlerGroupTemplates({senlerGroupId})
       if(result.ok){
         setTemplates(result.templates || [])
+        setSenlerGroupIdW(result.senlerGroupId)
       }
     })()
   }, [])
 
   const saveTemplate = async () => {
-    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: +senlerGroupId, name: 'шаблон '+(new Date()).getSeconds()})
+    if (!senlerGroupIdW) return
+    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: 'шаблон '+(new Date()).getSeconds()})
     if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
   }
 

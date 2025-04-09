@@ -25,7 +25,7 @@ export const getSenlerGroupTemplates = async ({ senlerGroupId }: CheckRegistrati
       }
     );
 
-    return {ok: true, templates: result.data.integrationStepTemplates};
+    return {ok: true, templates: result.data.integrationStepTemplates, senlerGroupId: result.data.id};
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       console.warn("Registration not found, 404 received.");
@@ -41,7 +41,7 @@ interface saveTemplate {
     private: any,
     public: any
   },
-  senlerGroupId: number,
+  senlerGroupId: string,
   name: string
 }
 
