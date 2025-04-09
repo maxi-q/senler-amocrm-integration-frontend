@@ -27,7 +27,7 @@ export const Templates = ({data, setData}: ITemplates) => {
   }, [])
 
   const saveTemplate = async () => {
-    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId, name: 'шаблон '+(new Date()).getSeconds()})
+    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: +senlerGroupId, name: 'шаблон '+(new Date()).getSeconds()})
     if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
   }
 

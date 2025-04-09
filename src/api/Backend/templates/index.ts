@@ -41,7 +41,7 @@ interface saveTemplate {
     private: any,
     public: any
   },
-  senlerGroupId: string,
+  senlerGroupId: number,
   name: string
 }
 
