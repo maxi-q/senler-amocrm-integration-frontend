@@ -21,11 +21,14 @@ export const Templates = ({data, setData}: ITemplates) => {
   useEffect(()=>{
     (async () => {
       const result = await getSenlerGroupTemplates({senlerGroupId})
+      console.log('result', result)
       if(result.ok){
         setTemplates(result.templates || [])
         setSenlerGroupIdW(result.senlerGroupId)
       }
     })()
+    console.log('go')
+
   }, [])
 
   const saveTemplate = async () => {
