@@ -59,7 +59,7 @@ export const createIntegrationStepTemplates = async (data: saveTemplate) => {
   try {
     const result = await axios.post<createSenlerGroupTemplatesResponse>(
       `/api/integrationStepTemplates`,
-      { data }
+      data
     );
 
     return {ok: true, data: result.data};
