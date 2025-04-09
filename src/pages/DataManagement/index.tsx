@@ -9,6 +9,7 @@ import { Loader } from './modules/AmoCRM/components/Loader'
 import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
+import { Templates } from './components/Templates'
 
 
 export enum BotStepType {
@@ -40,6 +41,8 @@ export const DataManagement = () => {
   const [publicData, setPublicData] = useState<DataManagementRouter>()
   const [privateData, setPrivateData] = useState<object>()
 
+  const [transferData, setTransferData] = useState<any>()
+
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
   const getDefaultComponent = (type: BotStepType) => {
@@ -51,6 +54,37 @@ export const DataManagement = () => {
         default:
             return <>Тип не передан</>;
     }
+  };
+
+  useEffect(()=>{
+    setTransferData(
+      {
+        private: { ...privateData },
+        public: {
+          ...publicData,
+          token,
+          type: stepType,
+          syncableVariables: publicData && publicData[stepType] ,
+        }
+      }
+    )
+  }, [publicData, privateData])
+
+  const handleSetData = (mockMessage?: { private: any, public: any }) => {
+    const { private: privatePayload, public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
+
+    if (privatePayload) setPrivateData(JSON.parse(privatePayload));
+    if (publicPayload) {
+      const parsedPublicData = JSON.parse(publicPayload);
+
+      setToken(parsedPublicData.token);
+      setStepType(parsedPublicData.type);
+      if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
+
+      setPublicData(parsedPublicData);
+    }
+
+    setDataIsLoaded(true)
   };
 
 	useEffect(() => {
@@ -82,22 +116,6 @@ export const DataManagement = () => {
       sendMessage(data, window.parent);
     };
 
-    const handleSetData = () => {
-      const { private: privatePayload, public: publicPayload } = message.request.payload;
-
-      if (privatePayload) setPrivateData(JSON.parse(privatePayload));
-      if (publicPayload) {
-        const parsedPublicData = JSON.parse(publicPayload);
-
-        setToken(parsedPublicData.token);
-        setStepType(parsedPublicData.type);
-        if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
-
-        setPublicData(parsedPublicData);
-      }
-      setDataIsLoaded(true)
-    };
-
     if (!message) return;
     if (message.request?.type === 'getData') handleGetData();
     if (message.request?.type === 'setData') handleSetData();
@@ -109,6 +127,8 @@ export const DataManagement = () => {
       {
         isAmoCRMAuthenticated &&
         <>
+          <Templates data={transferData} setData={handleSetData}/>
+
           <SelectField
             label="Тип шага"
             value={stepType}
