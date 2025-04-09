@@ -9,7 +9,7 @@ interface MySelectProps {
 export const MySelectDropdown = ({ value, onValueChange, options }: MySelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const isLoaded = Boolean(options);
-
+  console.log('test -- test ', isLoaded, isOpen, options)
   // const selectedLabel = options?.find((opt) => opt.value === value)?.label || "Выберите шаблон";
   const selectedLabel = "Выберите шаблон";
 
