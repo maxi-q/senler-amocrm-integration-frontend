@@ -58,7 +58,7 @@ type createSenlerGroupTemplatesResponse = {
 export const createIntegrationStepTemplates = async (data: saveTemplate) => {
   try {
     const result = await axios.post<createSenlerGroupTemplatesResponse>(
-      `/api/senlerGroups/${data.senlerGroupId}`,
+      `/api/integrationStepTemplates`,
       { data }
     );
 
