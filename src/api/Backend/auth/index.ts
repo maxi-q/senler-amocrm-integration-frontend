@@ -20,7 +20,7 @@ export const sendAuthCode = async ({
 			`/api/senlerGroups`,
 			JSON.stringify({
 				senlerAccessToken,
-				senlerGroupId,
+				senlerGroupId: +senlerGroupId,
 				amoCrmDomainName,
 				amoCrmAuthorizationCode,
         senlerSign
