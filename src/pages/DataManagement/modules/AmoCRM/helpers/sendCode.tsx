@@ -4,12 +4,12 @@ import { sendAuthCode } from "@/api/Backend/auth";
 export const sendCode = async ({ code, referer, token }: { code: string; referer: string; token: string }) => {
   const { sign, senlerGroupId } = getUrlParams()
 
-  const successRegistration = await sen dAuthCode({
+  const successRegistration = await sendAuthCode({
     senlerAccessToken: token,
     senlerGroupId,
     amoCrmDomain: referer,
     amoCrmAuthorizationCode: code,
-    senlerSign: sign
+    senlerSign: sign,
   })
 
   return successRegistration.ok
