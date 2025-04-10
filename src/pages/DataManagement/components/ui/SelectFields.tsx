@@ -19,9 +19,6 @@ export const MySelectDropdown = ({ value, onValueChange, options }: MySelectProp
   };
 
   const toggleDropdown = () => {
-    if (!isOpen) {
-      document.addEventListener("click", handleDocumentClick);
-    }
     setIsOpen(!isOpen);
   };
 

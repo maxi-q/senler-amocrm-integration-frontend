@@ -127,7 +127,7 @@ export const DataManagement = () => {
       {
         isAmoCRMAuthenticated &&
         <>
-          <Templates data={transferData} setData={handleSetData}/>
+          {/* <Templates data={transferData} setData={handleSetData}/> */}
 
           <SelectField
             label="Тип шага"
