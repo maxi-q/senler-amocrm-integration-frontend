@@ -1,6 +1,6 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { MySelectDropdown } from "./ui/SelectFields"
 
 interface ITemplates {
@@ -12,6 +12,7 @@ export const Templates = ({data, setData}: ITemplates) => {
   const [templates, setTemplates] = useState<integrationStepTemplate[]>([])
   const [senlerGroupIdW, setSenlerGroupIdW] = useState<string>()
   const { senlerGroupId } = getUrlParams()
+  const [isOpen, setIsOpen] = useState(false);
 
   const onChangeTemplate = (template_id: string) => {
     const template = templates.find( el => el.id == template_id)
@@ -40,7 +41,7 @@ export const Templates = ({data, setData}: ITemplates) => {
   return (
     <>
       <button onClick={saveTemplate}>save template</button>
-      <MySelectDropdown onValueChange={onChangeTemplate} options={templates.map(el => ({value: el.id, label: el.name}))} />
+      <MySelectDropdown onValueChange={onChangeTemplate} options={templates.map(el => ({ value: el.id, label: el.name }))} isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   )
 }

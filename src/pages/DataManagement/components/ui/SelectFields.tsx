@@ -1,16 +1,15 @@
-import { useState } from "react";
-
 interface MySelectProps {
   value?: string;
   onValueChange: (newValue: string) => void;
   options: { value: string; label: string }[];
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const MySelectDropdown = ({ value, onValueChange, options }: MySelectProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen }: MySelectProps) => {
   const isLoaded = Boolean(options);
   console.log('test -- test ', isLoaded, isOpen, options)
-  // const selectedLabel = options?.find((opt) => opt.value === value)?.label || "Выберите шаблон";
+
   const selectedLabel = "Выберите шаблон";
 
   const handleDocumentClick = () => {
