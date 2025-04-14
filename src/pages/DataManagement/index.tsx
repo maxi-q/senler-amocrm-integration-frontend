@@ -73,6 +73,8 @@ export const DataManagement = () => {
   const handleSetData = (mockMessage?: { private: any, public: any }) => {
     const { private: privatePayload, public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
 
+    console.log(mockMessage)
+
     if (privatePayload) setPrivateData(JSON.parse(privatePayload));
     if (publicPayload) {
       const parsedPublicData = JSON.parse(publicPayload);
