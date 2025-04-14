@@ -45,6 +45,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                   value === item.value ? "bg-blue-50 text-blue-600" : ""
                 }`}
                 onClick={() => {
+                  console.log('test', item.value)
                   onValueChange(item.value);
                   setIsOpen(false);
                 }}
