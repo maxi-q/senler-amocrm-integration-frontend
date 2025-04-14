@@ -16,6 +16,7 @@ export const Templates = ({data, setData}: ITemplates) => {
 
   const onChangeTemplate = (template_id: string) => {
     const template = templates.find( el => el.id == template_id)
+    console.log(template, template?.settings)
     setData(template?.settings)
   }
 
