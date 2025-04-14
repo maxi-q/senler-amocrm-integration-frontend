@@ -1,6 +1,6 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { MySelectDropdown } from "./ui/SelectFields"
 
 interface ITemplates {
