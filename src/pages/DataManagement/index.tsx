@@ -10,6 +10,7 @@ import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
+import { InputField } from './components/TextField'
 
 
 export enum BotStepType {
@@ -131,24 +132,31 @@ export const DataManagement = () => {
 	return (
     <div>
       <AmoCRM token={token} />
+      { !isAmoCRMAuthenticated && <InputField label="Senler Токен" value={token} setValue={setToken} /> }
       {
         isAmoCRMAuthenticated &&
         <>
+          <Margin/>
+
           <Templates data={transferData} setData={handleSetData}/>
 
-          <SelectField
-            label="Тип шага"
-            value={stepType}
-            setValue={setStepType}
-            options={[
-              { label: "Отправка данных в amoCRM", value: BotStepType.SendDataToAmoCrm },
-              { label: "Отправка данных в Senler", value: BotStepType.SendDataToSenler },
-            ]}
-          />
+          <Margin/>
 
-          {/* <InputField label="Senler Токен" value={token} setValue={setToken} /> */}
+          <div className='text-left'>
+            <h3>Направление передачи данных</h3>
+            <SelectField
+              value={stepType}
+              setValue={setStepType}
+              options={[
+                { label: "Отправка данных в amoCRM", value: BotStepType.SendDataToAmoCrm },
+                { label: "Отправка данных в Senler", value: BotStepType.SendDataToSenler },
+              ]}
+            />
+          </div>
 
-          { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
+          <div className='mt-8 relative'>
+            { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
+          </div>
         </>
       }
 
@@ -157,3 +165,4 @@ export const DataManagement = () => {
   )
 }
 
+const Margin = () => <div className='w-full my-10'/>

@@ -1,11 +1,9 @@
 const AmoCRMProfile = ({amoCrmDomainName}: {amoCrmDomainName: string}) => {
   return (
     <div className="accounts_dropdown flex justify-start p-3 flex-row">
-      <div className="flex items-center ">
-        <div className="m-2 mt-2 mb-2"></div>
-        <div>
-          <span data-role="header_account_text" >Подключен профиль {amoCrmDomainName}</span>
-        </div>
+      <div className="flex w-full items-center text-sm justify-between">
+        <div className="text-left"><p>Аккаунт в amoCRM</p><p>{amoCrmDomainName || 'account.amocrm.ru'}</p></div>
+        <div className="text-red-600 underline">Отключить</div>
       </div>
     </div>
   )

@@ -48,14 +48,16 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
 
   return (
     <div style={{ width: '100%', maxWidth: '800px', margin: 'auto' }}>
+      <div className='flex w-full justify-between items-center'>
+        <h3>Передача значений</h3>
+        <button
+          onClick={handleAddRow}
+          className="px-4 py-2 mt-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200"
+        >
+          Добавить
+        </button>
+      </div>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>Откуда</th>
-            <th>Куда</th>
-            <th></th>
-          </tr>
-        </thead>
         <tbody>
           {currentData?.map((row, rowIndex) => (
             <EditableRow
@@ -70,12 +72,6 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
           ))}
         </tbody>
       </table>
-      <button
-        onClick={handleAddRow}
-        className="px-4 py-2 mt-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200"
-      >
-        Добавить соответствие
-      </button>
     </div>
   );
 });

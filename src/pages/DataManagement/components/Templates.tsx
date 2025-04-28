@@ -9,8 +9,8 @@ interface ITemplates {
 }
 
 export const Templates = ({data, setData}: ITemplates) => {
-  const [templates, setTemplates] = useState<integrationStepTemplate[]>([])
-  const [senlerGroupIdW, setSenlerGroupIdW] = useState<string>()
+  const [ templates, setTemplates ] = useState<integrationStepTemplate[]>([])
+  const [ senlerGroupIdW, setSenlerGroupIdW ] = useState<string>()
   const { senlerGroupId } = getUrlParams()
   const [isOpen, setIsOpen] = useState(false);
 
@@ -28,8 +28,6 @@ export const Templates = ({data, setData}: ITemplates) => {
         setSenlerGroupIdW(result.senlerGroupId)
       }
     })()
-    console.log('go')
-
   }, [])
 
   const saveTemplate = async () => {
@@ -39,9 +37,13 @@ export const Templates = ({data, setData}: ITemplates) => {
   }
 
   return (
-    <>
-      <button onClick={saveTemplate} className="px-4 py-2 mt-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200">save template</button>
-      <MySelectDropdown onValueChange={onChangeTemplate} options={templates.map(el => ({ value: el.id, label: el.name }))} isOpen={isOpen} setIsOpen={setIsOpen} />
-    </>
+    <div className="text-left">
+      <h3>Шаблон настроек</h3>
+      <div className="flex items-center gap-3 my-3">
+        <MySelectDropdown onValueChange={onChangeTemplate} options={templates.map(el => ({ value: el.id, label: el.name }))} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <button onClick={saveTemplate} className="px-4 py-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200">+</button>
+      </div>
+      <p className="ms-2 text-xs">Сохраняя настройки с выбранным шаблоном,<br/>вы изменяете шаблон, применяя настройку только на этот шаг</p>
+    </div>
   )
 }
