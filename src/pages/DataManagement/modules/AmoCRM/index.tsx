@@ -11,7 +11,7 @@ import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
 
-export const AmoCRM = ({ token }: { token: string }) => {
+export const AmoCRM = ({ token }: { token: string; }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
 

@@ -11,6 +11,7 @@ import { AmoCRM } from './modules/AmoCRM'
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
 import { InputField } from './components/TextField'
+import { MessageEditor } from './modules/AmoCRM/components/VariablesModal'
 
 
 export enum BotStepType {
@@ -37,6 +38,8 @@ export const DataManagement = () => {
   const { isAmoCRMAuthenticated } = useAccountStore()
 
   const [token, setToken] = useState('')
+  const [vkGroupId, setVkGroupId] = useState('')
+
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
 
   const [publicData, setPublicData] = useState<DataManagementRouter>()
@@ -64,6 +67,7 @@ export const DataManagement = () => {
         public: {
           ...publicData,
           token,
+          vkGroupId,
           type: stepType,
           syncableVariables: publicData && publicData[stepType] ,
         }
@@ -86,6 +90,7 @@ export const DataManagement = () => {
       const parsedPublicData = publicPayload;
 
       setToken(parsedPublicData.token);
+      setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
 
@@ -109,6 +114,7 @@ export const DataManagement = () => {
             public: {
               ...publicData,
               token,
+              vkGroupId,
               type: stepType,
               syncableVariables,
             },
@@ -129,6 +135,13 @@ export const DataManagement = () => {
     if (message.request?.type === 'setData') handleSetData();
   }, [message]);
 
+  const [messageContent, setMessageContent] = useState('');
+
+  const handleContentChange = (content: string) => {
+    console.log('New content:', content);
+    setMessageContent(content);
+  };
+
 	return (
     <div>
       <AmoCRM token={token} />
@@ -139,7 +152,17 @@ export const DataManagement = () => {
           <Margin/>
 
           <Templates data={transferData} setData={handleSetData}/>
+          <Margin/>
 
+          <MessageEditor
+            initialContent={messageContent}
+            onContentChange={handleContentChange}
+          />
+
+          <div className="mt-4 p-4 border rounded">
+            <h2 className="text-lg mb-2">Предпросмотр:</h2>
+            <div className="whitespace-pre-wrap">{messageContent}</div>
+          </div>
           <Margin/>
 
           <div className='text-left'>

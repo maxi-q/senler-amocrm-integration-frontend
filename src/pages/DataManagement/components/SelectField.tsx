@@ -13,15 +13,15 @@ interface ISelectField {
 export const SelectField = ({ label, value, setValue, options }: ISelectField) => {
   console.log('options2', options)
   return (
-    <div style={{ 
-      width: '100%', 
-      margin: 'auto', 
+    <div style={{
+      width: '100%',
+      margin: 'auto',
       fontFamily: 'system-ui, sans-serif'
     }}>
       {label && (
-        <label 
+        <label
           htmlFor="custom-select"
-          style={{ 
+          style={{
             display: 'block',
             fontWeight: '500',
             marginBottom: '8px',
@@ -32,7 +32,7 @@ export const SelectField = ({ label, value, setValue, options }: ISelectField) =
           {label}
         </label>
       )}
-      
+
       <div style={{ position: 'relative' }}>
         <select
           id="custom-select"
@@ -58,8 +58,7 @@ export const SelectField = ({ label, value, setValue, options }: ISelectField) =
             </option>
           ))}
         </select>
-    
-        {/* Кастомная стрелка ▾ */}
+
         <div style={{
           position: 'absolute',
           right: '12px',

@@ -38,10 +38,6 @@
     display: block;
 }
 
-.accounts_dropdown {
-    background-color: rgb(232 236 239);
-}
-
 .accounts_dropdown:hover {
     background-color: rgb(203 207 209);
 }

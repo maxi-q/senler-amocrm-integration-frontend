@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { IDataRow } from '.';
-import MySelect from './SelectField';
+import MySelect, { MySelectOldV } from './SelectField';
 import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
 
 import styles from './styles.module.css';
@@ -27,7 +27,7 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '12px' }}>
         <div>
           <label>Из amoCRM</label>
-          <MySelect
+          <MySelectOldV
             value={row.from}
             rowIndex={rowIndex}
             onValueChange={onValueChange}
