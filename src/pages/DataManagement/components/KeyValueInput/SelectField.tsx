@@ -15,7 +15,7 @@ interface MySelectProps {
 
 const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey }: MySelectProps) => {
   // const isLoad = Boolean(options);
-  // console.log('options', options)
+  console.log('options', options)
   return (
     <div>
       {/* <label className="block mb-2 font-bold">{label}</label> */}
