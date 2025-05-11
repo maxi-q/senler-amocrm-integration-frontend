@@ -20,7 +20,7 @@ export const sendAuthCode = async ({
 		await axios.post(
 			`/api/senlerGroups`,
 			JSON.stringify({
-				senlerAccessToken: senlerApiAccessToken ,
+				senlerApiAccessToken,
 				senlerGroupId: +senlerGroupId,
 				amoCrmDomainName,
 				amoCrmAuthorizationCode,
