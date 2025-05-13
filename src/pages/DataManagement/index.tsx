@@ -135,12 +135,12 @@ export const DataManagement = () => {
     if (message.request?.type === 'setData') handleSetData();
   }, [message]);
 
-  const [messageContent, setMessageContent] = useState('');
+  // const [messageContent, setMessageContent] = useState('');
 
-  const handleContentChange = (content: string) => {
-    console.log('New content:', content);
-    setMessageContent(content);
-  };
+  // const handleContentChange = (content: string) => {
+  //   console.log('New content:', content);
+  //   setMessageContent(content);
+  // };
 
 	return (
     <div>
@@ -154,7 +154,7 @@ export const DataManagement = () => {
           <Templates data={transferData} setData={handleSetData}/>
           <Margin/>
 
-          <MessageEditor
+          {/* <MessageEditor
             initialContent={messageContent}
             onContentChange={handleContentChange}
           />
@@ -163,7 +163,8 @@ export const DataManagement = () => {
             <h2 className="text-lg mb-2">Предпросмотр:</h2>
             <div className="whitespace-pre-wrap">{messageContent}</div>
           </div>
-          <Margin/>
+
+          <Margin/> */}
 
           <div className='text-left'>
             <h3>Направление передачи данных</h3>

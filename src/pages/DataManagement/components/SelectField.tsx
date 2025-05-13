@@ -11,7 +11,6 @@ interface ISelectField {
 }
 
 export const SelectField = ({ label, value, setValue, options }: ISelectField) => {
-  console.log('options2', options)
   return (
     <div style={{
       width: '100%',

@@ -16,16 +16,23 @@ interface VariablesModalProps {
 interface MessageEditorProps {
   initialContent?: string;
   onContentChange?: (content: string) => void;
+  options?: {
+    value: string;
+    label: string;
+  }[];
 }
 
 export const MessageEditor = ({
   initialContent = '',
-  onContentChange
+  onContentChange,
+  options
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
 
   const { senlerGroupId } = getUrlParams()
+
+  console.log(options)
 
   const handleInsertVariable = (value: string) => {
     const newContent = content + value;
@@ -43,21 +50,21 @@ export const MessageEditor = ({
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl mb-4">Редактор сообщения</h1>
 
-      <div className="mb-4">
+      <div className="relative">
+        <textarea
+          value={content}
+          onChange={handleTextChange}
+          className="w-full h-48 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          placeholder="Введите текст сообщения..."
+        />
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="absolute right-2 top-2 bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-600 transition-colors"
+          title="Вставить переменную"
         >
-          Вставить переменную
+          +
         </button>
       </div>
-
-      <textarea
-        value={content}
-        onChange={handleTextChange}
-        className="w-full h-48 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-        placeholder="Введите текст сообщения..."
-      />
 
       <VariablesModal
         groupId={senlerGroupId}
