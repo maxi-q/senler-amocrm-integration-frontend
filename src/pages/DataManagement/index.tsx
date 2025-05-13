@@ -11,7 +11,7 @@ import { AmoCRM } from './modules/AmoCRM'
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
 import { InputField } from './components/TextField'
-import { MessageEditor } from './modules/AmoCRM/components/VariablesModal'
+// import { MessageEditor } from './modules/AmoCRM/components/VariablesModal'
 
 
 export enum BotStepType {
