@@ -11,6 +11,10 @@ interface VariablesModalProps {
   show: boolean;
   onHide: () => void;
   onInsert: (value: string) => void;
+  options?: {
+    value: string;
+    label: string;
+  }[];
 }
 
 interface MessageEditorProps {
@@ -54,7 +58,7 @@ export const MessageEditor = ({
         <textarea
           value={content}
           onChange={handleTextChange}
-          className="w-full h-48 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full h-5 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
         />
         <button
@@ -69,6 +73,7 @@ export const MessageEditor = ({
       <VariablesModal
         groupId={senlerGroupId}
         show={showModal}
+        options={options}
         onHide={() => setShowModal(false)}
         onInsert={handleInsertVariable}
       />
@@ -76,7 +81,7 @@ export const MessageEditor = ({
   );
 };
 
-const VariablesModal = ({ groupId, show, onHide, onInsert }: VariablesModalProps) => {
+const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesModalProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showGlobalAddModal, setShowGlobalAddModal] = useState(false);
   const [customVars, setCustomVars] = useState<Variable[]>([]);
@@ -86,21 +91,22 @@ const VariablesModal = ({ groupId, show, onHide, onInsert }: VariablesModalProps
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const wildcards = [
-    { value: '%username%', label: 'Имя' },
-    { value: '%fullname%', label: 'Полное имя' },
-    { value: '%userid%', label: 'ID получателя' },
-    { value: '%domain%', label: 'Короткий адрес страницы' },
-    { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
-    { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
-    { value: '[relation]%relation%|семейное положение не выбрано[/relation]', label: 'Семейное положение' },
-    { value: '[public192639504|novasex]', label: 'Ссылка на сообщество' },
-    { value: '[gender]Этот текст увидит парень|Этот текст увидит девушка[/gender]', label: 'Мужчинам|Женщинам' },
-    { value: '[date]%e %month|+1 day[/date]', label: 'Дата' },
-    { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
-    { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
-    { value: '%unsubscribe%', label: 'Отписаться' },
-  ];
+  const wildcards = options;
+  // const wildcards = [
+  //   { value: '%username%', label: 'Имя' },
+  //   { value: '%fullname%', label: 'Полное имя' },
+  //   { value: '%userid%', label: 'ID получателя' },
+  //   { value: '%domain%', label: 'Короткий адрес страницы' },
+  //   { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
+  //   { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
+  //   { value: '[relation]%relation%|семейное положение не выбрано[/relation]', label: 'Семейное положение' },
+  //   { value: '[public192639504|novasex]', label: 'Ссылка на сообщество' },
+  //   { value: '[gender]Этот текст увидит парень|Этот текст увидит девушка[/gender]', label: 'Мужчинам|Женщинам' },
+  //   { value: '[date]%e %month|+1 day[/date]', label: 'Дата' },
+  //   { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
+  //   { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
+  //   { value: '%unsubscribe%', label: 'Отписаться' },
+  // ];
 
   useEffect(() => {
     if (!show) return;

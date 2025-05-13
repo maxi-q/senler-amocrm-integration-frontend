@@ -25,27 +25,25 @@ export const MySelectOldV = ({ value, rowIndex, onValueChange, options, sourceKe
   const isLoad = Boolean(options);
 
   return (
-    <div>
-      <select
-        onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded"
-        value={value}
-        disabled={!isLoad}
-      >
-        {!isLoad ? (
-          <option value="">Загрузка...</option>
-        ) : (
-          <>
-            <option value="">Выберите значение</option>
-            {options?.map((item, index) => (
-              <option key={index} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </>
-        )}
-      </select>
-    </div>
+    <select
+      onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
+      className="w-full p-2 border border-gray-300 rounded"
+      value={value}
+      disabled={!isLoad}
+    >
+      {!isLoad ? (
+        <option value="">Загрузка...</option>
+      ) : (
+        <>
+          <option value="">Выберите значение</option>
+          {options?.map((item, index) => (
+            <option key={index} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </>
+      )}
+    </select>
   );
 };
 

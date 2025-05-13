@@ -26,17 +26,6 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '12px' }}>
         <div>
-          <label>Из amoCRM</label>
-          <MySelect
-            value={row.from}
-            rowIndex={rowIndex}
-            onValueChange={onValueChange}
-            options={senlerFieldsOptions}
-            sourceKey="from"
-          />
-        </div>
-
-        <div>
           <label>В Senler</label>
           <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
             <MySelectOldV
@@ -49,6 +38,17 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
           </div>
         </div>
       </div>
+
+      <div>
+          <label>Из amoCRM</label>
+          <MySelect
+            value={row.from}
+            rowIndex={rowIndex}
+            onValueChange={onValueChange}
+            options={senlerFieldsOptions}
+            sourceKey="from"
+          />
+        </div>
 
       <button
         onClick={() => onDelete(rowIndex)}
