@@ -91,7 +91,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const wildcards = options;
+  const wildcards = options || [];
   // const wildcards = [
   //   { value: '%username%', label: 'Имя' },
   //   { value: '%fullname%', label: 'Полное имя' },
