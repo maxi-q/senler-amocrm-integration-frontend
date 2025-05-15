@@ -56,7 +56,7 @@ export const MessageEditor = ({
         <textarea
           value={content}
           onChange={handleTextChange}
-          className="w-full h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full h-14 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
         />
         <button
