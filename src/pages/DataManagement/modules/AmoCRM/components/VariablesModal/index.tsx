@@ -52,13 +52,11 @@ export const MessageEditor = ({
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-2xl mb-4">Редактор сообщения</h1>
-
       <div className="relative">
         <textarea
           value={content}
           onChange={handleTextChange}
-          className="w-full h-5 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
         />
         <button
