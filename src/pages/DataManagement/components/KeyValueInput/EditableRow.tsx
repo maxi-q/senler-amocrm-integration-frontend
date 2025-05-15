@@ -37,9 +37,8 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
             />
           </div>
         </div>
-      </div>
 
-      <div>
+        <div>
           <label>Из amoCRM</label>
           <MySelect
             value={row.from}
@@ -49,6 +48,7 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
             sourceKey="from"
           />
         </div>
+      </div>
 
       <button
         onClick={() => onDelete(rowIndex)}
