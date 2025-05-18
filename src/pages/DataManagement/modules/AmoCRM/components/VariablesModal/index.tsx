@@ -104,25 +104,25 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
       setError('');
       setLoading(false);
 
-      // try {
-      //   const [customRes, globalRes] = await Promise.all([
-      //     fetch(`/vars/list?group_id=${groupId}`),
-      //     fetch(`/vars/list?group_id=${groupId}&type=glob_vars`)
-      //   ]);
+      try {
+        const [customRes, globalRes] = await Promise.all([
+          fetch(`/vars/list?group_id=${groupId}`),
+          fetch(`/vars/list?group_id=${groupId}&type=glob_vars`)
+        ]);
 
-      //   const customData = await customRes.json();
-      //   const globalData = await globalRes.json();
+        const customData = await customRes.json();
+        const globalData = await globalRes.json();
 
-      //   setCustomVars(customData);
-      //   setGlobalVars(globalData);
+        setCustomVars(customData);
+        setGlobalVars(globalData);
 
 
-      //   setError('');
-      // } catch (err) {
-      //   setError('Ошибка загрузки переменных');
-      // } finally {
-      //   setLoading(false);
-      // }
+        setError('');
+      } catch (err) {
+        setError('Ошибка загрузки переменных');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchVariables();
@@ -219,7 +219,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
             </div>
 
             {/* Global Variables Section */}
-            {/* <div className="space-y-4">
+            <div className="space-y-4">
               <label className="block text-xl font-semibold">Глобальные переменные</label>
               <div className="flex gap-4">
                 <select
@@ -250,7 +250,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
               >
                 Создать новую переменную
               </button>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
@@ -263,7 +263,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
             setShowAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`{%${name}%}`);
+            onInsert(`%${name}%`);
             setShowAddModal(false);
           }}
         />
@@ -276,7 +276,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
             setShowGlobalAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`[%${name}%]`);
+            onInsert(`%${name}%`);
             setShowGlobalAddModal(false);
           }}
         />
@@ -305,7 +305,7 @@ const VarAddModal = ({ groupId, onClose, onSuccess }: {
     }
 
     try {
-      const response = await fetch('/vars/create', {
+      const response = await fetch(`https://senler.ru/ajax/group/variables/VarLeadSave/${groupId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -408,20 +408,20 @@ const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
     }
 
     try {
-      const response = await fetch('/vars_global/create', {
+      const response = await fetch(`https://senler.ru/ajax/group/variables/VarGlobalSave/${groupId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          group_id: groupId, 
+        body: JSON.stringify({
+          group_id: groupId,
           n: name,
-          v: value 
+          v: value
         }),
       });
 
       if (!response.ok) throw new Error('Ошибка сервера');
-      
+
       const data = await response.json();
       if (data.success) {
         onSuccess(name);
