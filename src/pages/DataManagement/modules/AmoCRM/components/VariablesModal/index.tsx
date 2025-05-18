@@ -2,8 +2,8 @@ import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
 
 interface Variable {
-  id: string;
-  name: string;
+  value: string;
+  label: string;
 }
 
 interface VariablesModalProps {
@@ -51,12 +51,12 @@ export const MessageEditor = ({
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <div className="relative">
         <textarea
           value={content}
           onChange={handleTextChange}
-          className="w-full h-14 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
         />
         <button
@@ -89,44 +89,40 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const wildcards = options || [];
-  // const wildcards = [
-  //   { value: '%username%', label: 'Имя' },
-  //   { value: '%fullname%', label: 'Полное имя' },
-  //   { value: '%userid%', label: 'ID получателя' },
-  //   { value: '%domain%', label: 'Короткий адрес страницы' },
-  //   { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
-  //   { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
-  //   { value: '[relation]%relation%|семейное положение не выбрано[/relation]', label: 'Семейное положение' },
-  //   { value: '[public192639504|novasex]', label: 'Ссылка на сообщество' },
-  //   { value: '[gender]Этот текст увидит парень|Этот текст увидит девушка[/gender]', label: 'Мужчинам|Женщинам' },
-  //   { value: '[date]%e %month|+1 day[/date]', label: 'Дата' },
-  //   { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
-  //   { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
-  //   { value: '%unsubscribe%', label: 'Отписаться' },
-  // ];
+  // const wildcards = options || [];
+  const wildcards = [
+    { value: '%username%', label: 'Имя' },
+    { value: '%fullname%', label: 'Полное имя' },
+    { value: '%userid%', label: 'ID получателя' },
+  ];
 
   useEffect(() => {
     if (!show) return;
 
     const fetchVariables = async () => {
-      try {
-        const [customRes, globalRes] = await Promise.all([
-          fetch(`/vars/list?group_id=${groupId}`),
-          fetch(`/vars/list?group_id=${groupId}&type=glob_vars`)
-        ]);
+      setCustomVars(options || []);
+      setError('');
+      setLoading(false);
 
-        const customData = await customRes.json();
-        const globalData = await globalRes.json();
+      // try {
+      //   const [customRes, globalRes] = await Promise.all([
+      //     fetch(`/vars/list?group_id=${groupId}`),
+      //     fetch(`/vars/list?group_id=${groupId}&type=glob_vars`)
+      //   ]);
 
-        setCustomVars(customData);
-        setGlobalVars(globalData);
-        setError('');
-      } catch (err) {
-        setError('Ошибка загрузки переменных');
-      } finally {
-        setLoading(false);
-      }
+      //   const customData = await customRes.json();
+      //   const globalData = await globalRes.json();
+
+      //   setCustomVars(customData);
+      //   setGlobalVars(globalData);
+
+
+      //   setError('');
+      // } catch (err) {
+      //   setError('Ошибка загрузки переменных');
+      // } finally {
+      //   setLoading(false);
+      // }
     };
 
     fetchVariables();
@@ -137,7 +133,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
       setError('Выберите переменную');
       return;
     }
-    onInsert(`{%${selectedCustomVar}%}`);
+    onInsert(`%${selectedCustomVar}%`);
     onHide();
   };
 
@@ -146,7 +142,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
       setError('Выберите переменную');
       return;
     }
-    onInsert(`[%${selectedGlobalVar}%]`);
+    onInsert(`%${selectedGlobalVar}%`);
     onHide();
   };
 
@@ -200,8 +196,8 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
                 >
                   <option value="">Выберите переменную</option>
                   {customVars.map((varItem) => (
-                    <option key={varItem.id} value={varItem.name}>
-                      {varItem.name}
+                    <option key={varItem.value} value={varItem.label}>
+                      {varItem.label}
                     </option>
                   ))}
                 </select>
@@ -223,7 +219,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
             </div>
 
             {/* Global Variables Section */}
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <label className="block text-xl font-semibold">Глобальные переменные</label>
               <div className="flex gap-4">
                 <select
@@ -234,8 +230,8 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
                 >
                   <option value="">Выберите переменную</option>
                   {globalVars.map((varItem) => (
-                    <option key={varItem.id} value={varItem.name}>
-                      {varItem.name}
+                    <option key={varItem.value} value={varItem.label}>
+                      {varItem.label}
                     </option>
                   ))}
                 </select>
@@ -254,7 +250,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
               >
                 Создать новую переменную
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
