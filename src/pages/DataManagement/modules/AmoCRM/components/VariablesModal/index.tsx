@@ -94,6 +94,16 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
     { value: '%username%', label: 'Имя' },
     { value: '%fullname%', label: 'Полное имя' },
     { value: '%userid%', label: 'ID получателя' },
+    // { value: '%domain%', label: 'Короткий адрес страницы' },
+    // { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
+    // { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
+    // { value: '[relation]%relation%|семейное положение не выбрано[/relation]', label: 'Семейное положение' },
+    // { value: '[public192639504|novasex]', label: 'Ссылка на сообщество' },
+    // { value: '[gender]Этот текст увидит парень|Этот текст увидит девушка[/gender]', label: 'Мужчинам|Женщинам' },
+    // { value: '[date]%e %month|+1 day[/date]', label: 'Дата' },
+    // { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
+    // { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
+    // { value: '%unsubscribe%', label: 'Отписаться' },
   ];
 
   useEffect(() => {
