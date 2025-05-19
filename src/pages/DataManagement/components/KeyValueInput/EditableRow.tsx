@@ -12,9 +12,10 @@ interface IEditableRowProps {
   onDelete: (rowIndex: number) => void;
   toFields?: IAmoCRMField[] | ISenlerField[];
   fromFields?: IAmoCRMField[] | ISenlerField[];
+  type: 'no-senler' | 'senler';
 }
 
-const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [], fromFields = [] }: IEditableRowProps) => {
+const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [], fromFields = [], type='no-senler' }: IEditableRowProps) => {
   const getLabel = (field: IAmoCRMField | ISenlerField): string => {
     return field instanceof ISenlerField ? field.text : field.name;
   };
@@ -46,6 +47,7 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
             onValueChange={onValueChange}
             options={senlerFieldsOptions}
             sourceKey="from"
+            type={type}
           />
         </div>
       </div>

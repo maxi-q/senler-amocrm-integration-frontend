@@ -11,13 +11,14 @@ interface MySelectProps {
     value: string;
     label: string;
   }[];
+  type: 'senler' | 'no-senler'
 }
 
-const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey }: MySelectProps) => {
+const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey, type}: MySelectProps) => {
   options = options?.map(el => ({...el, value: `%${el.value}%`}));
   return (
     <div>
-      <MessageEditor options={options} initialContent={value} onContentChange={(content) => onValueChange(rowIndex, sourceKey, content)} />
+      <MessageEditor type={type} options={options} initialContent={value} onContentChange={(content) => onValueChange(rowIndex, sourceKey, content)} />
     </div>
   );
 };

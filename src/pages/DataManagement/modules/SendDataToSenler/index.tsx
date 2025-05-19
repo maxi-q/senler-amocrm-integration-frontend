@@ -68,6 +68,7 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
       changeData={setSendDataToSenlerData}
       toFields={senlerFields}
       fromFields={amoCRMFields}
+      type='no-senler'
     />
   )
 }

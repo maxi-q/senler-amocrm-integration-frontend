@@ -1,5 +1,6 @@
 import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
+import { VariablesModal } from './NotSenlerVariablesModal';
 
 interface Variable {
   value: string;
@@ -24,12 +25,14 @@ interface MessageEditorProps {
     value: string;
     label: string;
   }[];
+  type?: 'senler' | 'no-senler'
 }
 
 export const MessageEditor = ({
   initialContent = '',
   onContentChange,
-  options
+  options,
+  type = 'senler'
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
@@ -68,18 +71,28 @@ export const MessageEditor = ({
         </button>
       </div>
 
-      <VariablesModal
-        groupId={senlerGroupId}
-        show={showModal}
-        options={options}
-        onHide={() => setShowModal(false)}
-        onInsert={handleInsertVariable}
-      />
+      {
+        type == 'senler' ?
+        <SenlerVariablesModal
+          groupId={senlerGroupId}
+          show={showModal}
+          options={options}
+          onHide={() => setShowModal(false)}
+          onInsert={handleInsertVariable}
+        /> :
+        <VariablesModal
+          groupId={senlerGroupId}
+          show={showModal}
+          options={options}
+          onHide={() => setShowModal(false)}
+          onInsert={handleInsertVariable}
+        />
+      }
     </div>
   );
 };
 
-const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesModalProps) => {
+const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesModalProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showGlobalAddModal, setShowGlobalAddModal] = useState(false);
   const [customVars, setCustomVars] = useState<Variable[]>([]);
@@ -295,7 +308,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
   );
 };
 
-const VarAddModal = ({ groupId, onClose, onSuccess }: {
+export const VarAddModal = ({ groupId, onClose, onSuccess }: {
   groupId: string;
   onClose: () => void;
   onSuccess: (name: string) => void;
@@ -397,7 +410,7 @@ const VarAddModal = ({ groupId, onClose, onSuccess }: {
 };
 
 // Add Global Variable Modal Component
-const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
+export const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
   groupId: string;
   onClose: () => void;
   onSuccess: (name: string) => void;
