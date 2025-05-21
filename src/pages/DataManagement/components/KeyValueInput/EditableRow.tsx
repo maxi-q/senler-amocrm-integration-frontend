@@ -27,7 +27,7 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '12px' }}>
         <div>
-          <label>В Senler</label>
+          <label>{type == 'no-senler' ? "В Senler" : "В amoCRM"}</label>
           <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
             <MySelectOldV
               value={row.to}
@@ -35,12 +35,13 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
               onValueChange={onValueChange}
               options={amoCRMFieldsOptions}
               sourceKey="to"
+              type={type}
             />
           </div>
         </div>
 
         <div>
-          <label>Из amoCRM</label>
+          <label>{type == 'no-senler' ? "Из amoCRM" : "Из Senler"}</label>
           <MySelect
             value={row.from}
             rowIndex={rowIndex}

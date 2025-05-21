@@ -32,7 +32,7 @@ export const MessageEditor = ({
   initialContent = '',
   onContentChange,
   options,
-  type = 'senler'
+  type
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
@@ -72,7 +72,7 @@ export const MessageEditor = ({
       </div>
 
       {
-        type == 'senler' ?
+        type === 'senler' ?
         <SenlerVariablesModal
           groupId={senlerGroupId}
           show={showModal}

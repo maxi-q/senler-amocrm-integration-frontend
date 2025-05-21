@@ -11,7 +11,7 @@ interface MySelectProps {
     value: string;
     label: string;
   }[];
-  type: 'senler' | 'no-senler'
+  type?: 'senler' | 'no-senler'
 }
 
 const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey, type}: MySelectProps) => {
