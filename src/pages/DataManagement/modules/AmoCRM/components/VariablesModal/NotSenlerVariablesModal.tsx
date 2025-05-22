@@ -73,7 +73,7 @@ export const VariablesModal = ({ groupId, show, onHide, onInsert, options }: Var
                 >
                   <option value="">Выберите переменную</option>
                   {customVars.map((varItem) => (
-                    <option key={varItem.value} value={varItem.label}>
+                    <option key={varItem.value} value={varItem.value}>
                       {varItem.label}
                     </option>
                   ))}

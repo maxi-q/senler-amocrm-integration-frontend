@@ -219,7 +219,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 >
                   <option value="">Выберите переменную</option>
                   {customVars.map((varItem) => (
-                    <option key={varItem.value} value={varItem.label}>
+                    <option key={varItem.value} value={varItem.value}>
                       {varItem.label}
                     </option>
                   ))}
@@ -253,7 +253,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 >
                   <option value="">Выберите переменную</option>
                   {globalVars.map((varItem) => (
-                    <option key={varItem.value} value={varItem.label}>
+                    <option key={varItem.value} value={varItem.value}>
                       {varItem.label}
                     </option>
                   ))}
