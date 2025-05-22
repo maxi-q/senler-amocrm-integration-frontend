@@ -1,5 +1,6 @@
 import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
+import { VariablesModal } from './NotSenlerVariablesModal';
 
 interface Variable {
   value: string;
@@ -24,12 +25,14 @@ interface MessageEditorProps {
     value: string;
     label: string;
   }[];
+  type?: 'senler' | 'no-senler'
 }
 
 export const MessageEditor = ({
   initialContent = '',
   onContentChange,
-  options
+  options,
+  type
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
@@ -68,18 +71,28 @@ export const MessageEditor = ({
         </button>
       </div>
 
-      <VariablesModal
-        groupId={senlerGroupId}
-        show={showModal}
-        options={options}
-        onHide={() => setShowModal(false)}
-        onInsert={handleInsertVariable}
-      />
+      {
+        type === 'senler' ?
+        <SenlerVariablesModal
+          groupId={senlerGroupId}
+          show={showModal}
+          options={options}
+          onHide={() => setShowModal(false)}
+          onInsert={handleInsertVariable}
+        /> :
+        <VariablesModal
+          groupId={senlerGroupId}
+          show={showModal}
+          options={options}
+          onHide={() => setShowModal(false)}
+          onInsert={handleInsertVariable}
+        />
+      }
     </div>
   );
 };
 
-const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesModalProps) => {
+const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesModalProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showGlobalAddModal, setShowGlobalAddModal] = useState(false);
   const [customVars, setCustomVars] = useState<Variable[]>([]);
@@ -94,6 +107,16 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
     { value: '%username%', label: 'Имя' },
     { value: '%fullname%', label: 'Полное имя' },
     { value: '%userid%', label: 'ID получателя' },
+    // { value: '%domain%', label: 'Короткий адрес страницы' },
+    // { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
+    // { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
+    // { value: '[relation]%relation%|семейное положение не выбрано[/relation]', label: 'Семейное положение' },
+    // { value: '[public192639504|novasex]', label: 'Ссылка на сообщество' },
+    // { value: '[gender]Этот текст увидит парень|Этот текст увидит девушка[/gender]', label: 'Мужчинам|Женщинам' },
+    // { value: '[date]%e %month|+1 day[/date]', label: 'Дата' },
+    // { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
+    // { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
+    // { value: '%unsubscribe%', label: 'Отписаться' },
   ];
 
   useEffect(() => {
@@ -285,7 +308,7 @@ const VariablesModal = ({ groupId, show, onHide, onInsert, options }: VariablesM
   );
 };
 
-const VarAddModal = ({ groupId, onClose, onSuccess }: {
+export const VarAddModal = ({ groupId, onClose, onSuccess }: {
   groupId: string;
   onClose: () => void;
   onSuccess: (name: string) => void;
@@ -387,7 +410,7 @@ const VarAddModal = ({ groupId, onClose, onSuccess }: {
 };
 
 // Add Global Variable Modal Component
-const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
+export const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
   groupId: string;
   onClose: () => void;
   onSuccess: (name: string) => void;

@@ -13,9 +13,10 @@ interface IEditableTableProps {
   changeData: (updatedData: IDataRow[]) => void;
   toFields: IAmoCRMField[] | ISenlerField[],
   fromFields: IAmoCRMField[] | ISenlerField[],
+  type?: 'no-senler' | 'senler'
 }
 
-const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEditableTableProps) => {
+const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields }: IEd
               onDelete={handleDeleteRow}
               toFields={toFields}
               fromFields={fromFields}
+              type={type}
             />
           ))}
         </tbody>
