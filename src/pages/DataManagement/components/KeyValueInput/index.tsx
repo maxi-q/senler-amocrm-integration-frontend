@@ -53,7 +53,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
         <h3>Передача значений</h3>
         <button
           onClick={handleAddRow}
-          className="px-4 py-2 mt-2 bg-[#428BCA] text-white rounded-md hover:bg-[#025aa5] transition-colors duration-200"
+          className="px-4 py-2 mt-2 bg-[#428BCA] hover:bg-[#025aa5] text-white rounded-md  transition-colors duration-200"
         >
           Добавить
         </button>
