@@ -15,7 +15,6 @@ interface MySelectProps {
 }
 
 const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey, type}: MySelectProps) => {
-  console.log('debug type:', type);
   options = options?.map(el => ({...el, value: `%${el.value}%`}));
   return (
     <div>
