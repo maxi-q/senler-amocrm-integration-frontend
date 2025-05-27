@@ -293,7 +293,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
             setShowAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`%${name}%`);
+            onInsert(`${name}`);
             setShowAddModal(false);
           }}
         />
@@ -306,7 +306,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
             setShowGlobalAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`%${name}%`);
+            onInsert(`${name}`);
             setShowGlobalAddModal(false);
           }}
         />
