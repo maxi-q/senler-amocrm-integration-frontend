@@ -163,7 +163,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
       setError('Выберите переменную');
       return;
     }
-    onInsert(`%${selectedCustomVar}%`);
+    onInsert(`${selectedCustomVar}`);
     onHide();
   };
 
@@ -172,7 +172,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
       setError('Выберите переменную');
       return;
     }
-    onInsert(`%${selectedGlobalVar}%`);
+    onInsert(`${selectedGlobalVar}`);
     onHide();
   };
 
