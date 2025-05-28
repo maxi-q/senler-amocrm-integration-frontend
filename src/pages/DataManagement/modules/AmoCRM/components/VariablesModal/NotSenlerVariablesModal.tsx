@@ -36,7 +36,7 @@ export const VariablesModal = ({ groupId, show, onHide, onInsert, options }: Var
       setError('Выберите переменную');
       return;
     }
-    onInsert(`%${selectedCustomVar}%`);
+    onInsert(`${selectedCustomVar}`);
     onHide();
   };
 

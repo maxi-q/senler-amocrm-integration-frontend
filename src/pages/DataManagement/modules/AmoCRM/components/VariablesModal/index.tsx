@@ -110,10 +110,10 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
   const [error, setError] = useState('');
 
   // const wildcards = options || [];
-  const wildcards = [
-    { value: '%username%', label: 'Имя' },
-    { value: '%fullname%', label: 'Полное имя' },
-    { value: '%userid%', label: 'ID получателя' },
+  // const wildcards = [
+    // { value: '%username%', label: 'Имя' },
+    // { value: '%fullname%', label: 'Полное имя' },
+    // { value: '%userid%', label: 'ID получателя' },
     // { value: '%domain%', label: 'Короткий адрес страницы' },
     // { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
     // { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
@@ -124,7 +124,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
     // { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
     // { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
     // { value: '%unsubscribe%', label: 'Отписаться' },
-  ];
+  // ];
 
   useEffect(() => {
     if (!show) return;
@@ -197,7 +197,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
         <div className="flex-1 p-6">
           {error && <div className="text-red-500 mb-6 text-lg">{error}</div>}
 
-          {/* Wildcards Grid */}
+          {/* Wildcards Grid
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
             {wildcards.map((card) => (
               <button
@@ -211,7 +211,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 {card.label}
               </button>
             ))}
-          </div>
+          </div> */}
 
           {/* Custom Variables Section */}
           <div className="space-y-6 mb-8">
