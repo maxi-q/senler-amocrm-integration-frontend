@@ -1,0 +1,12 @@
+stages:
+  - deploy
+
+amocrm-backend:prod:
+  stage: deploy
+  trigger:
+    project: integrations/amocrm/deployment/amocrm-frontend
+    branch: $CI_DEFAULT_BRANCH
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline" 
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
