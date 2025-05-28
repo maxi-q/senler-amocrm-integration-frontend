@@ -195,7 +195,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
 
         {/* Body */}
         <div className="flex-1 p-6">
-          {error && <div className="text-red-500 mb-6 text-lg">{error}</div>}
+          {/* {error && <div className="text-red-500 mb-6 text-lg">{error}</div>} */}
 
           {/* Wildcards Grid
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
