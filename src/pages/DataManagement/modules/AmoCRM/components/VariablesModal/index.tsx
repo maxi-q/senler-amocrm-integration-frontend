@@ -150,6 +150,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
         setError('');
       } catch (err) {
         setError('Ошибка загрузки переменных');
+        console.log(error)
       } finally {
         setLoading(false);
       }
