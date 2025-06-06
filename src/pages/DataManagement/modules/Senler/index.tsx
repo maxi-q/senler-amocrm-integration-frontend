@@ -8,7 +8,7 @@ import { Loader } from './components/Loader';
 
 export const Senler = ({ token, setToken }: { token: string; setToken: React.Dispatch<React.SetStateAction<string>> }) => {
   const { senlerGroupId } = getUrlParams()
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const saveSenlerCode = async ({code}: {code: string}) => {
     setIsLoading(true)
