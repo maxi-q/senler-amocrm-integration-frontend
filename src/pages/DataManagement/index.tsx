@@ -10,8 +10,7 @@ import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
-import { InputField } from './components/TextField'
-// import { MessageEditor } from './modules/AmoCRM/components/VariablesModal'
+import { Senler } from './modules/Senler'
 
 
 export enum BotStepType {
@@ -83,8 +82,6 @@ export const DataManagement = () => {
       publicPayload = JSON.parse(publicPayload || '{}')
     }
 
-    console.log('mockMessage', mockMessage)
-
     if (privatePayload) setPrivateData(privatePayload);
     if (publicPayload) {
       const parsedPublicData = publicPayload;
@@ -135,17 +132,11 @@ export const DataManagement = () => {
     if (message.request?.type === 'setData') handleSetData();
   }, [message]);
 
-  // const [messageContent, setMessageContent] = useState('');
-
-  // const handleContentChange = (content: string) => {
-  //   console.log('New content:', content);
-  //   setMessageContent(content);
-  // };
-
 	return (
     <div>
       <AmoCRM token={token} />
-      { !isAmoCRMAuthenticated && <InputField label="Senler Токен" value={token} setValue={setToken} /> }
+      {!isAmoCRMAuthenticated && <Senler token={'token'} setToken={setToken} /> }
+
       {
         isAmoCRMAuthenticated &&
         <>
@@ -153,18 +144,6 @@ export const DataManagement = () => {
 
           <Templates data={transferData} setData={handleSetData}/>
           <Margin/>
-
-          {/* <MessageEditor
-            initialContent={messageContent}
-            onContentChange={handleContentChange}
-          />
-
-          <div className="mt-4 p-4 border rounded">
-            <h2 className="text-lg mb-2">Предпросмотр:</h2>
-            <div className="whitespace-pre-wrap">{messageContent}</div>
-          </div>
-
-          <Margin/> */}
 
           <div className='text-left'>
             <h3>Направление передачи данных</h3>
@@ -183,8 +162,6 @@ export const DataManagement = () => {
           </div>
         </>
       }
-
-      {/* <ServerMessage message={message} /> */}
     </div>
   )
 }
