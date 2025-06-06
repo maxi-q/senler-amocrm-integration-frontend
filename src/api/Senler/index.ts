@@ -24,3 +24,24 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: IGetSenlerGroupFie
     throw error;
   }
 };
+
+export const OAuth2token = async ({client_id, client_secret, redirect_uri, code}: {client_id: string, client_secret: string, redirect_uri: string, code: string}) => {
+  try {
+     const response = await axios.get<{success: boolean, access_token: string}>(
+      `https://senler.ru/ajax/cabinet/OAuth2token`,
+      {
+        params: {
+          client_id: client_id,
+          client_secret: client_secret,
+          redirect_uri: redirect_uri,
+          code: code,
+        },
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error("Error fetching Senler group fields:", error);
+    throw error;
+  }
+}
