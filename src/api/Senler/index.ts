@@ -34,8 +34,7 @@ export const OAuth2token = async ({client_id, client_secret, redirect_uri, code}
           client_id: client_id,
           client_secret: client_secret,
           redirect_uri: redirect_uri,
-          code: code,
-          state: Date.now()
+          code: code
         },
       }
     )
