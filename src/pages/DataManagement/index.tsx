@@ -135,7 +135,7 @@ export const DataManagement = () => {
 	return (
     <div>
       <AmoCRM token={token} />
-      {!isAmoCRMAuthenticated && <Senler token={'token'} setToken={setToken} /> }
+      {!isAmoCRMAuthenticated && <Senler token={token} setToken={setToken} /> }
 
       {
         isAmoCRMAuthenticated &&
