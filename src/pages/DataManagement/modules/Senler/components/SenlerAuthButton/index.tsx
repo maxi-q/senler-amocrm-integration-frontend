@@ -23,6 +23,7 @@ const SenlerAuthLink = ({
 		authUrl.searchParams.append('group_id', group_id)
 		authUrl.searchParams.append('client_id', clientId)
 		authUrl.searchParams.append('redirect_uri', redirectUri)
+		authUrl.searchParams.append('state', ''+Date.now())
 
 		return authUrl.toString()
 	}
