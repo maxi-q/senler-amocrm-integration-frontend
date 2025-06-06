@@ -64,10 +64,17 @@ export const MessageEditor = ({
         />
         <button
           onClick={() => setShowModal(true)}
-          className="absolute right-2 top-2 bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-600 transition-colors"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
           title="Вставить переменную"
         >
-          +
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-5 h-5"
+          >
+            <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" />
+          </svg>
         </button>
       </div>
 
@@ -103,10 +110,10 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
   const [error, setError] = useState('');
 
   // const wildcards = options || [];
-  const wildcards = [
-    { value: '%username%', label: 'Имя' },
-    { value: '%fullname%', label: 'Полное имя' },
-    { value: '%userid%', label: 'ID получателя' },
+  // const wildcards = [
+    // { value: '%username%', label: 'Имя' },
+    // { value: '%fullname%', label: 'Полное имя' },
+    // { value: '%userid%', label: 'ID получателя' },
     // { value: '%domain%', label: 'Короткий адрес страницы' },
     // { value: '[city]%city%|город не выбран[/city]', label: 'Город' },
     // { value: '[country]%country%|страна не выбрана[/country]', label: 'Страна' },
@@ -117,7 +124,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
     // { value: '[rand]текст 1|текст 2|текст 3[/rand]', label: 'Случайный текст' },
     // { value: '[rand]1:9999[/rand]', label: 'Случайное число' },
     // { value: '%unsubscribe%', label: 'Отписаться' },
-  ];
+  // ];
 
   useEffect(() => {
     if (!show) return;
@@ -143,6 +150,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
         setError('');
       } catch (err) {
         setError('Ошибка загрузки переменных');
+        console.log(error)
       } finally {
         setLoading(false);
       }
@@ -156,7 +164,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
       setError('Выберите переменную');
       return;
     }
-    onInsert(`%${selectedCustomVar}%`);
+    onInsert(`${selectedCustomVar}`);
     onHide();
   };
 
@@ -165,7 +173,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
       setError('Выберите переменную');
       return;
     }
-    onInsert(`%${selectedGlobalVar}%`);
+    onInsert(`${selectedGlobalVar}`);
     onHide();
   };
 
@@ -188,9 +196,9 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
 
         {/* Body */}
         <div className="flex-1 p-6">
-          {error && <div className="text-red-500 mb-6 text-lg">{error}</div>}
+          {/* {error && <div className="text-red-500 mb-6 text-lg">{error}</div>} */}
 
-          {/* Wildcards Grid */}
+          {/* Wildcards Grid
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
             {wildcards.map((card) => (
               <button
@@ -204,7 +212,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 {card.label}
               </button>
             ))}
-          </div>
+          </div> */}
 
           {/* Custom Variables Section */}
           <div className="space-y-6 mb-8">
@@ -219,7 +227,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 >
                   <option value="">Выберите переменную</option>
                   {customVars.map((varItem) => (
-                    <option key={varItem.value} value={varItem.label}>
+                    <option key={varItem.value} value={varItem.value}>
                       {varItem.label}
                     </option>
                   ))}
@@ -253,7 +261,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 >
                   <option value="">Выберите переменную</option>
                   {globalVars.map((varItem) => (
-                    <option key={varItem.value} value={varItem.label}>
+                    <option key={varItem.value} value={varItem.value}>
                       {varItem.label}
                     </option>
                   ))}
@@ -286,7 +294,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
             setShowAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`%${name}%`);
+            onInsert(`${name}`);
             setShowAddModal(false);
           }}
         />
@@ -299,7 +307,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
             setShowGlobalAddModal(false);
           }}
           onSuccess={(name) => {
-            onInsert(`%${name}%`);
+            onInsert(`${name}`);
             setShowGlobalAddModal(false);
           }}
         />

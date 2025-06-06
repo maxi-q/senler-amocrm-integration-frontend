@@ -57,10 +57,16 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
         onClick={() => onDelete(rowIndex)}
         className={styles['delete-button']}
         title="Удалить строку"
-        style={{ marginTop: '24px' }}
+        style={{ marginTop: '28px' }}
       >
-        <svg style={{ width: "24px", height: "24px" }} viewBox="0 0 24 24">
-          <path fill='#fff' d="M8 4v-2h8v2h5v2h-18v-2h5zm-3 16v-14h14v14q0 1.25-.875 2.125t-2.125.875h-8q-1.25 0-2.125-.875t-.875-2.125zm2-2h10v-12h-10v12z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4"
+          style={{ width: "24px", height: "24px" }}
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
         </svg>
       </button>
     </div>
