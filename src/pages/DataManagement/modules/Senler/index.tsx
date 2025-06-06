@@ -28,7 +28,7 @@ export const Senler = ({ token, setToken }: { token: string; setToken: React.Dis
     return (
       <SenlerAuthLink
         clientId={import.meta.env.VITE_CLIENT_ID || ''}
-        redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
+        redirectUri={`https://amocrm.senler.ru/get_senler_code`}
         group_id={senlerGroupId}
         onAuthSuccess={saveSenlerCode}
       />
