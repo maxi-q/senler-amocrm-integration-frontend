@@ -54,7 +54,7 @@ const SenlerAuthLink = ({
 
 				if (code) {
 					onAuthSuccess({ code })
-					// popup.close()
+					popup.close()
 					clearInterval(timer)
 				}
 

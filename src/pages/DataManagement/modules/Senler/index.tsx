@@ -11,13 +11,17 @@ export const Senler = ({ token, setToken }: { token: string; setToken: React.Dis
   const [isLoading, setIsLoading] = useState(false);
 
   const saveSenlerCode = async ({code}: {code: string}) => {
+    console.log(code)
     setIsLoading(true)
+
     const result = await OAuth2token({
       client_id: import.meta.env.VITE_CLIENT_ID,
       client_secret: '6c0be2c31d56d105ce19d3e5c18311e5808cd3b2',
       redirect_uri: 'https://amocrm.senler.ru/get_senler_code',
       code: code,
     })
+
+    console.log(result)
     setIsLoading(false)
     if (result.success) {
       setToken(result.access_token)
