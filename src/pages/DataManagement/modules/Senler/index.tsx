@@ -11,7 +11,7 @@ export const Senler = ({ token, setToken }: { token: string; setToken: React.Dis
   const [isLoading, setIsLoading] = useState(false);
 
   const saveSenlerCode = async ({code}: {code: string}) => {
-    console.log(code)
+    console.log('code', code)
     setIsLoading(true)
 
     const result = await OAuth2token({
