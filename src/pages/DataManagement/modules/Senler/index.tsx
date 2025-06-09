@@ -19,6 +19,7 @@ export const Senler = ({ token, setToken }: { token: string; setToken: React.Dis
       client_secret: '6c0be2c31d56d105ce19d3e5c18311e5808cd3b2',
       redirect_uri: 'https://amocrm.senler.ru/get_senler_code',
       code: code,
+      group_id: senlerGroupId,
     })
 
     console.log(result)
