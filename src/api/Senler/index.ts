@@ -26,14 +26,12 @@ export const getSenlerGroupFields = async ({ senlerGroupId }: IGetSenlerGroupFie
 };
 
 export const OAuth2token = async ({client_id, client_secret, redirect_uri, code, group_id}: {client_id: string, client_secret: string, redirect_uri: string, code: string, group_id: string}) => {
-  console.log('group_id 1', group_id)
   try {
-    console.log('group_id 2', group_id)
      const response = await axios.get<{success: boolean, access_token: string}>(
       `https://senler.ru/ajax/cabinet/OAuth2token`,
       {
         params: {
-          client_id: client_id,
+          client_id: '670b92d90d647d1fc4350042',
           client_secret: client_secret,
           redirect_uri: redirect_uri,
           code: code,
