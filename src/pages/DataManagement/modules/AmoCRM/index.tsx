@@ -41,7 +41,7 @@ export const AmoCRM = ({ OAuthCode }: { OAuthCode: string; }) => {
   const renderAuthLink = () => {
     return (
       <AmoAuthLink
-        clientId={import.meta.env.VITE_CLIENT_ID || ''}
+        clientId={'37232e67-3403-48c8-b949-69edb0701268'} // import.meta.env.VITE_CLIENT_ID || ''
         redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
         onAuthSuccess={registerAndCheckAccess}
       />
