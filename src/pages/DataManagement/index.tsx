@@ -36,7 +36,7 @@ export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
 
-  const [token, setToken] = useState('')
+  const [OAuthCode, setOAuthCode] = useState('')
   const [vkGroupId, setVkGroupId] = useState('')
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
@@ -65,7 +65,7 @@ export const DataManagement = () => {
         private: { ...privateData },
         public: {
           ...publicData,
-          token,
+          token: OAuthCode,
           vkGroupId,
           type: stepType,
           syncableVariables: publicData && publicData[stepType] ,
@@ -86,7 +86,7 @@ export const DataManagement = () => {
     if (publicPayload) {
       const parsedPublicData = publicPayload;
 
-      setToken(parsedPublicData.token);
+      setOAuthCode(parsedPublicData.token);
       setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
@@ -110,7 +110,7 @@ export const DataManagement = () => {
             private: { ...privateData },
             public: {
               ...publicData,
-              token,
+              token: OAuthCode,
               vkGroupId,
               type: stepType,
               syncableVariables,
@@ -134,8 +134,8 @@ export const DataManagement = () => {
 
 	return (
     <div>
-      <AmoCRM token={token} />
-      {!isAmoCRMAuthenticated && <Senler token={token} setToken={setToken} /> }
+      <AmoCRM OAuthCode={OAuthCode} />
+      {!isAmoCRMAuthenticated && <Senler token={OAuthCode} setToken={setOAuthCode} /> }
 
       {
         isAmoCRMAuthenticated &&

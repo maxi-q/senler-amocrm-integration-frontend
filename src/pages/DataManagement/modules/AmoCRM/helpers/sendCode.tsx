@@ -1,11 +1,11 @@
 import { getUrlParams } from "@/helpers";
 import { sendAuthCode } from "@/api/Backend/auth";
 
-export const sendCode = async ({ code, referer, token }: { code: string; referer: string; token: string; }) => {
+export const sendCode = async ({ code, referer, OAuthCode }: { code: string; referer: string; OAuthCode: string; }) => {
   const { sign, senlerGroupId } = getUrlParams()
 
   const successRegistration = await sendAuthCode({
-    senlerApiAccessToken: token,
+    senlerAuthorizationCode: OAuthCode,
     senlerGroupId,
     amoCrmDomain: referer,
     amoCrmAuthorizationCode: code,

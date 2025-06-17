@@ -1,7 +1,7 @@
 import axios from "axios";
 
 interface sendAuthCode {
-	senlerApiAccessToken: string,
+	senlerAuthorizationCode: string,
 	senlerGroupId: string,
 	amoCrmDomain: string,
 	amoCrmAuthorizationCode: string
@@ -10,7 +10,7 @@ interface sendAuthCode {
 }
 
 export const sendAuthCode = async ({
-	senlerApiAccessToken,
+	senlerAuthorizationCode,
 	senlerGroupId,
 	amoCrmDomain: amoCrmDomainName,
 	amoCrmAuthorizationCode,
@@ -20,12 +20,11 @@ export const sendAuthCode = async ({
 		await axios.post(
 			`/api/senlerGroups`,
 			JSON.stringify({
-				senlerApiAccessToken,
+				senlerAuthorizationCode,
 				senlerGroupId: +senlerGroupId,
 				amoCrmDomainName,
 				amoCrmAuthorizationCode,
         senlerSign,
-        // vkGroupId
 			}),
 			{
 				headers: {

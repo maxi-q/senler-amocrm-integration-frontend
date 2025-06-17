@@ -11,8 +11,8 @@ import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
 
-export const AmoCRM = ({ token }: { token: string; }) => {
-  if (!token) return <></>
+export const AmoCRM = ({ OAuthCode }: { OAuthCode: string; }) => {
+  if (!OAuthCode) return <></>
 
   const [isLoading, setIsLoading] = useState(true);
   const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
@@ -32,7 +32,7 @@ export const AmoCRM = ({ token }: { token: string; }) => {
   }, []);
 
   const registerAndCheckAccess = async (code: IOnAuthSuccess) => {
-    const successRegistration = await sendCode({ ...code, token })
+    const successRegistration = await sendCode({ ...code, OAuthCode })
     if (successRegistration) {
       setIsAmoCRMAuthenticated(true)
     }
