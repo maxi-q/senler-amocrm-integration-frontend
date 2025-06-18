@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CheckRegistrationDto } from "./index.types";
+import { SERVER_URL } from "@/constants";
 
 type checkRegistrationAndReturnData = {
   amoCrmDomainName: string
@@ -11,7 +12,7 @@ type checkRegistrationAndReturnData = {
 export const checkRegistrationAndReturnData = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
     const result = await axios.get<checkRegistrationAndReturnData>(
-      `/api/senlerGroups/${senlerGroupId}`,
+      SERVER_URL + `/api/senlerGroups/${senlerGroupId}`,
       {
         params: { field: 'senlerGroupId' }
       }

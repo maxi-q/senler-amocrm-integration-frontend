@@ -1,3 +1,4 @@
+import { SERVER_URL } from "@/constants";
 import axios from "axios";
 
 interface sendAuthCode {
@@ -18,7 +19,7 @@ export const sendAuthCode = async ({
 }: sendAuthCode) => {
 	try {
 		await axios.post(
-			`/api/senlerGroups`,
+			SERVER_URL + `/api/senlerGroups`,
 			JSON.stringify({
 				senlerAuthorizationCode,
 				senlerGroupId: +senlerGroupId,

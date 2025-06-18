@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CheckRegistrationDto } from "./index.types";
+import { SERVER_URL } from "@/constants";
 
 export type integrationStepTemplate = {
   id: string,
@@ -19,7 +20,7 @@ type getSenlerGroupTemplatesResponse = {
 export const getSenlerGroupTemplates = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
     const result = await axios.get<getSenlerGroupTemplatesResponse>(
-      `/api/senlerGroups/${senlerGroupId}`,
+      SERVER_URL + `/api/senlerGroups/${senlerGroupId}`,
       {
         params: { field: 'senlerGroupId' }
       }
@@ -58,7 +59,7 @@ type createSenlerGroupTemplatesResponse = {
 export const createIntegrationStepTemplates = async (data: saveTemplate) => {
   try {
     const result = await axios.post<createSenlerGroupTemplatesResponse>(
-      `/api/integrationStepTemplates`,
+      SERVER_URL + `/api/integrationStepTemplates`,
       data
     );
 
