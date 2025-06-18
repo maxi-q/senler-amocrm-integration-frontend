@@ -12,7 +12,7 @@ type checkRegistrationAndReturnData = {
 export const checkRegistrationAndReturnData = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {
     const result = await axios.get<checkRegistrationAndReturnData>(
-      SERVER_URL + `/api/senlerGroups/${senlerGroupId}`,
+      SERVER_URL + `/senlerGroups/${senlerGroupId}`,
       {
         params: { field: 'senlerGroupId' }
       }

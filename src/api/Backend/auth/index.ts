@@ -19,7 +19,7 @@ export const sendAuthCode = async ({
 }: sendAuthCode) => {
 	try {
 		await axios.post(
-			SERVER_URL + `/api/senlerGroups`,
+			SERVER_URL + `/senlerGroups`,
 			JSON.stringify({
 				senlerAuthorizationCode,
 				senlerGroupId: +senlerGroupId,

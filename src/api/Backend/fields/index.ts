@@ -9,7 +9,7 @@ interface getAmoCRMFields {
 export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promise<IAmoCRMField[]> => {
   try {
     const response = await axios.get(
-      SERVER_URL + `/api/integration/getAmoFields`,
+      SERVER_URL + `/integration/getAmoFields`,
       {
         params: {
           senlerGroupId
