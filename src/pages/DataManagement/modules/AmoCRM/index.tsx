@@ -12,10 +12,11 @@ import { sendCode } from './helpers/sendCode';
 import styles from './styles.module.css';
 
 export const AmoCRM = ({ OAuthCode }: { OAuthCode: string; }) => {
-  if (!OAuthCode) return <></>
+  const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
+
+  if (!OAuthCode && !isAmoCRMAuthenticated) return <></>
 
   const [isLoading, setIsLoading] = useState(true);
-  const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
 
   useEffect(() => {
     const checkAuth = async () => {
