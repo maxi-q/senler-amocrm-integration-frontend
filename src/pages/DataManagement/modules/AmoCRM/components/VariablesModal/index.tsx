@@ -103,9 +103,9 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
   const [showAddModal, setShowAddModal] = useState(false);
   const [showGlobalAddModal, setShowGlobalAddModal] = useState(false);
   const [customVars, setCustomVars] = useState<Variable[]>([]);
-  const [globalVars, setGlobalVars] = useState<Variable[]>([]);
+  // const [globalVars, setGlobalVars] = useState<Variable[]>([]);
   const [selectedCustomVar, setSelectedCustomVar] = useState('');
-  const [selectedGlobalVar, setSelectedGlobalVar] = useState('');
+  // const [selectedGlobalVar, setSelectedGlobalVar] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -135,16 +135,16 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
       setLoading(false);
 
       try {
-        const [customRes, globalRes] = await Promise.all([
+        const [ customRes ] = await Promise.all([
           fetch(`/vars/list?group_id=${groupId}`),
           fetch(`/vars/list?group_id=${groupId}&type=glob_vars`)
         ]);
 
         const customData = await customRes.json();
-        const globalData = await globalRes.json();
+        // const globalData = await globalRes.json();
 
         setCustomVars(customData);
-        setGlobalVars(globalData);
+        // setGlobalVars(globalData);
 
 
         setError('');
@@ -168,14 +168,14 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
     onHide();
   };
 
-  const handleInsertGlobal = () => {
-    if (!selectedGlobalVar) {
-      setError('Выберите переменную');
-      return;
-    }
-    onInsert(`${selectedGlobalVar}`);
-    onHide();
-  };
+  // const handleInsertGlobal = () => {
+  //   if (!selectedGlobalVar) {
+  //     setError('Выберите переменную');
+  //     return;
+  //   }
+  //   onInsert(`${selectedGlobalVar}`);
+  //   onHide();
+  // };
 
   if (!show) return null;
 
@@ -239,18 +239,18 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                   Вставить
                 </button>
               </div>
-              <button
+              {/* <button
                 onClick={() => {
                   setShowAddModal(true);
                 }}
                 className="text-blue-600 hover:text-blue-700 text-lg"
               >
                 Создать новую переменную
-              </button>
+              </button> */}
             </div>
 
             {/* Global Variables Section */}
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <label className="block text-xl font-semibold">Глобальные переменные</label>
               <div className="flex gap-4">
                 <select
@@ -281,7 +281,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
               >
                 Создать новую переменную
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

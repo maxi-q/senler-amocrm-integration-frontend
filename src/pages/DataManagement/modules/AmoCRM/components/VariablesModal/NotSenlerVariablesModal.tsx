@@ -85,14 +85,14 @@ export const VariablesModal = ({ groupId, show, onHide, onInsert, options }: Var
                   Вставить
                 </button>
               </div>
-              <button
+              {/* <button
                 onClick={() => {
                   setShowAddModal(true);
                 }}
                 className="text-blue-600 hover:text-blue-700 text-lg"
               >
                 Создать новую переменную
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
