@@ -10,7 +10,6 @@ import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
-import { Senler } from './modules/Senler'
 
 
 export enum BotStepType {
@@ -134,8 +133,7 @@ export const DataManagement = () => {
 
 	return (
     <div>
-      <AmoCRM OAuthCode={OAuthCode} />
-      {!isAmoCRMAuthenticated && <Senler token={OAuthCode} setToken={setOAuthCode} /> }
+      <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode}/>
 
       {
         isAmoCRMAuthenticated &&

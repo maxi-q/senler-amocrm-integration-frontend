@@ -10,8 +10,9 @@ import { Loader } from './components/Loader';
 import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
+import { Senler } from '../Senler';
 
-export const AmoCRM = ({ OAuthCode }: { OAuthCode: string; }) => {
+export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>> }) => {
   const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
 
   if (!OAuthCode && !isAmoCRMAuthenticated) return <></>
@@ -41,11 +42,17 @@ export const AmoCRM = ({ OAuthCode }: { OAuthCode: string; }) => {
 
   const renderAuthLink = () => {
     return (
-      <AmoAuthLink
-        clientId={import.meta.env.VITE_CLIENT_ID || ''}
-        redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
-        onAuthSuccess={registerAndCheckAccess}
-      />
+      <>
+        {
+          !OAuthCode
+            ? <Senler token={OAuthCode} setToken={setOAuthCode} />
+            : <AmoAuthLink
+                clientId={import.meta.env.VITE_CLIENT_ID || ''}
+                redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
+                onAuthSuccess={registerAndCheckAccess}
+              />
+        }
+      </>
     );
   };
 
