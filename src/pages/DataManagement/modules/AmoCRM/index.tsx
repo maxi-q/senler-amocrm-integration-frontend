@@ -15,8 +15,6 @@ import { Senler } from '../Senler';
 export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>> }) => {
   const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()
 
-  if (!OAuthCode && !isAmoCRMAuthenticated) return <></>
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
