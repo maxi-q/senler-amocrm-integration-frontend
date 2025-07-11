@@ -86,7 +86,6 @@ export const DataManagement = () => {
       const parsedPublicData = publicPayload;
 
       // setOAuthCode(parsedPublicData.token);
-      setOAuthCode('');
       setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }

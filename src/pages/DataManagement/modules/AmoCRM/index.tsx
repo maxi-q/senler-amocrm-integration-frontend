@@ -56,7 +56,7 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
 
   const renderAuthenticatedContent = () => {
     return (
-      <AmoCRMProfile amoCrmDomainName={senlerGroup.amoCrmDomainName}/>
+      <AmoCRMProfile setOAuthCode={setOAuthCode} amoCrmDomainName={senlerGroup.amoCrmDomainName}/>
     );
   };
 
