@@ -1,4 +1,14 @@
+import { unlinkAmoAccount } from "@/api/Backend/unlinkAmoAccount"
+import useAccountStore from "@/store/account"
+
 const AmoCRMProfile = ({amoCrmDomainName}: {amoCrmDomainName: string}) => {
+  const { senlerGroup, setIsAmoCRMAuthenticated } = useAccountStore()
+
+  const unlinkAmoAccountButton = () => {
+    unlinkAmoAccount(senlerGroup.id)
+    setIsAmoCRMAuthenticated(false)
+  }
+
   return (
     <div className="flex justify-start p-3 flex-row">
       <div className="flex w-full items-center text-sm justify-between">
@@ -21,7 +31,7 @@ const AmoCRMProfile = ({amoCrmDomainName}: {amoCrmDomainName: string}) => {
           <p className="text-gray-600">{amoCrmDomainName || 'account.amocrm.ru'}</p>
         </div>
       </div>
-        <button className="text-red-600 font-medium rounded-md px-4 py-2 border border-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer">
+        <button onClick={unlinkAmoAccountButton} className="text-red-600 font-medium rounded-md px-4 py-2 border border-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer">
           Отключить
         </button>
       </div>

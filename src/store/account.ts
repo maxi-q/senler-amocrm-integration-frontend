@@ -22,8 +22,16 @@ const useAccountStore = create<AccountStore>((set) => ({
     senlerGroupVkId: 0
   },
   isAmoCRMAuthenticated: false,
-  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => set(() => ({ isAmoCRMAuthenticated: isAmoCRMAuthenticated })),
-  setSenlerGroup: (senlerGroup: Account) => set(() => ({ senlerGroup: senlerGroup }))
+  setIsAmoCRMAuthenticated: (isAmoCRMAuthenticated: boolean) => set(() => ({
+    isAmoCRMAuthenticated: isAmoCRMAuthenticated,
+    senlerGroup: {
+      amoCrmDomainName: '',
+      id: '',
+      senlerGroupId: 0,
+      senlerGroupVkId: 0
+    }
+  })),
+  setSenlerGroup: (senlerGroup: Account) => set(() => ({ senlerGroup: senlerGroup })),
 }));
 
 export default useAccountStore
