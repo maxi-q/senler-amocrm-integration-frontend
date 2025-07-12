@@ -18,6 +18,7 @@ export const sendAuthCode = async ({
   senlerSign,
 }: sendAuthCode) => {
 	try {
+    console.log('senlerAuthorizationCode', senlerAuthorizationCode)
 		await axios.post(
 			SERVER_URL + `/senlerGroups`,
 			JSON.stringify({
