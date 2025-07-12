@@ -29,8 +29,6 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
     };
 
     checkAuth();
-
-    setOAuthCode(' 2 ');
   }, []);
 
   const registerAndCheckAccess = async (code: IOnAuthSuccess) => {
