@@ -35,7 +35,7 @@ export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
 
-  const [OAuthCode, setOAuthCode] = useState(' 1 ')
+  const [OAuthCode, setOAuthCode] = useState('')
   const [vkGroupId, setVkGroupId] = useState('')
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
@@ -85,7 +85,7 @@ export const DataManagement = () => {
     if (publicPayload) {
       const parsedPublicData = publicPayload;
 
-      setOAuthCode(' 6 ');
+      setOAuthCode('');
       setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }

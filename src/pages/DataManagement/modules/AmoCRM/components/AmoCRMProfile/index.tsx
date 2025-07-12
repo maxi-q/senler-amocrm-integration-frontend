@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>>}) => {
   const { senlerGroup, setIsAmoCRMAuthenticated } = useAccountStore()
 
-  useEffect(()=>{ setOAuthCode(' 8 ') }, [])
+  useEffect(()=>{ setOAuthCode('') }, [])
 
   const unlinkAmoAccountButton = () => {
     unlinkAmoAccount(senlerGroup.id)

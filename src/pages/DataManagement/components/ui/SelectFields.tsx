@@ -8,7 +8,6 @@ interface MySelectProps {
 
 export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen }: MySelectProps) => {
   const isLoaded = Boolean(options);
-  console.log('test -- test ', isLoaded, isOpen, options)
 
   const selectedLabel = "Выберите шаблон";
 
