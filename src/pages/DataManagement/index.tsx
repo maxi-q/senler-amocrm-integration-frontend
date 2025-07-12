@@ -109,7 +109,7 @@ export const DataManagement = () => {
             private: { ...privateData },
             public: {
               ...publicData,
-              token: Boolean(OAuthCode),
+              // token: Boolean(OAuthCode),
               vkGroupId,
               type: stepType,
               syncableVariables,
