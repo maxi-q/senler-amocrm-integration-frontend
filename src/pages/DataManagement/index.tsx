@@ -64,7 +64,7 @@ export const DataManagement = () => {
         private: { ...privateData },
         public: {
           ...publicData,
-          token: OAuthCode,
+          // token: OAuthCode,
           vkGroupId,
           type: stepType,
           syncableVariables: publicData && publicData[stepType] ,
@@ -85,7 +85,7 @@ export const DataManagement = () => {
     if (publicPayload) {
       const parsedPublicData = publicPayload;
 
-      // setOAuthCode(parsedPublicData.token);
+      setOAuthCode('');
       setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
