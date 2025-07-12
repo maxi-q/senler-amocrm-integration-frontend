@@ -35,7 +35,7 @@ export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
 
-  const [OAuthCode, setOAuthCode] = useState('')
+  const [OAuthCode, setOAuthCode] = useState(' 1 ')
   const [vkGroupId, setVkGroupId] = useState('')
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
@@ -109,7 +109,7 @@ export const DataManagement = () => {
             private: { ...privateData },
             public: {
               ...publicData,
-              // token: Boolean(OAuthCode),
+              token: '',
               vkGroupId,
               type: stepType,
               syncableVariables,
