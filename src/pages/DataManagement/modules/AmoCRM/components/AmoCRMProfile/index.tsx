@@ -35,7 +35,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
         </div>
       </div>
         <button onClick={unlinkAmoAccountButton} className="text-red-600 font-medium rounded-md px-4 py-2 border border-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer">
-          Отключить
+          Отключить.
         </button>
       </div>
     </div>
