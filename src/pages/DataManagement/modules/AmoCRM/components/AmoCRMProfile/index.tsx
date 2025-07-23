@@ -1,14 +1,15 @@
 import { unlinkAmoAccount } from "@/api/Backend/unlinkAmoAccount"
+import { getUrlParams } from "@/helpers";
 import useAccountStore from "@/store/account"
 import { useEffect } from "react";
 
 const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>>}) => {
-  const { senlerGroup, setIsAmoCRMAuthenticated } = useAccountStore()
-
+  const { setIsAmoCRMAuthenticated } = useAccountStore()
+  const { senlerGroupId } = getUrlParams()
   useEffect(()=>{ setOAuthCode('') }, [])
 
   const unlinkAmoAccountButton = () => {
-    unlinkAmoAccount(senlerGroup.id)
+    unlinkAmoAccount(senlerGroupId)
     setIsAmoCRMAuthenticated(false)
   }
 

@@ -59,6 +59,12 @@ export const DataManagement = () => {
   };
 
   useEffect(()=>{
+    if(!stepType) {
+      setStepType(BotStepType.SendDataToAmoCrm)
+    }
+  }, [stepType])
+
+  useEffect(()=>{
     setTransferData(
       {
         private: { ...privateData },
@@ -87,7 +93,7 @@ export const DataManagement = () => {
 
       setOAuthCode('');
       setVkGroupId(parsedPublicData.vkGroupId);
-      setStepType(parsedPublicData.type);
+      setStepType(parsedPublicData.type || BotStepType.SendDataToAmoCrm);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
 
       setPublicData(parsedPublicData);
