@@ -8,7 +8,7 @@ interface unlinkAmoAccount {
 export const unlinkAmoAccount = async (senlerGroupId: string) => {
 	try {
 		await axios.delete(
-			SERVER_URL + `/integration/unlinkAmoAccount`,
+			SERVER_URL + `/integration/untieAmoCrmProfile`,
 			{
         params: {
           senlerGroupId: +senlerGroupId,
