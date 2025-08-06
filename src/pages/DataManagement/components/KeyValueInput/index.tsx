@@ -16,7 +16,7 @@ interface IEditableTableProps {
   type?: 'no-senler' | 'senler'
 }
 
-const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
+const EditableTable = ({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
@@ -76,6 +76,6 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
       </table>
     </div>
   );
-});
+};
 
 export default EditableTable;
