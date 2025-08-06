@@ -47,16 +47,6 @@ export const DataManagement = () => {
 
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
-  const getDefaultComponent = (type: BotStepType) => {
-    switch (type) {
-        case BotStepType.SendDataToAmoCrm:
-            return <SendDataToAmoCrm data={publicData} setData={setPublicData} />;
-        case BotStepType.SendDataToSenler:
-            return <SendDataToSenler data={publicData} setData={setPublicData} />;
-        default:
-            return <>Тип не передан</>;
-    }
-  };
 
   useEffect(()=>{
     if(!stepType) {
@@ -166,7 +156,14 @@ export const DataManagement = () => {
           </div>
 
           <div className='mt-8 relative'>
-            { dataIsLoaded ? getDefaultComponent(stepType) : <Loader/> }
+            {
+              dataIsLoaded ?
+              <>
+                {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} />}
+                {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
+              </> :
+              <Loader/>
+            }
           </div>
         </>
       }
