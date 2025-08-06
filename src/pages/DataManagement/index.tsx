@@ -83,8 +83,8 @@ export const DataManagement = () => {
     let { private: privatePayload, public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
 
     console.log('mockMessage', mockMessage)
-    console.log('privatePayload', privatePayload)
-    console.log('privateData', privateData)
+    console.log('publicPayload', publicPayload)
+    console.log('publicData', publicData)
 
     if (!mockMessage) {
       privatePayload = JSON.parse(privatePayload || '{}')
