@@ -16,11 +16,12 @@ interface IEditableTableProps {
   type?: 'no-senler' | 'senler'
 }
 
-const EditableTable = ({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
+const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
     setCurrentData(data)
+    console.log('setCurrentData in EditableTable', data)
   }, [data])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
@@ -76,6 +77,6 @@ const EditableTable = ({ data = [], changeData, toFields, fromFields, type='senl
       </table>
     </div>
   );
-};
+});
 
 export default EditableTable;

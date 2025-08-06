@@ -11,7 +11,7 @@ import { BotStepType } from '../..'
 import { transformDataToListMessage } from '../../helpers/helpers'
 import { SenlerFieldsResponse } from '../../types'
 
-const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
+const SendDataToAmoCrm = ({ data, setData }: ISendDataToAmoCrm) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
 
@@ -33,6 +33,8 @@ const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
   };
 
   useEffect(() => {
+    console.log('Rerender SendDataToAmoCrm', data)
+
     const { senlerGroupId } = getUrlParams();
 
     if (!senlerGroupId) {
@@ -42,9 +44,9 @@ const SendDataToAmoCrm = ({data, setData}: ISendDataToAmoCrm) => {
 
     getOrThrowAmoCRMFields(senlerGroupId);
 
-    const data = transformDataToListMessage(senlerGroupId)
+    const _data = transformDataToListMessage(senlerGroupId)
 
-    sendMessage(data, window.parent);
+    sendMessage(_data, window.parent);
   }, [])
 
   useEffect(() =>{

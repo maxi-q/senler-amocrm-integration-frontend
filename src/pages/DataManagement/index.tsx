@@ -54,7 +54,8 @@ export const DataManagement = () => {
     }
   }, [stepType])
 
-  useEffect(()=>{
+  useEffect(() => {
+    console.log('set publicData in DataManagement', publicData)
     setTransferData(
       {
         private: { ...privateData },

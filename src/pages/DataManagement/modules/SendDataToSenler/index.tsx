@@ -36,6 +36,8 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
   };
 
   useEffect(() => {
+    console.log('Rerender SendDataToSenler', data)
+
     const { senlerGroupId } = getUrlParams()
 
     if (!senlerGroupId) {
@@ -44,8 +46,8 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
     }
 
     getOrThrowAmoCRMFields(senlerGroupId)
-    const data = transformDataToListMessage(senlerGroupId)
-    sendMessage(data, window.parent)
+    const _data = transformDataToListMessage(senlerGroupId)
+    sendMessage(_data, window.parent)
   }, [])
 
   useEffect(() =>{
