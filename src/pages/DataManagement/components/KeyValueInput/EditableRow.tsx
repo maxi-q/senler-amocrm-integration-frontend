@@ -15,7 +15,7 @@ interface IEditableRowProps {
   type: 'no-senler' | 'senler';
 }
 
-const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [], fromFields = [], type='no-senler' }: IEditableRowProps) => {
+const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fromFields = [], type='no-senler' }: IEditableRowProps) => {
   const getLabel = (field: IAmoCRMField | ISenlerField): string => {
     return field instanceof ISenlerField ? field.text : field.name;
   };
@@ -71,6 +71,6 @@ const EditableRow = memo(({ row, rowIndex, onValueChange, onDelete, toFields = [
       </button>
     </div>
   );
-});
+};
 
 export default EditableRow;

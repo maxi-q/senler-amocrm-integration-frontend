@@ -21,7 +21,6 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
 
   useEffect(() => {
     setCurrentData(data)
-    console.log('setCurrentData in EditableTable', data)
   }, [data])
 
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
