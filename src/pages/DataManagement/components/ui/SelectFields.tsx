@@ -6,9 +6,11 @@ interface MySelectProps {
   options: { value: string; label: string; id: string }[];
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  refreshTemplates: () => Promise<void>
+  resaveTemplate: (id: string) => Promise<void>
 }
 
-export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen }: MySelectProps) => {
+export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen, refreshTemplates, resaveTemplate }: MySelectProps) => {
   const isLoaded = Boolean(options);
 
   const selectedLabel = "Выберите шаблон";
@@ -22,21 +24,11 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
     setIsOpen(!isOpen);
   };
 
-  const renameTemplate = async (id: string) => {
-    const name = prompt('Новое название шаблона', '');
-    if (name) {
-      const res = await patchIntegrationStepTemplates({ name: name }, id)
-
-      if (res.ok) {
-        console.log('renameTemplate')
-      }
-    }
-  }
-
   const deleteTemplate = async (id: string) => {
     const res = await deleteIntegrationStepTemplates(id)
     if (res.ok) {
       console.log('template is delete')
+      refreshTemplates()
     }
   }
 
@@ -76,15 +68,15 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     setIsOpen(false);
                   }}
                 >
-                  Прим
+                  Прим {' '}
                 </div>
                 <div
                   className="hover:bg-blue-50"
                   onClick={() => {
-                    renameTemplate(item.id);
+                    resaveTemplate(item.id);
                   }}
                   >
-                  Пер
+                  Изм {' '}
                 </div>
                 <div
                   className="hover:bg-blue-50"
