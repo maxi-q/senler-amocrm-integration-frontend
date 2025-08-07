@@ -61,24 +61,24 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                   ${value === item.value ? "bg-blue-50 text-blue-600 font-medium" : ""}
                   flex items-center min-h-10`}
               >
-                <span className="truncate">{item.label}</span>
+                <span className="truncate mr-auto">{item.label}</span>
                 <div
-                  className="hover:bg-blue-50"
+                  className="hover:bg-blue-50 mr-1"
                   onClick={() => {
                     onValueChange(item.value);
                     setSelectedLabel(item.label);
                     setIsOpen(false);
                   }}
                 >
-                  Прим {' '}
+                  Прим
                 </div>
                 <div
-                  className="hover:bg-blue-50"
+                  className="hover:bg-blue-50 mr-1"
                   onClick={() => {
                     resaveTemplate(item.id);
                   }}
                   >
-                  Изм {' '}
+                  Изм
                 </div>
                 <div
                   className="hover:bg-blue-50"
