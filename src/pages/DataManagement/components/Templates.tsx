@@ -41,7 +41,7 @@ export const Templates = ({data, setData}: ITemplates) => {
   const resaveTemplate = async (id: string) => {
     const name = prompt('Новое название шаблона', '');
     if (name) {
-      const res = await patchIntegrationStepTemplates({ name: name }, id)
+      const res = await patchIntegrationStepTemplates({ name: name, settings: data }, id)
 
       if (res.ok) {
         console.log('renameTemplate')

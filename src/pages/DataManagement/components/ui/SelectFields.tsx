@@ -1,4 +1,5 @@
-import { deleteIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates";
+import { deleteIntegrationStepTemplates } from "@/api/Backend/templates";
+import { useState } from "react";
 
 interface MySelectProps {
   value?: string;
@@ -13,7 +14,7 @@ interface MySelectProps {
 export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen, refreshTemplates, resaveTemplate }: MySelectProps) => {
   const isLoaded = Boolean(options);
 
-  const selectedLabel = "Выберите шаблон";
+  const [selectedLabel, setSelectedLabel] = useState("Выберите шаблон");
 
   const handleDocumentClick = () => {
     setIsOpen(false);
@@ -65,6 +66,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                   className="hover:bg-blue-50"
                   onClick={() => {
                     onValueChange(item.value);
+                    setSelectedLabel(item.label);
                     setIsOpen(false);
                   }}
                 >
