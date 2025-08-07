@@ -37,6 +37,10 @@ export const MessageEditor = ({
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
 
+  useEffect(()=>{
+    setContent(initialContent)
+  }, [initialContent])
+
   const { senlerGroupId } = getUrlParams()
 
   console.log(options)
