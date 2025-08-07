@@ -73,3 +73,50 @@ export const createIntegrationStepTemplates = async (data: saveTemplate) => {
     return {ok: false, data: null};
   }
 };
+
+export const deleteIntegrationStepTemplates = async (id: string) => {
+  try {
+    const result = await axios.delete<null>(
+      SERVER_URL + `/integrationStepTemplates/` + id,
+    );
+
+    return {ok: true, data: result.data};
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.warn("Registration not found, 404 received.");
+      return {ok: false, data: null}
+    }
+    console.error("Error fetching AmoCRM checkRegistration. Something went wrong:", error);
+    return {ok: false, data: null};
+  }
+}
+
+type patchIntegrationStepTemplatesRequest = {
+  name: string,
+  settings?: any
+}
+
+type patchIntegrationStepTemplatesResponse = {
+  id: string,
+  name: string,
+  settings: any,
+  senlerGroupId: string
+}
+
+export const patchIntegrationStepTemplates = async (data: patchIntegrationStepTemplatesRequest, id: string) => {
+  try {
+    const result = await axios.patch<patchIntegrationStepTemplatesResponse>(
+      SERVER_URL + `/integrationStepTemplates/` + id,
+      data
+    );
+
+    return {ok: true, data: result.data};
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.warn("Registration not found, 404 received.");
+      return {ok: false, data: null}
+    }
+    console.error("Error fetching AmoCRM checkRegistration. Something went wrong:", error);
+    return {ok: false, data: null};
+  }
+}

@@ -1,7 +1,9 @@
+import { deleteIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates";
+
 interface MySelectProps {
   value?: string;
   onValueChange: (newValue: string) => void;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; id: string }[];
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -19,6 +21,24 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  const renameTemplate = async (id: string) => {
+    const name = prompt('Новое название шаблона', '');
+    if (name) {
+      const res = await patchIntegrationStepTemplates({ name: name }, id)
+
+      if (res.ok) {
+        console.log('renameTemplate')
+      }
+    }
+  }
+
+  const deleteTemplate = async (id: string) => {
+    const res = await deleteIntegrationStepTemplates(id)
+    if (res.ok) {
+      console.log('template is delete')
+    }
+  }
 
   return (
     <div className="relative w-full">
@@ -44,15 +64,36 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
             {options?.map((item) => (
               <div
                 key={item.value}
-                className={`px-4 py-2 cursor-pointer hover:bg-blue-50 transition-colors
+                className={`px-4 py-2 cursor-pointer transition-colors
                   ${value === item.value ? "bg-blue-50 text-blue-600 font-medium" : ""}
                   flex items-center min-h-10`}
-                onClick={() => {
-                  onValueChange(item.value);
-                  setIsOpen(false);
-                }}
               >
                 <span className="truncate">{item.label}</span>
+                <div
+                  className="hover:bg-blue-50"
+                  onClick={() => {
+                    onValueChange(item.value);
+                    setIsOpen(false);
+                  }}
+                >
+                  Прим
+                </div>
+                <div
+                  className="hover:bg-blue-50"
+                  onClick={() => {
+                    renameTemplate(item.id);
+                  }}
+                  >
+                  Пер
+                </div>
+                <div
+                  className="hover:bg-blue-50"
+                  onClick={() => {
+                    deleteTemplate(item.id);
+                  }}
+                  >
+                  Уд
+                </div>
               </div>
             ))}
           </div>
