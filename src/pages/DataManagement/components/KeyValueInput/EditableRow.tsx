@@ -3,6 +3,7 @@ import MySelect, { MySelectOldV } from './SelectField';
 import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
 
 import styles from './styles.module.css';
+import { useEffect } from 'react';
 
 interface IEditableRowProps {
   row: IDataRow;
@@ -21,6 +22,10 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
 
   const amoCRMFieldsOptions = toFields.map(field => ({ value: field.id, label: getLabel(field) }));
   const senlerFieldsOptions = fromFields.map(field => ({ value: field.id, label: getLabel(field) }));
+
+  useEffect(()=>{
+    console.log('EditableRow', row)
+  }, [row])
 
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
