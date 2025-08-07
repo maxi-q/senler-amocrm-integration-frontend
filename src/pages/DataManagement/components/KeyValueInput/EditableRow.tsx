@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { IDataRow } from '.';
 import MySelect, { MySelectOldV } from './SelectField';
 import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
