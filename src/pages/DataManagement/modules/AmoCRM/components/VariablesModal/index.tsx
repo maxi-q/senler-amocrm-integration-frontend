@@ -69,7 +69,7 @@ export const MessageEditor = ({
         />
         <button
           onClick={() => setShowModal(true)}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+          className="absolute right-2 top-1 transform -translate-y-1/2 bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
           title="Вставить переменную"
         >
           <svg
