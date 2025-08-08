@@ -8,9 +8,10 @@ interface ISelectField {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<any>>;
   options: IOption[];
+  disabled?: boolean;
 }
 
-export const SelectField = ({ label, value, setValue, options }: ISelectField) => {
+export const SelectField = ({ label, value, setValue, options, disabled }: ISelectField) => {
   return (
     <div style={{
       width: '100%',
@@ -50,6 +51,7 @@ export const SelectField = ({ label, value, setValue, options }: ISelectField) =
             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
             cursor: 'pointer'
           }}
+          disabled={disabled}
         >
           {options?.map((option) => (
             <option key={option.value} value={option.value}>

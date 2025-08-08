@@ -1,7 +1,7 @@
 import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
 import { VariablesModal } from './NotSenlerVariablesModal';
-import styles from './styles.module.css'
+import { SelectField } from '@/pages/DataManagement/components/SelectField';
 
 interface Variable {
   value: string;
@@ -224,7 +224,13 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
             <div className="space-y-4">
               <label className="block text-xl font-semibold">Пользовательские переменные</label>
               <div className="flex gap-4">
-                <select
+                <SelectField
+                  value={selectedCustomVar}
+                  setValue={(e) => setSelectedCustomVar(e.target.value)}
+                  options={customVars || []}
+                  disabled={loading}
+                />
+                {/* <select
                   value={selectedCustomVar}
                   onChange={(e) => setSelectedCustomVar(e.target.value)}
                   className={`flex-1 p-3 border-2 rounded-lg bg-white text-lg ${styles.selectField}`}
@@ -236,7 +242,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                       {varItem.label}
                     </option>
                   ))}
-                </select>
+                </select> */}
                 <button
                   onClick={handleInsertCustom}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg"

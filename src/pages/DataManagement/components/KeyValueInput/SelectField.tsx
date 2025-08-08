@@ -1,6 +1,6 @@
 import { IDataRow } from '.';
 import { MessageEditor } from '../../modules/AmoCRM/components/VariablesModal';
-import styles from './styles.module.css'
+import { SelectField } from '../SelectField';
 
 interface MySelectProps {
   value: string;
@@ -28,25 +28,31 @@ export const MySelectOldV = ({ value, rowIndex, onValueChange, options, sourceKe
   const isLoad = Boolean(options);
 
   return (
-    <select
-      onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
-      className={`w-full p-2 border border-gray-300 rounded ${styles.selectField}`}
+    <SelectField
       value={value}
+      setValue={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
+      options={options || []}
       disabled={!isLoad}
-    >
-      {!isLoad ? (
-        <option value="">Загрузка...</option>
-      ) : (
-        <>
-          <option value="">Выберите значение</option>
-          {options?.map((item, index) => (
-            <option key={index} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </>
-      )}
-    </select>
+    />
+    // <select
+    //   onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
+    //   className={`w-full p-2 border border-gray-300 rounded ${styles.selectField}`}
+    //   value={value}
+    //   disabled={!isLoad}
+    // >
+    //   {!isLoad ? (
+    //     <option value="">Загрузка...</option>
+    //   ) : (
+    //     <>
+    //       <option value="">Выберите значение</option>
+    //       {options?.map((item, index) => (
+    //         <option key={index} value={item.value}>
+    //           {item.label}
+    //         </option>
+    //       ))}
+    //     </>
+    //   )}
+    // </select>
   );
 };
 
