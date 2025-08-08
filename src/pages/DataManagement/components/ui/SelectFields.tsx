@@ -60,21 +60,17 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                 className={`px-4 py-2 cursor-pointer transition-colors
                   ${value === item.value ? "bg-blue-50 text-blue-600 font-medium" : ""}
                   flex items-center min-h-10`}
-              >
-                <span className="truncate mr-auto">{item.label}</span>
-                <div
-                  className="hover:bg-blue-50 mr-1"
                   onClick={() => {
                     onValueChange(item.value);
                     setSelectedLabel(item.label);
                     setIsOpen(false);
                   }}
-                >
-                  Прим
-                </div>
+              >
+                <span className="truncate mr-auto">{item.label}</span>
                 <div
                   className="hover:bg-blue-50 mr-1"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     resaveTemplate(item.id);
                   }}
                   >
@@ -82,7 +78,8 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                 </div>
                 <div
                   className="hover:bg-blue-50"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     deleteTemplate(item.id);
                   }}
                   >
