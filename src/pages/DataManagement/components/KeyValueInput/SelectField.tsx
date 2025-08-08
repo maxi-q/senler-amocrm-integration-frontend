@@ -30,7 +30,7 @@ export const MySelectOldV = ({ value, rowIndex, onValueChange, options, sourceKe
   return (
     <SelectField
       value={value}
-      setValue={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
+      setValue={(value) => onValueChange(rowIndex, sourceKey, value)}
       options={options || []}
       disabled={!isLoad}
     />

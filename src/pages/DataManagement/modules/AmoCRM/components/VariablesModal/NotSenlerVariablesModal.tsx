@@ -68,7 +68,7 @@ export const VariablesModal = ({ groupId, show, onHide, onInsert, options }: Var
               <div className="flex gap-4">
                 <SelectField
                   value={selectedCustomVar}
-                  setValue={(e) => setSelectedCustomVar(e.target.value)}
+                  setValue={(value) => setSelectedCustomVar(value)}
                   options={customVars || []}
                   disabled={loading}
                 />

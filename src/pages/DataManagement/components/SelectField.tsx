@@ -6,7 +6,7 @@ interface IOption {
 interface ISelectField {
   label?: string;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<any>>;
+  setValue: (value: any) => void;
   options: IOption[];
   disabled?: boolean;
 }

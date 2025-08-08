@@ -226,7 +226,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
               <div className="flex gap-4">
                 <SelectField
                   value={selectedCustomVar}
-                  setValue={(e) => setSelectedCustomVar(e.target.value)}
+                  setValue={(value) => setSelectedCustomVar(value)}
                   options={customVars || []}
                   disabled={loading}
                 />
