@@ -1,6 +1,7 @@
 import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
 import { VariablesModal } from './NotSenlerVariablesModal';
+import styles from './styles.module.css'
 
 interface Variable {
   value: string;
@@ -63,7 +64,7 @@ export const MessageEditor = ({
         <textarea
           value={content}
           onChange={handleTextChange}
-          className="w-full h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
         />
         <button
@@ -226,7 +227,7 @@ const SenlerVariablesModal = ({ groupId, show, onHide, onInsert, options }: Vari
                 <select
                   value={selectedCustomVar}
                   onChange={(e) => setSelectedCustomVar(e.target.value)}
-                  className="flex-1 p-3 border-2 rounded-lg bg-white text-lg"
+                  className={`flex-1 p-3 border-2 rounded-lg bg-white text-lg ${styles.selectField}`}
                   disabled={loading}
                 >
                   <option value="">Выберите переменную</option>
@@ -506,7 +507,7 @@ export const VarGlobalAddModal = ({ groupId, onClose, onSuccess }: {
             <textarea
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded h-32"
+              className="w-full p-2 border border-gray-300 rounded min-h-32 h-32"
               disabled={loading}
             />
           </div>

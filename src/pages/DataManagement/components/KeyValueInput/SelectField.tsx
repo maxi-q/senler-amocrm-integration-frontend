@@ -1,5 +1,6 @@
 import { IDataRow } from '.';
 import { MessageEditor } from '../../modules/AmoCRM/components/VariablesModal';
+import styles from './styles.module.css'
 
 interface MySelectProps {
   value: string;
@@ -29,7 +30,7 @@ export const MySelectOldV = ({ value, rowIndex, onValueChange, options, sourceKe
   return (
     <select
       onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
-      className="w-full p-2 border border-gray-300 rounded"
+      className={`w-full p-2 border border-gray-300 rounded ${styles.selectField}`}
       value={value}
       disabled={!isLoad}
     >

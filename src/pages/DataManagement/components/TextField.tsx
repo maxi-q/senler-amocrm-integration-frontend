@@ -33,6 +33,7 @@ export const InputField = ({label, value, setValue}: ITextField) => {
 					onChange={(e) => setValue(e.target.value)}
 					rows={4}
 					style={{
+            minHeight: '46px',
             height: '46px',
 						width: '100%',
 						padding: '10px',
