@@ -1,24 +1,21 @@
 .selectField {
-  position: relative;
-  display: inline-block;
-}
-.selectField:after {
-  content: "▼";
-  padding: 0 8px;
-  font-size: 12px;
-  position: absolute;
-  right: 8px;
-  top: 4px;
-  z-index: 1;
-  text-align: center;
-  width: 10%;
-  height: 100%;
-  pointer-events: none;
-  box-sizing: border-box;
-}
-.selectField {
-  padding-right: 25px;
-  -webkit-appearance: none;
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
   -moz-appearance: none;
+  -webkit-appearance: none;
   appearance: none;
+}
+
+.selectField:not([multiple]) {
+  padding-right: 1.2em;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 0.25em) 0.35em;
+  background-size: 0.85em auto;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M70.3 13.8L40 66.3 9.7 13.8z' fill='%23000'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* скроет иконку стрелки в IE */
+.selectField::-ms-expand {
+  display: none;
 }
