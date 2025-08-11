@@ -50,7 +50,7 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
   return (
     <div style={{ width: '100%', maxWidth: '800px', margin: 'auto' }}>
       <div className='flex w-full justify-between items-center'>
-        <div>
+        <div className='text-start'>
           <h3>Передача значений</h3>
           <p className="mt-1 text-[0.7rem]">Максимум 2000 символов, подробнее в (документации)</p>
         </div>
