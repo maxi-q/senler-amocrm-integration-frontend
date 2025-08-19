@@ -53,9 +53,11 @@ export const SelectField = ({ label, value, setValue, options, disabled }: ISele
           }}
           disabled={disabled}
         >
-          <option value={''}>
-              Выберите значение
+          {!value && (
+            <option value={''}>
+                Выберите значение
             </option>
+          )}
           {options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
