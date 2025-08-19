@@ -75,7 +75,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     resaveTemplate(item.id);
                   }}
                   >
-                    <FontAwesomeIcon icon={'pencil'} />
+                    <FontAwesomeIcon icon="pencil" />
                 </div>
                 <div
                   className="hover:bg-blue-50"
@@ -84,7 +84,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     deleteTemplate(item.id);
                   }}
                   >
-                    <FontAwesomeIcon icon={'trash'} className="text-danger"/>
+                    <FontAwesomeIcon icon="trash" className="text-danger"/>
                 </div>
               </div>
             ))}
