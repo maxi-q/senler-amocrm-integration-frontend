@@ -64,7 +64,7 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
         title="Удалить строку"
         style={{ marginTop: '28px' }}
       >
-        <FontAwesomeIcon icon="trash" style={{ color: '#dc3545' }} />
+        <FontAwesomeIcon icon={'trash'} className="text-danger"/>
         {/* <i className='fa fa-trash text-danger'></i> */}
         {/* <svg
           xmlns="http://www.w3.org/2000/svg"
