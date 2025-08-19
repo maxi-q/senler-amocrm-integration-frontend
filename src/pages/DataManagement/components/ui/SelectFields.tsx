@@ -1,4 +1,5 @@
 import { deleteIntegrationStepTemplates } from "@/api/Backend/templates";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 interface MySelectProps {
@@ -74,7 +75,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     resaveTemplate(item.id);
                   }}
                   >
-                  <i className='fa fa-pencil'></i>
+                    <FontAwesomeIcon icon={'pencil'} />
                 </div>
                 <div
                   className="hover:bg-blue-50"
@@ -83,7 +84,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     deleteTemplate(item.id);
                   }}
                   >
-                  <i className='fa fa-trash text-danger'></i>
+                    <FontAwesomeIcon icon={'trash'} className="text-danger"/>
                 </div>
               </div>
             ))}

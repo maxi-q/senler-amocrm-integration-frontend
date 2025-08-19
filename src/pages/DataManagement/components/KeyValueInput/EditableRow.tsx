@@ -4,6 +4,7 @@ import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
 
 import styles from './styles.module.css';
 import { useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface IEditableRowProps {
   row: IDataRow;
@@ -63,7 +64,8 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
         title="Удалить строку"
         style={{ marginTop: '28px' }}
       >
-        <i className='fa fa-trash text-danger'></i>
+        <FontAwesomeIcon icon={'trash'} className="text-danger"/>
+        {/* <i className='fa fa-trash text-danger'></i> */}
         {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           className="w-4 h-4"
