@@ -74,7 +74,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     resaveTemplate(item.id);
                   }}
                   >
-                  Изм
+                  <i className='fa fa-pencil'></i>
                 </div>
                 <div
                   className="hover:bg-blue-50"
@@ -83,7 +83,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     deleteTemplate(item.id);
                   }}
                   >
-                  Уд
+                  <i className='fa fa-trash text-danger'></i>
                 </div>
               </div>
             ))}

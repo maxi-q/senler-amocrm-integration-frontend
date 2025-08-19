@@ -37,7 +37,7 @@ export const SelectField = ({ label, value, setValue, options, disabled }: ISele
         <select
           id="custom-select"
           value={value}
-          onChange={(e) => {if (e.target.value) setValue(e.target.value)}}
+          onChange={(e) => { if (e.target.value) setValue(e.target.value) }}
           style={{
             width: '100%',
             padding: '10px 36px 10px 12px',
