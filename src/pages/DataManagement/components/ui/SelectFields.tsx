@@ -84,7 +84,7 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
                     deleteTemplate(item.id);
                   }}
                   >
-                    <FontAwesomeIcon icon="trash" className="text-danger"/>
+                    <FontAwesomeIcon icon="trash" style={{ color: '#dc3545' }} />
                 </div>
               </div>
             ))}
