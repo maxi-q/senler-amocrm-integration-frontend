@@ -135,7 +135,7 @@ export const DataManagement = () => {
 	return (
     <div>
       <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode}/>
-
+      
       {
         isAmoCRMAuthenticated &&
         <>
