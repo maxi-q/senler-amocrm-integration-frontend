@@ -6,6 +6,7 @@ import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto'
 import { getAmoCRMFields } from '@/api/Backend/fields'
 
 import EditableTable from '../../components/KeyValueInput'
+import { ServerMessage } from '../../components/ServerMessage'
 
 import { BotStepType } from '../..'
 
@@ -17,12 +18,19 @@ import { SenlerFieldsResponse } from '../../types'
 const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
+  const [error, setError] = useState<string | null>(null)
 
 	const { message, sendMessage } = useMessage()
 
   const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
     try {
       const amoFields = await getAmoCRMFields({ senlerGroupId })
+
+      // Проверяем, является ли ответ ошибкой
+      if ('error' in amoFields) {
+        setError(amoFields.error.message)
+        return
+      }
 
       if (!Array.isArray(amoFields)) {
         throw new Error('amoFields is not an array')
@@ -31,7 +39,7 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
       setAmoCRMFields(amoFields.map(field => new IAmoCRMField(field)))
     } catch (error) {
       console.error("Error fetching amoCRM fields:", error)
-      throw error
+      setError("Произошла ошибка при получении полей AmoCRM")
     }
   };
 
@@ -64,14 +72,25 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
     setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
   }
 
+  const clearError = () => {
+    setError(null)
+  }
+
 	return (
-    <EditableTable
-      data={data && data[BotStepType.SendDataToSenler]}
-      changeData={setSendDataToSenlerData}
-      toFields={senlerFields}
-      fromFields={amoCRMFields}
-      type='no-senler'
-    />
+    <>
+      {error && (
+        <div className="mb-4">
+          <ServerMessage message={error} onClose={clearError} />
+        </div>
+      )}
+      <EditableTable
+        data={data && data[BotStepType.SendDataToSenler]}
+        changeData={setSendDataToSenlerData}
+        toFields={senlerFields}
+        fromFields={amoCRMFields}
+        type='no-senler'
+      />
+    </>
   )
 }
 

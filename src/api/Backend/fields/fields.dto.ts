@@ -94,3 +94,13 @@ export class ISenlerField {
     this.disabled = data.disabled ?? false;
   }
 }
+
+export interface IApiError {
+  name: string;
+  code: number;
+  message: string;
+}
+
+export interface IApiErrorResponse {
+  error: IApiError;
+}

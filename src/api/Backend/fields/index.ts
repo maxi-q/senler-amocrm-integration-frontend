@@ -1,12 +1,12 @@
 import axios from "axios";
-import { IAmoCRMField } from "./fields.dto";
+import { IAmoCRMField, IApiErrorResponse } from "./fields.dto";
 import { SERVER_URL } from "@/constants";
 
 interface getAmoCRMFields {
   senlerGroupId: string;
 }
 
-export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promise<IAmoCRMField[]> => {
+export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promise<IAmoCRMField[] | IApiErrorResponse> => {
   try {
     const response = await axios.get(
       SERVER_URL + `/integration/getAmoFields`,
