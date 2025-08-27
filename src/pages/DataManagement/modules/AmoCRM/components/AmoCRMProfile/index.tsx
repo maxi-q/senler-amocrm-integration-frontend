@@ -77,19 +77,32 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
 
       {/* Блок с ошибками AmoCRM */}
       {errors && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-lg font-medium text-red-800 mb-3">Ошибки AmoCRM</h3>
-          <div className="space-y-2">
-            <div key={errors} className="flex items-center justify-between p-3 bg-white border border-red-200 rounded-md">
-              <span className="text-red-700 flex-1">{errors}</span>
-              <button
-                onClick={handleDeleteError}
-                className="ml-3 p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-md transition-colors"
-                title="Удалить ошибку"
-              >
-                <FontAwesomeIcon icon="trash" className="text-danger" />
-              </button>
+        <div
+          style={{
+            maxWidth: '500px',
+            padding: '20px',
+            border: '1px solid #f56565',
+            borderRadius: '8px',
+            backgroundColor: '#fef2f2',
+            color: '#991b1b',
+            margin: '20px auto',
+            position: 'relative',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h4 className="font-semibold mb-2">Ошибки AmoCRM</h4>
+              <p className="text-sm">{errors}</p>
             </div>
+            <button
+              onClick={handleDeleteError}
+              className="ml-4 text-gray-500 hover:text-gray-700 text-xl font-bold"
+              style={{ fontSize: '18px', lineHeight: '1' }}
+              title="Удалить ошибку"
+            >
+              ×
+            </button>
           </div>
         </div>
       )}
