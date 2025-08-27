@@ -3,7 +3,6 @@ import { getAmoCrmErrors, deleteAmoCrmErrors } from "@/api/Backend/integration"
 import { getUrlParams } from "@/helpers";
 import useAccountStore from "@/store/account"
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>>}) => {
   const { setIsAmoCRMAuthenticated } = useAccountStore()
