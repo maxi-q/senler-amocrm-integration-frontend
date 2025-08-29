@@ -14,7 +14,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
   useEffect(() => {
     const fetchErrors = async () => {
       if (!senlerGroupId) return;
-      
+
       try {
         const errorsData = await getAmoCrmErrors({ senlerGroupId });
         // API возвращает строку с текстовым описанием ошибки
@@ -30,7 +30,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
 
   const handleDeleteError = async () => {
     if (!senlerGroupId) return;
-    
+
     try {
       await deleteAmoCrmErrors({ senlerGroupId: Number(senlerGroupId) });
       // Очищаем ошибку из локального состояния
@@ -92,7 +92,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h4 className="font-semibold mb-2">Ошибки AmoCRM</h4>
-              <p className="text-sm">{errors}</p>
+              <div className="text-sm whitespace-pre-line">{errors}</div>
             </div>
             <button
               onClick={handleDeleteError}
