@@ -84,7 +84,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
             borderRadius: '8px',
             backgroundColor: '#fef2f2',
             color: '#991b1b',
-            margin: '20px auto',
+            margin: '20px 0',
             position: 'relative',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
           }}
@@ -92,7 +92,11 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h4 className="font-semibold mb-2">Ошибки AmoCRM</h4>
-              <div className="text-sm whitespace-pre-line">{errors}</div>
+              <ul className="text-sm list-disc list-inside space-y-1">
+                {errors.split(';').filter(error => error.trim()).map((error, index) => (
+                  <li key={index} className="text-sm">{error.trim()}</li>
+                ))}
+              </ul>
             </div>
             <button
               onClick={handleDeleteError}
