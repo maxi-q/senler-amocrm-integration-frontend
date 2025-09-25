@@ -74,7 +74,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
         </div>
       </div>
 
-      {/* Блок с ошибками AmoCRM */}
+      {/* Блок с ошибками amoCRM */}
       {errors && (
         <div
           style={{
@@ -91,12 +91,10 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
         >
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h4 className="font-semibold mb-2">Ошибки AmoCRM</h4>
-              <ul className="text-sm list-disc list-inside space-y-1">
-                {errors.split(';').filter(error => error.trim()).map((error, index) => (
-                  <li key={index} className="text-sm">{error.trim()}</li>
-                ))}
-              </ul>
+              <h4 className="font-semibold mb-2">Ошибка amoCRM</h4>
+              <p className="text-sm list-disc list-inside space-y-1">
+                Превышен лимит запросов к amoCRM, оплатите или расширьте тариф системы
+              </p>
             </div>
             <button
               onClick={handleDeleteError}
