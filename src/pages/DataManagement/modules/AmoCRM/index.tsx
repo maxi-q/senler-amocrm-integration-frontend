@@ -19,12 +19,16 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { senlerGroupId } = getUrlParams()
+      const { senlerGroupId } = getUrlParams();
 
-      const isValidSign = await checkRegistrationAndReturnData({senlerGroupId})
+      let isValidSign = await checkRegistrationAndReturnData({ senlerGroupId });
 
-      if (isValidSign.data) setSenlerGroup(isValidSign.data)
-      setIsAmoCRMAuthenticated(isValidSign.ok)
+      if (!isValidSign.data) {
+        isValidSign = await checkRegistrationAndReturnData({ senlerGroupId });
+      }
+
+      if (isValidSign.data) setSenlerGroup(isValidSign.data);
+      setIsAmoCRMAuthenticated(isValidSign.ok);
       setIsLoading(false);
     };
 

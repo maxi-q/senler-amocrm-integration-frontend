@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import AmoAuthLink, { IOnAuthSuccess } from '../AmoAuthButton';
 import { changeAmoAccount } from '@/api/Backend/unlinkAmoAccount';
+import { checkRegistrationAndReturnData } from '@/api/Backend/checkRegistration';
 import { getUrlParams } from '@/helpers';
 import useAccountStore from '@/store/account';
 
 interface ChangeAmoAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
-  amoCrmDomainName: string;
 }
 
-const ChangeAmoAccountModal = ({ isOpen, onClose, amoCrmDomainName }: ChangeAmoAccountModalProps) => {
-  const { setIsAmoCRMAuthenticated } = useAccountStore();
+const ChangeAmoAccountModal = ({ isOpen, onClose }: ChangeAmoAccountModalProps) => {
+  const { setSenlerGroup } = useAccountStore();
   const { senlerGroupId } = getUrlParams();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,7 +28,8 @@ const ChangeAmoAccountModal = ({ isOpen, onClose, amoCrmDomainName }: ChangeAmoA
       });
 
       if (result.ok) {
-        setIsAmoCRMAuthenticated(false);
+        const isValidSign = await checkRegistrationAndReturnData({senlerGroupId});
+        if (isValidSign.data) setSenlerGroup(isValidSign.data);
         onClose();
       } else {
         console.error('Failed to change AmoCRM account');
@@ -72,9 +73,6 @@ const ChangeAmoAccountModal = ({ isOpen, onClose, amoCrmDomainName }: ChangeAmoA
               <h3 className="text-lg font-medium mb-4">
                 Подключите новый аккаунт AmoCRM
               </h3>
-              <p className="text-gray-600 mb-6">
-                Текущий аккаунт: <strong>{amoCrmDomainName}</strong>
-              </p>
               <AmoAuthLink
                 clientId={import.meta.env.VITE_CLIENT_ID || ''}
                 redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}

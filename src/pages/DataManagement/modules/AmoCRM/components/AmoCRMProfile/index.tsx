@@ -110,7 +110,6 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
       <ChangeAmoAccountModal
         isOpen={isChangeModalOpen}
         onClose={() => setIsChangeModalOpen(false)}
-        amoCrmDomainName={amoCrmDomainName}
       />
     </div>
   )
