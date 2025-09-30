@@ -1,6 +1,5 @@
 import { getAmoCrmErrors, deleteAmoCrmErrors } from "@/api/Backend/integration"
 import { getUrlParams } from "@/helpers";
-import useAccountStore from "@/store/account"
 import { useEffect, useState } from "react";
 import ChangeAmoAccountModal from "../ChangeAmoAccountModal";
 
