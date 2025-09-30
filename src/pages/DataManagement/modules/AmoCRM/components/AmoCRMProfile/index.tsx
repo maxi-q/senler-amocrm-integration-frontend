@@ -1,13 +1,13 @@
-import { unlinkAmoAccount } from "@/api/Backend/unlinkAmoAccount"
 import { getAmoCrmErrors, deleteAmoCrmErrors } from "@/api/Backend/integration"
 import { getUrlParams } from "@/helpers";
 import useAccountStore from "@/store/account"
 import { useEffect, useState } from "react";
+import ChangeAmoAccountModal from "../ChangeAmoAccountModal";
 
 const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>>}) => {
-  const { setIsAmoCRMAuthenticated } = useAccountStore()
   const { senlerGroupId } = getUrlParams()
   const [errors, setErrors] = useState<string>('');
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
   useEffect(()=>{ setOAuthCode('') }, [])
 
@@ -40,9 +40,8 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
     }
   };
 
-  const unlinkAmoAccountButton = () => {
-    unlinkAmoAccount(senlerGroupId)
-    setIsAmoCRMAuthenticated(false)
+  const changeAmoAccountButton = () => {
+    setIsChangeModalOpen(true);
   }
 
   return (
@@ -68,8 +67,8 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
             <p className="text-gray-600">{amoCrmDomainName || 'account.amocrm.ru'}</p>
           </div>
         </div>
-          <button onClick={unlinkAmoAccountButton} className="text-red-600 font-medium rounded-md px-4 py-2 border border-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer">
-            Отключить
+          <button onClick={changeAmoAccountButton} className="text-blue-600 font-medium rounded-md px-4 py-2 border border-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
+            Сменить аккаунт
           </button>
         </div>
       </div>
@@ -107,6 +106,13 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
           </div>
         </div>
       )}
+
+      {/* Модальное окно для смены аккаунта */}
+      <ChangeAmoAccountModal
+        isOpen={isChangeModalOpen}
+        onClose={() => setIsChangeModalOpen(false)}
+        amoCrmDomainName={amoCrmDomainName}
+      />
     </div>
   )
 }

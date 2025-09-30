@@ -1,18 +1,18 @@
 import { SERVER_URL } from "@/constants";
 import axios from "axios";
 
-interface unlinkAmoAccount {
+interface changeAmoAccount {
 	senlerGroupId: string,
+  amoCrmDomainName: string,
+  amoCrmAuthorizationCode: string,
 }
 
-export const unlinkAmoAccount = async (senlerGroupId: string) => {
+export const changeAmoAccount = async (data: changeAmoAccount) => {
 	try {
 		await axios.delete(
-			SERVER_URL + `/integration/untieAmoCrmProfile`,
+			SERVER_URL + `/integration/change-amocrm-account`,
 			{
-        params: {
-          senlerGroupId: +senlerGroupId,
-        },
+        data: data,
 				headers: {
 					"Content-Type": "application/json",
 				},
