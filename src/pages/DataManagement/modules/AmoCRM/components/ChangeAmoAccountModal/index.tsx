@@ -29,7 +29,7 @@ const ChangeAmoAccountModal = ({ isOpen, onClose }: ChangeAmoAccountModalProps) 
 
       if (result.ok) {
         const isValidSign = await checkRegistrationAndReturnData({senlerGroupId});
-        if (isValidSign.data) setSenlerGroup(isValidSign.data);
+        if (isValidSign.data) setSenlerGroup({...isValidSign.data, amoCrmDomainName: isValidSign.data.amoCrmProfile.domainName});
         onClose();
       } else {
         console.error('Failed to change AmoCRM account');

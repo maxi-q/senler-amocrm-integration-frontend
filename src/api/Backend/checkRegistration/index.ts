@@ -3,11 +3,20 @@ import { CheckRegistrationDto } from "./index.types";
 import { SERVER_URL } from "@/constants";
 
 type checkRegistrationAndReturnData = {
-  amoCrmDomainName: string
-  id: string
-  senlerGroupId: number
-  senlerGroupVkId?: number
+  id: string,
+  senlerGroupId: number,
+  amoCrmProfile: {
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      domainName: string,
+      accessToken: string,
+      refreshToken: string,
+      rateLimit: number
+  }
 }
+
+
 
 export const checkRegistrationAndReturnData = async ({ senlerGroupId }: CheckRegistrationDto) => {
   try {

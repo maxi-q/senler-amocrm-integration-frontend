@@ -27,7 +27,7 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
         isValidSign = await checkRegistrationAndReturnData({ senlerGroupId });
       }
 
-      if (isValidSign.data) setSenlerGroup(isValidSign.data);
+      if (isValidSign.data) setSenlerGroup({...isValidSign.data, amoCrmDomainName: isValidSign.data.amoCrmProfile.domainName});
       setIsAmoCRMAuthenticated(isValidSign.ok);
       setIsLoading(false);
     };
