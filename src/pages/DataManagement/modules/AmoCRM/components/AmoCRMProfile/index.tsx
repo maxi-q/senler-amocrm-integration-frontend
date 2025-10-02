@@ -1,7 +1,8 @@
 import { getAmoCrmErrors, deleteAmoCrmErrors } from "@/api/Backend/integration"
 import { getUrlParams } from "@/helpers";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ChangeAmoAccountModal from "../ChangeAmoAccountModal";
+import { RenderErrors } from "./helpers";
 
 const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>>}) => {
   const { senlerGroupId } = getUrlParams()
@@ -43,6 +44,8 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
     setIsChangeModalOpen(true);
   }
 
+  const MemoizedRenderErrors = useMemo(() => RenderErrors(errors), [errors]);
+
   return (
     <div>
       <div className="flex justify-start p-3 flex-row">
@@ -73,7 +76,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
       </div>
 
       {/* Блок с ошибками amoCRM */}
-      {errors && (
+      {MemoizedRenderErrors && (
         <div
           style={{
             maxWidth: '500px',
@@ -90,9 +93,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h4 className="font-semibold mb-2">Ошибка amoCRM</h4>
-              <p className="text-sm list-disc list-inside space-y-1">
-                Превышен лимит запросов к amoCRM, оплатите или расширьте тариф системы
-              </p>
+              {MemoizedRenderErrors}
             </div>
             <button
               onClick={handleDeleteError}
