@@ -1,5 +1,5 @@
 import { getUrlParams } from '@/helpers';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { VariablesModal } from './NotSenlerVariablesModal';
 import { SelectField } from '@/pages/Bot_step/DataManagement/components/SelectField';
 
@@ -29,6 +29,25 @@ interface MessageEditorProps {
   type?: 'senler' | 'no-senler'
 }
 
+// Функции для работы с переменными
+const convertToDisplayText = (text: string, options: { value: string; label: string; }[] = []) => {
+  let displayText = text;
+  options.forEach(option => {
+    const regex = new RegExp(option.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    displayText = displayText.replace(regex, option.label);
+  });
+  return displayText;
+};
+
+const convertFromDisplayText = (displayText: string, options: { value: string; label: string; }[] = []) => {
+  let originalText = displayText;
+  options.forEach(option => {
+    const regex = new RegExp(option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    originalText = originalText.replace(regex, option.value);
+  });
+  return originalText;
+};
+
 export const MessageEditor = ({
   initialContent = '',
   onContentChange,
@@ -37,10 +56,17 @@ export const MessageEditor = ({
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
+  const [displayContent, setDisplayContent] = useState(initialContent);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(()=>{
-    setContent(initialContent)
-  }, [initialContent])
+    setContent(initialContent);
+    if (type === 'no-senler' && options) {
+      setDisplayContent(convertToDisplayText(initialContent, options));
+    } else {
+      setDisplayContent(initialContent);
+    }
+  }, [initialContent, type, options])
 
   const { senlerGroupId } = getUrlParams()
 
@@ -50,19 +76,42 @@ export const MessageEditor = ({
     const newContent = content + value;
     setContent(newContent);
     onContentChange?.(newContent);
+    
+    if (type === 'no-senler' && options) {
+      const newDisplayContent = convertToDisplayText(newContent, options);
+      setDisplayContent(newDisplayContent);
+    }
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setContent(newValue);
-    onContentChange?.(newValue);
+    const newDisplayValue = e.target.value;
+    const cursorPosition = e.target.selectionStart;
+    
+    setDisplayContent(newDisplayValue);
+    
+    if (type === 'no-senler' && options) {
+      const newOriginalValue = convertFromDisplayText(newDisplayValue, options);
+      setContent(newOriginalValue);
+      onContentChange?.(newOriginalValue);
+      
+      // Восстанавливаем позицию курсора после обновления
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.setSelectionRange(cursorPosition, cursorPosition);
+        }
+      }, 0);
+    } else {
+      setContent(newDisplayValue);
+      onContentChange?.(newDisplayValue);
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="relative">
         <textarea
-          value={content}
+          ref={textareaRef}
+          value={displayContent}
           onChange={handleTextChange}
           className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           placeholder="Введите текст сообщения..."
