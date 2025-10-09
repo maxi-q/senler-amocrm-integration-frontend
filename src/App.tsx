@@ -13,7 +13,7 @@ import { Register } from './pages/list_integrations/Register'
 function App() {
   const { context } = getUrlParams()
 
-  if (context === 'Bot_step') {
+  if (context === 'list_integration') {
     return (
       <MessageProvider>
 			<BrowserRouter>
