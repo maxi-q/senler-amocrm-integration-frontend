@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { VarAddModal } from '.';
-import { SelectField } from '@/pages/DataManagement/components/SelectField';
+import { SelectField } from '@/pages/Bot_step/DataManagement/components/SelectField';
 
 interface Variable {
   value: string;

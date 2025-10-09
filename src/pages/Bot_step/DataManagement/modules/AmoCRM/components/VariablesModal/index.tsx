@@ -1,7 +1,7 @@
 import { getUrlParams } from '@/helpers';
 import { useState, useEffect } from 'react';
 import { VariablesModal } from './NotSenlerVariablesModal';
-import { SelectField } from '@/pages/DataManagement/components/SelectField';
+import { SelectField } from '@/pages/Bot_step/DataManagement/components/SelectField';
 
 interface Variable {
   value: string;
