@@ -32,7 +32,7 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '12px' }}>
         <div>
-          <label>{type == 'no-senler' ? "В Senler" : "В amoCRM"}</label>
+          <label>{type == 'no-senler' ? "В переменную Senler" : "В переменную amoCRM"}</label>
           <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
             <MySelectOldV
               value={row.to}
@@ -65,16 +65,6 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
         style={{ marginTop: '28px' }}
       >
         <FontAwesomeIcon icon={'trash'} className="text-danger"/>
-        {/* <i className='fa fa-trash text-danger'></i> */}
-        {/* <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-4 h-4"
-          style={{ width: "24px", height: "24px" }}
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
-        </svg> */}
       </button>
     </div>
   );
