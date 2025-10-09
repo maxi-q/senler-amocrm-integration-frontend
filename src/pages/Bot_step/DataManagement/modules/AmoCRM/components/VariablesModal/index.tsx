@@ -30,22 +30,23 @@ interface MessageEditorProps {
 }
 
 // Функции для работы с переменными
-const convertToDisplayText = (text: string, options: { value: string; label: string; }[] = []) => {
-  let displayText = text;
+const convertToDisplayHTML = (text: string, options: { value: string; label: string; }[] = []) => {
+  let displayHTML = text;
   options.forEach(option => {
     const regex = new RegExp(option.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-    displayText = displayText.replace(regex, `🔹${option.label}🔹`);
+    displayHTML = displayHTML.replace(regex, `<span class="bg-blue-50 text-blue-600 px-1 py-0.5 rounded border border-blue-200 font-medium">${option.label}</span>`);
   });
-  return displayText;
+  return displayHTML;
 };
 
-const convertFromDisplayText = (displayText: string, options: { value: string; label: string; }[] = []) => {
-  let originalText = displayText;
+const convertFromDisplayHTML = (html: string, options: { value: string; label: string; }[] = []) => {
+  // Убираем HTML теги и получаем чистый текст
+  let text = html.replace(/<[^>]*>/g, '');
   options.forEach(option => {
-    const regex = new RegExp(`🔹${option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}🔹`, 'g');
-    originalText = originalText.replace(regex, option.value);
+    const regex = new RegExp(option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    text = text.replace(regex, option.value);
   });
-  return originalText;
+  return text;
 };
 
 export const MessageEditor = ({
@@ -56,15 +57,15 @@ export const MessageEditor = ({
 }: MessageEditorProps) => {
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
-  const [displayContent, setDisplayContent] = useState(initialContent);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [displayHTML, setDisplayHTML] = useState(initialContent);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     setContent(initialContent);
     if (type === 'no-senler' && options) {
-      setDisplayContent(convertToDisplayText(initialContent, options));
+      setDisplayHTML(convertToDisplayHTML(initialContent, options));
     } else {
-      setDisplayContent(initialContent);
+      setDisplayHTML(initialContent);
     }
   }, [initialContent, type, options])
 
@@ -78,44 +79,47 @@ export const MessageEditor = ({
     onContentChange?.(newContent);
     
     if (type === 'no-senler' && options) {
-      const newDisplayContent = convertToDisplayText(newContent, options);
-      setDisplayContent(newDisplayContent);
+      const newDisplayHTML = convertToDisplayHTML(newContent, options);
+      setDisplayHTML(newDisplayHTML);
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newDisplayValue = e.target.value;
-    const cursorPosition = e.target.selectionStart;
+  const handleInput = () => {
+    if (!editorRef.current) return;
     
-    setDisplayContent(newDisplayValue);
+    const html = editorRef.current.innerHTML;
+    setDisplayHTML(html);
     
     if (type === 'no-senler' && options) {
-      const newOriginalValue = convertFromDisplayText(newDisplayValue, options);
+      const newOriginalValue = convertFromDisplayHTML(html, options);
       setContent(newOriginalValue);
       onContentChange?.(newOriginalValue);
-      
-      // Восстанавливаем позицию курсора после обновления
-      setTimeout(() => {
-        if (textareaRef.current) {
-          textareaRef.current.setSelectionRange(cursorPosition, cursorPosition);
-        }
-      }, 0);
     } else {
-      setContent(newDisplayValue);
-      onContentChange?.(newDisplayValue);
+      const text = editorRef.current.textContent || '';
+      setContent(text);
+      onContentChange?.(text);
     }
   };
 
 
   return (
     <div className="max-w-2xl mx-auto">
+      <style>{`
+        [contenteditable]:empty:before {
+          content: attr(data-placeholder);
+          color: #9ca3af;
+          pointer-events: none;
+        }
+      `}</style>
       <div className="relative">
-        <textarea
-          ref={textareaRef}
-          value={displayContent}
-          onChange={handleTextChange}
-          className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-          placeholder="Введите текст сообщения..."
+        <div
+          ref={editorRef}
+          contentEditable
+          onInput={handleInput}
+          className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent focus:outline-none"
+          style={{ whiteSpace: 'pre-wrap' }}
+          dangerouslySetInnerHTML={{ __html: displayHTML }}
+          data-placeholder="Введите текст сообщения..."
         />
         <button
           onClick={() => setShowModal(true)}
