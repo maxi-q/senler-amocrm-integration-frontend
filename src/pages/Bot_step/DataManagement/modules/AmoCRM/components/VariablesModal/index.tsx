@@ -34,7 +34,7 @@ const convertToDisplayText = (text: string, options: { value: string; label: str
   let displayText = text;
   options.forEach(option => {
     const regex = new RegExp(option.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-    displayText = displayText.replace(regex, option.label);
+    displayText = displayText.replace(regex, `🔹${option.label}🔹`);
   });
   return displayText;
 };
@@ -42,7 +42,7 @@ const convertToDisplayText = (text: string, options: { value: string; label: str
 const convertFromDisplayText = (displayText: string, options: { value: string; label: string; }[] = []) => {
   let originalText = displayText;
   options.forEach(option => {
-    const regex = new RegExp(option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    const regex = new RegExp(`🔹${option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}🔹`, 'g');
     originalText = originalText.replace(regex, option.value);
   });
   return originalText;
@@ -106,48 +106,17 @@ export const MessageEditor = ({
     }
   };
 
-  // Функция для создания HTML с выделенными переменными
-  const createHighlightedContent = (text: string, options: { value: string; label: string; }[] = []) => {
-    if (type !== 'no-senler' || !options) return text;
-    
-    let highlightedText = text;
-    options.forEach(option => {
-      const regex = new RegExp(option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-      highlightedText = highlightedText.replace(regex, `<span class="bg-blue-50 text-blue-600 px-1 py-0.5 rounded border border-blue-200 font-medium">${option.label}</span>`);
-    });
-    return highlightedText;
-  };
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="relative">
-        {type === 'no-senler' && options ? (
-          <div className="relative">
-            <div 
-              className="w-full min-h-14 h-14 p-3 border rounded focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent bg-white"
-              style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
-              dangerouslySetInnerHTML={{ 
-                __html: createHighlightedContent(displayContent, options) 
-              }}
-            />
-            <textarea
-              ref={textareaRef}
-              value={displayContent}
-              onChange={handleTextChange}
-              className="absolute inset-0 w-full min-h-14 h-14 p-3 border-0 rounded bg-transparent resize-none focus:outline-none"
-              placeholder="Введите текст сообщения..."
-              style={{ color: 'transparent', caretColor: 'black' }}
-            />
-          </div>
-        ) : (
-          <textarea
-            ref={textareaRef}
-            value={displayContent}
-            onChange={handleTextChange}
-            className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-            placeholder="Введите текст сообщения..."
-          />
-        )}
+        <textarea
+          ref={textareaRef}
+          value={displayContent}
+          onChange={handleTextChange}
+          className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          placeholder="Введите текст сообщения..."
+        />
         <button
           onClick={() => setShowModal(true)}
           className="absolute right-2 top-3 transform bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
