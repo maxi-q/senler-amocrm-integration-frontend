@@ -1,5 +1,5 @@
 import { getUrlParams } from '@/helpers';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { VariablesModal } from './NotSenlerVariablesModal';
 import { SelectField } from '@/pages/Bot_step/DataManagement/components/SelectField';
 
@@ -13,115 +13,68 @@ interface VariablesModalProps {
   show: boolean;
   onHide: () => void;
   onInsert: (value: string) => void;
-  options?: {
-    value: string;
-    label: string;
-  }[];
+  options?: Variable[];
 }
 
 interface MessageEditorProps {
   initialContent?: string;
   onContentChange?: (content: string) => void;
-  options?: {
-    value: string;
-    label: string;
-  }[];
+  options?: Variable[];
   type?: 'senler' | 'no-senler';
 }
 
-// ====== Функции для замены ======
-const convertToDisplayText = (text: string, options: { value: string; label: string }[] = []) => {
+// заменяет %value% на %label%
+const replaceValuesWithLabels = (text: string, options: Variable[] = []) => {
   let result = text;
-  options.forEach(option => {
-    const regex = new RegExp(option.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-    result = result.replace(regex, option.label);
+  options.forEach(opt => {
+    const regex = new RegExp(opt.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    result = result.replace(regex, `%${opt.label}%`);
   });
   return result;
 };
 
-const convertToValueText = (text: string, options: { value: string; label: string }[] = []) => {
-  let result = text;
-  options.forEach(option => {
-    const regex = new RegExp(option.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-    result = result.replace(regex, option.value);
-  });
-  return result;
-};
-
-// ====== Компонент MessageEditor ======
 export const MessageEditor = ({
   initialContent = '',
   onContentChange,
-  options,
-  type
+  options = [],
+  type = 'no-senler',
 }: MessageEditorProps) => {
-  const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState(initialContent);
-  const [displayText, setDisplayText] = useState(initialContent);
-  const editorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setContent(initialContent);
-    if (type === 'no-senler' && options) {
-      setDisplayText(convertToDisplayText(initialContent, options));
-    } else {
-      setDisplayText(initialContent);
-    }
-  }, [initialContent, type, options]);
+  const [showModal, setShowModal] = useState(false);
 
   const { senlerGroupId } = getUrlParams();
 
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    setContent(newText);
+    onContentChange?.(newText);
+  };
+
   const handleInsertVariable = (value: string) => {
-    const newContent = content + value;
-    setContent(newContent);
-    onContentChange?.(newContent);
-
-    if (type === 'no-senler' && options) {
-      const newDisplay = convertToDisplayText(newContent, options);
-      setDisplayText(newDisplay);
-    } else {
-      setDisplayText(newContent);
-    }
+    const newText = content + value;
+    setContent(newText);
+    onContentChange?.(newText);
   };
 
-  const handleInput = () => {
-    if (!editorRef.current) return;
-
-    const text = editorRef.current.textContent || '';
-    if (type === 'no-senler' && options) {
-      const newValueText = convertToValueText(text, options);
-      setContent(newValueText);
-      onContentChange?.(newValueText);
-    } else {
-      setContent(text);
-      onContentChange?.(text);
-    }
-    setDisplayText(text);
-  };
+  // превью для отображения с подменой %value% → %label%
+  const previewText = type === 'no-senler' ? replaceValuesWithLabels(content, options) : content;
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <style>{`
-        [contenteditable]:empty:before {
-          content: attr(data-placeholder);
-          color: #9ca3af;
-          pointer-events: none;
-        }
-      `}</style>
+    <div className="max-w-2xl mx-auto space-y-4">
       <div className="relative">
-        <div
-          ref={editorRef}
-          contentEditable
-          onInput={handleInput}
-          className="w-full min-h-14 h-14 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent focus:outline-none"
-          style={{ whiteSpace: 'pre-wrap' }}
-          data-placeholder="Введите текст сообщения..."
-        >
-          {displayText}
-        </div>
+        <textarea
+          value={content}
+          onChange={handleChange}
+          className="w-full min-h-24 p-3 border rounded focus:ring-2 focus:ring-blue-400 focus:border-transparent focus:outline-none resize-y"
+          placeholder="Введите текст сообщения..."
+        />
         <button
           onClick={() => setShowModal(true)}
-          className="absolute right-2 top-3 transform bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+          className="absolute right-2 top-2 bg-[#428BCA] hover:bg-[#025aa5] text-white w-8 h-8 flex items-center justify-center rounded-full transition-colors"
           title="Вставить переменную"
         >
           <svg
@@ -133,6 +86,11 @@ export const MessageEditor = ({
             <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" />
           </svg>
         </button>
+      </div>
+
+      {/* Превью текста */}
+      <div className="p-3 border rounded bg-gray-50 whitespace-pre-wrap text-gray-800">
+        {previewText}
       </div>
 
       {type === 'senler' ? (
