@@ -50,7 +50,7 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
             ? <Senler token={OAuthCode} setToken={setOAuthCode} />
             : <AmoAuthLink
                 clientId={import.meta.env.VITE_CLIENT_ID || ''}
-                redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
+                redirectUri={`${import.meta.env.VITE_FRONT_URL}/to`}
                 onAuthSuccess={registerAndCheckAccess}
               />
         }

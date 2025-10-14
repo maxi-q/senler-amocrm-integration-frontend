@@ -75,7 +75,7 @@ const ChangeAmoAccountModal = ({ isOpen, onClose }: ChangeAmoAccountModalProps) 
               </h3>
               <AmoAuthLink
                 clientId={import.meta.env.VITE_CLIENT_ID || ''}
-                redirectUri={`${import.meta.env.VITE_REDIRECT_URI}`}
+                redirectUri={`${import.meta.env.VITE_FRONT_URL}/to`}
                 onAuthSuccess={handleAuthSuccess}
                 onAuthError={handleAuthError}
               />
