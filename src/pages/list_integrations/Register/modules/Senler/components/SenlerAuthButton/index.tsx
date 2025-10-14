@@ -30,8 +30,8 @@ const SenlerAuthLink = ({
 
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
-    console.log('authUrl', authUrl)
 		const popup = window.open(authUrl, 'senlerAuthPopup', 'width=600,height=600')
+    console.log('authUrl', authUrl)
 
 		if (!popup) {
 			onAuthError?.(
