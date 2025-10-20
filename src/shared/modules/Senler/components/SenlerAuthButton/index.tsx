@@ -29,7 +29,7 @@ const SenlerAuthLink = ({
 		const authUrl = new URL('https://senler.ru/cabinet/OAuth2authorize')
 		authUrl.searchParams.append('group_id', group_id)
 		authUrl.searchParams.append('client_id', clientId)
-		authUrl.searchParams.append('redirect_uri', `https://${redirectUri}`)
+		authUrl.searchParams.append('redirect_uri', redirectUri)
 		authUrl.searchParams.append('state', ''+Date.now())
 
     console.log(authUrl)
