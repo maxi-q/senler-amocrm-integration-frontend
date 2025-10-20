@@ -2,6 +2,10 @@ export interface IOnAuthSuccess {
   code: string
 }
 
+import { useEffect, useRef } from 'react'
+import { useMessage } from '@/messages/messageProvider'
+import { MessageTypes } from '@/messages/types/messages.enum'
+
 interface AmoAuthPopupProps {
 	clientId: string
 	redirectUri: string
@@ -18,11 +22,14 @@ const SenlerAuthLink = ({
 	onAuthSuccess,
 	onAuthError,
 }: AmoAuthPopupProps) => {
+	const { message } = useMessage()
+	const popupRef = useRef<Window | null>(null)
+
 	const generateAuthUrl = () => {
 		const authUrl = new URL('https://senler.ru/cabinet/OAuth2authorize')
 		authUrl.searchParams.append('group_id', group_id)
 		authUrl.searchParams.append('client_id', clientId)
-		authUrl.searchParams.append('redirect_uri', redirectUri)
+		authUrl.searchParams.append('redirect_uri', `https://${redirectUri}`)
 		authUrl.searchParams.append('state', ''+Date.now())
 
     console.log(authUrl)
@@ -38,7 +45,7 @@ const SenlerAuthLink = ({
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
 		const popup = window.open(authUrl, 'senlerAuthPopup', 'width=600,height=600')
-    console.log('authUrl', authUrl)
+		popupRef.current = popup
 
 		if (!popup) {
 			onAuthError?.(
@@ -55,22 +62,26 @@ const SenlerAuthLink = ({
 				)
 				return
 			}
-
-			try {
-				const urlParams = new URLSearchParams(popup.location.search)
-				const code = urlParams.get('code')
-
-				if (code) {
-					onAuthSuccess({ code })
-					popup.close()
-					clearInterval(timer)
-				}
-
-			} catch (error) {
-        console.error(error)
-			}
 		}, 500)
 	}
+
+	useEffect(() => {
+		if (!message) return
+		if (message.type === MessageTypes.SenlerAuthCode) {
+			const { code } = message.payload || {}
+			if (code) {
+				onAuthSuccess({ code })
+				popupRef.current?.close()
+			}
+		}
+		if (message.type === MessageTypes.SenlerAuthCodeError) {
+			const { error } = message.payload || {}
+			if (error) {
+				onAuthError?.(error)
+				popupRef.current?.close()
+			}
+		}
+	}, [message])
 
 	return (
 		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
