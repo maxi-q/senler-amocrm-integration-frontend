@@ -9,7 +9,7 @@ import { Loader } from './components/Loader';
 import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
-import { Senler } from '../Senler';
+import { Senler } from '../../../../../shared/modules/Senler';
 import AmoAuthLink, { IOnAuthSuccess } from '@/shared/modules/AmoCRM/components/AmoAuthButton';
 
 export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>> }) => {
