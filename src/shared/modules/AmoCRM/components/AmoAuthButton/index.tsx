@@ -34,6 +34,7 @@ const AmoAuthLink = ({
 		authUrl.searchParams.append('client_id', clientId)
 		authUrl.searchParams.append('redirect_uri', redirectUri)
 		authUrl.searchParams.append('response_type', 'code')
+    console.log('AmoAuthLink', authUrl, clientId)
 		return authUrl.toString()
 	}
 
