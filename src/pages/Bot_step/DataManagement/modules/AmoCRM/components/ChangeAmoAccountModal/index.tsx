@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import AmoAuthLink, { IOnAuthSuccess } from '../AmoAuthButton';
 import { changeAmoAccount } from '@/api/Backend/unlinkAmoAccount';
 import { checkRegistrationAndReturnData } from '@/api/Backend/checkRegistration';
 import { getUrlParams } from '@/helpers';
 import useAccountStore from '@/store/account';
+import AmoAuthLink, { IOnAuthSuccess } from '@/shared/modules/AmoCRM/components/AmoAuthButton';
 
 interface ChangeAmoAccountModalProps {
   isOpen: boolean;

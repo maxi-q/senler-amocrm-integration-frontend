@@ -4,13 +4,13 @@ import { checkRegistrationAndReturnData } from '@/api/Backend/checkRegistration'
 import useAccountStore from '@/store/account';
 import { getUrlParams } from '@/helpers';
 
-import AmoAuthLink, { IOnAuthSuccess } from './components/AmoAuthButton';
 import AmoCRMProfile from './components/AmoCRMProfile';
 import { Loader } from './components/Loader';
 import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
 import { Senler } from '../Senler';
+import AmoAuthLink, { IOnAuthSuccess } from '@/shared/modules/AmoCRM/components/AmoAuthButton';
 
 export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAuthCode: React.Dispatch<React.SetStateAction<string>> }) => {
   const { isAmoCRMAuthenticated, senlerGroup, setIsAmoCRMAuthenticated, setSenlerGroup } = useAccountStore()

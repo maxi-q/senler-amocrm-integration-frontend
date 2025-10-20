@@ -4,6 +4,10 @@ export interface IOnAuthSuccess {
   referer: string
 }
 
+import { useEffect, useRef } from 'react'
+import { useMessage } from '@/messages/messageProvider'
+import { MessageTypes } from '@/messages/types/messages.enum'
+
 interface AmoAuthPopupProps {
 	clientId: string
 	redirectUri: string
@@ -22,6 +26,9 @@ const AmoAuthLink = ({
 	onAuthSuccess,
 	onAuthError,
 }: AmoAuthPopupProps) => {
+	const { message } = useMessage()
+	const popupRef = useRef<Window | null>(null)
+
 	const generateAuthUrl = () => {
 		const authUrl = new URL('https://www.amocrm.ru/oauth')
 		authUrl.searchParams.append('client_id', clientId)
@@ -33,6 +40,7 @@ const AmoAuthLink = ({
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
 		const popup = window.open(authUrl, 'amoAuthPopup', 'width=600,height=600')
+		popupRef.current = popup
 
 		if (!popup) {
 			onAuthError?.(
@@ -49,30 +57,26 @@ const AmoAuthLink = ({
 				)
 				return
 			}
-
-			try {
-				const urlParams = new URLSearchParams(popup.location.search)
-				const code = urlParams.get('code')
-				const state = urlParams.get('state') || ''
-				const error = urlParams.get('error')
-				const referer = urlParams.get('referer') || ''
-
-				if (code) {
-					onAuthSuccess({ code, state, referer })
-					popup.close()
-					clearInterval(timer)
-				}
-
-				if (error) {
-					onAuthError?.(error)
-					popup.close()
-					clearInterval(timer)
-				}
-			} catch (error) {
-        console.error(error)
-			}
 		}, 500)
 	}
+
+	useEffect(() => {
+		if (!message) return
+		if (message.type === MessageTypes.AmoAuthCode) {
+			const { code, state, referer } = message.payload || {}
+			if (code) {
+				onAuthSuccess({ code, state, referer })
+				popupRef.current?.close()
+			}
+		}
+		if (message.type === MessageTypes.AmoAuthCodeError) {
+			const { error } = message.payload || {}
+			if (error) {
+				onAuthError?.(error)
+				popupRef.current?.close()
+			}
+		}
+	}, [message])
 
 	return (
 		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
@@ -86,3 +90,4 @@ const AmoAuthLink = ({
 }
 
 export default AmoAuthLink
+

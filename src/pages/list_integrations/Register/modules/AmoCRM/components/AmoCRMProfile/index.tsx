@@ -66,7 +66,7 @@ const AmoCRMProfile = ({amoCrmDomainName, setOAuthCode}: {amoCrmDomainName: stri
 
           <div className="flex-1 text-left">
             <p className="font-medium">Аккаунт в amoCRM</p>
-            <p className="text-gray-600">{amoCrmDomainName || 'account.amocrm.ru'}</p>
+            <p className="text-gray-600">{amoCrmDomainName.slice(0, 25) || 'account.amocrm.ru'}</p>
           </div>
         </div>
           <button onClick={changeAmoAccountButton} className="text-blue-600 font-medium rounded-md px-4 py-2 border border-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
