@@ -25,6 +25,7 @@ const SenlerAuthLink = ({
 		authUrl.searchParams.append('redirect_uri', redirectUri)
 		authUrl.searchParams.append('state', ''+Date.now())
 
+    console.log(authUrl)
 		return authUrl.toString()
 	}
 
