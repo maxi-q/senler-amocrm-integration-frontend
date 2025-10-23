@@ -23,7 +23,6 @@ interface MessageEditorProps {
   type?: 'senler' | 'no-senler';
 }
 
-// заменяет %value% на %label%
 const replaceValuesWithLabels = (text: string, options: Variable[] = []) => {
   let result = text;
   options.forEach(opt => {
