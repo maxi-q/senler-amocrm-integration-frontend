@@ -1,15 +1,15 @@
 import axios from "axios";
-import { IAmoCRMField, IApiErrorResponse } from "./fields.dto";
+import { IAmoCRMFullResponse } from "./workspaceInfo.dto";
 import { SERVER_URL } from "@/constants";
 
-interface getAmoCRMFields {
+interface getAmoCRMWorkspaceInfo {
   senlerGroupId: string;
 }
 
-export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promise<IAmoCRMField[] | IApiErrorResponse> => {
+export const getAmoCRMWorkspaceInfo = async ({ senlerGroupId }: getAmoCRMWorkspaceInfo): Promise<IAmoCRMFullResponse> => {
   try {
     const response = await axios.get(
-      SERVER_URL + `/integration/getAmoFields`,
+      SERVER_URL + `/integration/amocrm-workspace-info`,
       {
         params: {
           senlerGroupId
@@ -22,7 +22,6 @@ export const getAmoCRMFields = async ({ senlerGroupId }: getAmoCRMFields): Promi
     console.log('response.data', response.data)
     return response.data;
   } catch (error) {
-    console.error("Error fetching AmoCRM fields:", error);
     throw error;
   }
 };

@@ -17,6 +17,7 @@ interface MySelectProps {
 
 const MySelect = ({ value, rowIndex, onValueChange, options, sourceKey, type}: MySelectProps) => {
   options = options?.map(el => ({...el, value: `%${el.value}%`}));
+  console.log(options)
   return (
     <div>
       <MessageEditor type={type} options={options} initialContent={value} onContentChange={(content) => onValueChange(rowIndex, sourceKey, content)} />

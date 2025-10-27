@@ -32,13 +32,6 @@ const SenlerAuthLink = ({
 		authUrl.searchParams.append('redirect_uri', redirectUri)
 		authUrl.searchParams.append('state', ''+Date.now())
 
-    console.log(authUrl)
-
-    console.log(import.meta.env.VITE_CLIENT_ID)
-    console.log(import.meta.env.VITE_API_URL)
-    console.log(import.meta.env.VITE_FRONT_URL)
-    console.log(import.meta.env.VITE_SENLER_INTEGRATION_ID)
-
 		return authUrl.toString()
 	}
 

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 import { useMessage } from '@/messages/messageProvider'
 import { getUrlParams } from '@/helpers'
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto'
-import { getAmoCRMFields } from '@/api/Backend/fields'
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
+import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo'
 
 import EditableTable from '../../components/KeyValueInput'
 import { ServerMessage } from '../../components/ServerMessage'
@@ -13,9 +13,10 @@ import { BotStepType } from '../..'
 import { SendDataToSenlerData, ISendDataToSenler } from './index.types'
 import { transformDataToListMessage } from '../../helpers/helpers'
 import { SenlerFieldsResponse } from '../../types'
+import { isAxiosError } from 'axios'
 
 
-const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
+const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -24,22 +25,18 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
 
   const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
     try {
-      const amoFields = await getAmoCRMFields({ senlerGroupId })
-
-      // Проверяем, является ли ответ ошибкой
-      if ('error' in amoFields) {
-        setError(amoFields.error.message)
-        return
-      }
-
-      if (!Array.isArray(amoFields)) {
-        throw new Error('amoFields is not an array')
-      }
-
-      setAmoCRMFields(amoFields.map(field => new IAmoCRMField(field)))
+      setError('')
+      
+      const { fields } = await getAmoCRMWorkspaceInfo({ senlerGroupId })
+      if (!fields) return
+      setAmoCRMFields(fields.map(field => new IAmoCRMField(field)))
     } catch (error) {
-      console.error("Error fetching amoCRM fields:", error)
-      setError("Произошла ошибка при получении полей AmoCRM")
+      if (isAxiosError(error)) {
+        setError(error.response?.data.message)
+      } else {
+        setError("Произошла ошибка при получении полей AmoCRM")
+      }
+      console.error("Error fetching amoCRM fields in SendDataToSenler:", error);
     }
   };
 
@@ -92,7 +89,7 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
       />
     </>
   )
-}
+})
 
 export { SendDataToSenler }
 export type { SendDataToSenlerData }

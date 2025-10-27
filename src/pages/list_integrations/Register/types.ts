@@ -1,4 +1,4 @@
-import { ISenlerField } from "@/api/Backend/fields/fields.dto"
+import { ISenlerField } from "@/api/Backend/fields/workspaceInfo.dto"
 
 export interface privateSetting {
   id: string,

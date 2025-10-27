@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import EditableRow from './EditableRow';
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto';
 
 
 export interface IDataRow {
@@ -62,8 +62,8 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
           Добавить
         </button>
       </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <tbody>
+      <div style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div>
           {currentData?.map((row, rowIndex) => (
             <EditableRow
               key={rowIndex}
@@ -76,8 +76,8 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
               type={type}
             />
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 });
