@@ -20,6 +20,7 @@ export const getAmoCRMWorkspaceInfo = async ({ senlerGroupId }: getAmoCRMWorkspa
       }
     );
     console.log('response.data', response.data)
+    console.log('response.data', response)
     return response.data;
   } catch (error) {
     throw error;

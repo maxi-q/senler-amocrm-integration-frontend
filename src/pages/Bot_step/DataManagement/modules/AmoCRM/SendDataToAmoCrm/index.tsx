@@ -1,42 +1,25 @@
   import { memo, useEffect, useMemo, useState } from 'react'
 
-  import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo'
-  import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
+  import { ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
   import { useMessage } from '@/messages/messageProvider'
+  import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
   import { getUrlParams } from '@/helpers'
 
   import { ISendDataToAmoCrm, SendDataToAmoCrmData } from './index.types'
-  import EditableTable from '../../components/KeyValueInput'
-  import { ServerMessage } from '../../components/ServerMessage'
-  import { transformDataToListMessage } from '../../helpers/helpers'
-  import { BotStepType, SenlerFieldsResponse } from '../../types'
-  import { isAxiosError } from 'axios'
+  import EditableTable from '../../../components/KeyValueInput'
+  import { ServerMessage } from '../../../components/ServerMessage'
+  import { transformDataToListMessage } from '../../../helpers/helpers'
+  import { BotStepType, SenlerFieldsResponse, } from '../../../types'
+import { AmoCrmTransferringSettingsComponent } from '../TransferringSettings'
 
-  const SendDataToAmoCrm = memo(({ data, setData }: ISendDataToAmoCrm) => {
+  const SendDataToAmoCrm = memo(({ data, setData, amoCrmTransferringSettings, setAmoCrmTransferringSettings }: ISendDataToAmoCrm) => {
 
     const renderData = useMemo(() => data ? data[BotStepType.SendDataToAmoCrm] : [{ from: "", to: "" }], [data])
 
-    const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
+    const { workspaceInfo } = useWorkspaceInfo()
     const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
-    const [error, setError] = useState<string | null>(null)
 
     const { message, sendMessage } = useMessage()
-
-    const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
-      try {
-        setError('')
-        const { fields } = await getAmoCRMWorkspaceInfo({ senlerGroupId });
-        if (!fields) return
-        setAmoCRMFields(fields.map(field => new IAmoCRMField(field)))
-      } catch (error) {
-        if (isAxiosError(error)) {
-          setError(error.response?.data.message)
-        } else {
-          setError("Произошла ошибка при получении полей AmoCRM")
-        }
-        console.error("Error fetching amoCRM fields in getOrThrowAmoCRMFields:", error);
-      }
-    };
 
     useEffect(() => {
       console.log('Rerender SendDataToAmoCrm', data)
@@ -48,10 +31,7 @@
         return;
       }
 
-      getOrThrowAmoCRMFields(senlerGroupId);
-
       const _data = transformDataToListMessage(senlerGroupId)
-
       sendMessage(_data, window.parent);
     }, [])
 
@@ -70,20 +50,24 @@
     }
 
     const clearError = () => {
-      setError(null)
+      // Ошибка теперь управляется через workspaceInfo
     }
 
     return (
       <>
-        {error && (
+        {workspaceInfo.error && (
           <div className="mb-4">
-            <ServerMessage message={error} onClose={clearError} />
+            <ServerMessage message={workspaceInfo.error} onClose={clearError} />
           </div>
         )}
+        <AmoCrmTransferringSettingsComponent
+          settings={amoCrmTransferringSettings}
+          setSettings={setAmoCrmTransferringSettings}
+        />
         <EditableTable
           data={renderData}
           changeData={setSendDataToAmoCrmData}
-          toFields={amoCRMFields}
+          toFields={workspaceInfo.fields}
           fromFields={senlerFields}
         />
       </>

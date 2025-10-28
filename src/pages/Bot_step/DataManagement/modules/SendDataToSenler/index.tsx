@@ -2,8 +2,8 @@ import { memo, useEffect, useMemo, useState } from 'react'
 
 import { useMessage } from '@/messages/messageProvider'
 import { getUrlParams } from '@/helpers'
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
-import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo'
+import { ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
+import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
 
 import EditableTable from '../../components/KeyValueInput'
 import { ServerMessage } from '../../components/ServerMessage'
@@ -11,34 +11,15 @@ import { ServerMessage } from '../../components/ServerMessage'
 import { SendDataToSenlerData, ISendDataToSenler } from './index.types'
 import { transformDataToListMessage } from '../../helpers/helpers'
 import { BotStepType, SenlerFieldsResponse } from '../../types'
-import { isAxiosError } from 'axios'
 
 
 const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
   const renderData = useMemo(() => data ? data[BotStepType.SendDataToSenler] : [], [data])
 
-  const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
+  const { workspaceInfo } = useWorkspaceInfo()
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
-  const [error, setError] = useState<string | null>(null)
 
 	const { message, sendMessage } = useMessage()
-
-  const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
-    try {
-      setError('')
-
-      const { fields } = await getAmoCRMWorkspaceInfo({ senlerGroupId })
-      if (!fields) return
-      setAmoCRMFields(fields.map(field => new IAmoCRMField(field)))
-    } catch (error) {
-      if (isAxiosError(error)) {
-        setError(error.response?.data.message)
-      } else {
-        setError("Произошла ошибка при получении полей AmoCRM")
-      }
-      console.error("Error fetching amoCRM fields in SendDataToSenler:", error);
-    }
-  };
 
   useEffect(() => {
     console.log('Rerender SendDataToSenler', data)
@@ -50,7 +31,6 @@ const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
       return
     }
 
-    getOrThrowAmoCRMFields(senlerGroupId)
     const _data = transformDataToListMessage(senlerGroupId)
     sendMessage(_data, window.parent)
   }, [])
@@ -70,21 +50,21 @@ const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
   }
 
   const clearError = () => {
-    setError(null)
+    // Ошибка теперь управляется через workspaceInfo
   }
 
 	return (
     <>
-      {error && (
+      {workspaceInfo.error && (
         <div className="mb-4">
-          <ServerMessage message={error} onClose={clearError} />
+          <ServerMessage message={workspaceInfo.error} onClose={clearError} />
         </div>
       )}
       <EditableTable
         data={renderData}
         changeData={setSendDataToSenlerData}
         toFields={senlerFields}
-        fromFields={amoCRMFields}
+        fromFields={workspaceInfo.fields}
         type='no-senler'
       />
     </>

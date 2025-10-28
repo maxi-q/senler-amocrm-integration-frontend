@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 
 import useAccountStore from '@/store/account'
 import { useMessage } from '@/messages/messageProvider'
+import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
+import { getUrlParams } from '@/helpers'
 
-import { SendDataToAmoCrm } from './modules/SendDataToAmoCrm'
+import { SendDataToAmoCrm } from './modules/AmoCRM/SendDataToAmoCrm'
 import { SendDataToSenler } from './modules/SendDataToSenler'
-import { Loader } from './modules/AmoCRM/components/Loader'
-import { AmoCRM } from './modules/AmoCRM'
+import { Loader } from './modules/Register/components/Loader'
+import { AmoCRM } from './modules/Register'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
@@ -16,6 +18,7 @@ import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementR
 export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
+  const { fetchWorkspaceInfo } = useWorkspaceInfo()
 
   const [OAuthCode, setOAuthCode] = useState('')
 
@@ -27,6 +30,16 @@ export const DataManagement = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
   const [amoCrmTransferringSettings, setAmoCrmTransferringSettings] = useState<AmoCrmTransferringSettings | null>(null)
+
+  // Загружаем workspaceInfo при аутентификации
+  useEffect(() => {
+    if (isAmoCRMAuthenticated) {
+      const { senlerGroupId } = getUrlParams()
+      if (senlerGroupId) {
+        fetchWorkspaceInfo(senlerGroupId)
+      }
+    }
+  }, [isAmoCRMAuthenticated, fetchWorkspaceInfo])
 
 
   useEffect(() => {
@@ -52,7 +65,7 @@ export const DataManagement = () => {
         }
       }
     )
-  }, [publicData])
+  }, [publicData, stepType, amoCrmTransferringSettings])
 
   const handleSetData = (mockMessage?: ITransferData) => {
     let { public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
@@ -141,7 +154,7 @@ export const DataManagement = () => {
             {
               dataIsLoaded ?
               <>
-                {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} />}
+                {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} amoCrmTransferringSettings={amoCrmTransferringSettings} setAmoCrmTransferringSettings={setAmoCrmTransferringSettings} />}
                 {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
               </> :
               <Loader/>

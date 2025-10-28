@@ -1,6 +1,6 @@
 import { ISenlerField } from "@/api/Backend/fields/workspaceInfo.dto"
 import { SendDataToSenlerData } from "./modules/SendDataToSenler"
-import { SendDataToAmoCrmData } from "./modules/SendDataToAmoCrm"
+import { SendDataToAmoCrmData } from "./modules/AmoCRM/SendDataToAmoCrm"
 
 export interface privateSetting {
   id: string,
