@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 import useAccountStore from '@/store/account';
 import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo';
-import { IAmoCRMField, IAmoCRMPipeline, IAmoCRMStatus, IAmoCRMUser } from '@/api/Backend/fields/workspaceInfo.dto';
+import { IAmoCRMField, IAmoCRMPipeline, IAmoCRMUser } from '@/api/Backend/fields/workspaceInfo.dto';
 
 const CACHE_DURATION = 5 * 60 * 1000; // 5 минут
 
