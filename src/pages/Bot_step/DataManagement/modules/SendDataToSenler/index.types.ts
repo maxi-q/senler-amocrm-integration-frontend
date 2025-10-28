@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import { type DataManagementRouter } from "../.."
 import { type IDataRow } from "../../components/KeyValueInput"
+import { DataManagementRouter } from "../../types"
 
 export type SendDataToSenlerData = IDataRow[]
 

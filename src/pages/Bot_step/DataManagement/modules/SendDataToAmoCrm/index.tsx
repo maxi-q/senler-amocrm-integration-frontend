@@ -1,4 +1,4 @@
-  import { memo, useEffect, useState } from 'react'
+  import { memo, useEffect, useMemo, useState } from 'react'
 
   import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo'
   import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
@@ -8,12 +8,13 @@
   import { ISendDataToAmoCrm, SendDataToAmoCrmData } from './index.types'
   import EditableTable from '../../components/KeyValueInput'
   import { ServerMessage } from '../../components/ServerMessage'
-  import { BotStepType } from '../..'
   import { transformDataToListMessage } from '../../helpers/helpers'
-  import { SenlerFieldsResponse } from '../../types'
+  import { BotStepType, SenlerFieldsResponse } from '../../types'
   import { isAxiosError } from 'axios'
 
   const SendDataToAmoCrm = memo(({ data, setData }: ISendDataToAmoCrm) => {
+
+    const renderData = useMemo(() => data ? data[BotStepType.SendDataToAmoCrm] : [{ from: "", to: "" }], [data])
 
     const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
     const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
@@ -80,7 +81,7 @@
           </div>
         )}
         <EditableTable
-          data={data && data[BotStepType.SendDataToAmoCrm]}
+          data={renderData}
           changeData={setSendDataToAmoCrmData}
           toFields={amoCRMFields}
           fromFields={senlerFields}

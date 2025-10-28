@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 
 import { useMessage } from '@/messages/messageProvider'
 import { getUrlParams } from '@/helpers'
@@ -8,15 +8,15 @@ import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo'
 import EditableTable from '../../components/KeyValueInput'
 import { ServerMessage } from '../../components/ServerMessage'
 
-import { BotStepType } from '../..'
-
 import { SendDataToSenlerData, ISendDataToSenler } from './index.types'
 import { transformDataToListMessage } from '../../helpers/helpers'
-import { SenlerFieldsResponse } from '../../types'
+import { BotStepType, SenlerFieldsResponse } from '../../types'
 import { isAxiosError } from 'axios'
 
 
 const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
+  const renderData = useMemo(() => data ? data[BotStepType.SendDataToSenler] : [], [data])
+
   const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -26,7 +26,7 @@ const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
   const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
     try {
       setError('')
-      
+
       const { fields } = await getAmoCRMWorkspaceInfo({ senlerGroupId })
       if (!fields) return
       setAmoCRMFields(fields.map(field => new IAmoCRMField(field)))
@@ -81,7 +81,7 @@ const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
         </div>
       )}
       <EditableTable
-        data={data && data[BotStepType.SendDataToSenler]}
+        data={renderData}
         changeData={setSendDataToSenlerData}
         toFields={senlerFields}
         fromFields={amoCRMFields}

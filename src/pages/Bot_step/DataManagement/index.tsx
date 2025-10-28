@@ -3,91 +3,72 @@ import { useEffect, useState } from 'react'
 import useAccountStore from '@/store/account'
 import { useMessage } from '@/messages/messageProvider'
 
-import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
-import { SendDataToSenler, type SendDataToSenlerData } from './modules/SendDataToSenler'
+import { SendDataToAmoCrm } from './modules/SendDataToAmoCrm'
+import { SendDataToSenler } from './modules/SendDataToSenler'
 import { Loader } from './modules/AmoCRM/components/Loader'
 import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
+import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementRouter, IPublicTransferData, isPublicTransferData, ITransferData } from './types'
 
-
-export enum BotStepType {
-  SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
-  SendDataToSenler = 'SEND_DATA_TO_SENLER',
-}
-
-let BotStepRuName = {
-  [BotStepType.SendDataToAmoCrm]: 'Отправка данных в amoCRM',
-  [BotStepType.SendDataToSenler]: 'Отправка данных в senler',
-}
-
-export type DataManagementRouter = {
-  [key in BotStepType]?
-    : key extends BotStepType.SendDataToAmoCrm
-    ? SendDataToAmoCrmData
-    : key extends BotStepType.SendDataToSenler
-    ? SendDataToSenlerData
-    : never;
-};
 
 export const DataManagement = () => {
 	const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
 
   const [OAuthCode, setOAuthCode] = useState('')
-  const [vkGroupId, setVkGroupId] = useState('')
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
 
   const [publicData, setPublicData] = useState<DataManagementRouter>()
-  const [privateData, setPrivateData] = useState<object>()
 
-  const [transferData, setTransferData] = useState<any>()
-
+  const [transferData, setTransferData] = useState<ITransferData>()
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
+  const [amoCrmTransferringSettings, setAmoCrmTransferringSettings] = useState<AmoCrmTransferringSettings | null>(null)
 
-  useEffect(()=>{
-    if(!stepType) {
-      setStepType(BotStepType.SendDataToAmoCrm)
-    }
-  }, [stepType])
 
   useEffect(() => {
-    console.log('set publicData in DataManagement', publicData)
+    let settings = amoCrmTransferringSettings
+
+    if ( amoCrmTransferringSettings && settings) {
+      for (const [key, value] of Object.entries(amoCrmTransferringSettings)) {
+        if (value) {
+          settings[key as keyof AmoCrmTransferringSettings] = value
+        }
+      }
+
+      settings = Object.keys(settings).length === 0 ? null : settings
+    }
+
     setTransferData(
       {
-        private: { ...privateData },
         public: {
           ...publicData,
-          // token: OAuthCode,
-          vkGroupId,
           type: stepType,
-          syncableVariables: publicData && publicData[stepType] ,
+          syncableVariables: publicData && publicData[stepType] || [],
+          amoCrmTransferringSettings: settings
         }
       }
     )
-  }, [publicData, privateData])
+  }, [publicData])
 
-  const handleSetData = (mockMessage?: { private: any, public: any }) => {
-    let { private: privatePayload, public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
-
-    console.log('mockMessage', mockMessage)
-    console.log('publicPayload', publicPayload)
-    console.log('publicData', publicData)
+  const handleSetData = (mockMessage?: ITransferData) => {
+    let { public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
 
     if (!mockMessage) {
-      privatePayload = JSON.parse(privatePayload || '{}')
-      publicPayload = JSON.parse(publicPayload || '{}')
+      try {
+        publicPayload = JSON.parse(publicPayload || '{}')
+      } catch (error) {
+        publicPayload = {}
+      }
     }
 
-    if (privatePayload) setPrivateData(privatePayload);
-    if (publicPayload) {
+    if (isPublicTransferData(publicPayload)) {
       const parsedPublicData = publicPayload;
 
       setOAuthCode('');
-      setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type || BotStepType.SendDataToAmoCrm);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
 
@@ -100,21 +81,21 @@ export const DataManagement = () => {
 	useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
-      const syncableVariables = publicData[stepType];
+      const syncableVariables = publicData[stepType] || [];
+
+      const publicPayload: IPublicTransferData = {
+        ...publicData,
+        type: stepType,
+        syncableVariables,
+        amoCrmTransferringSettings
+      }
 
       const data = {
         id: message.id,
         request: message.request,
         response: {
           payload: {
-            private: { ...privateData },
-            public: {
-              ...publicData,
-              token: '',
-              vkGroupId,
-              type: stepType,
-              syncableVariables,
-            },
+            public: publicPayload,
             description: 'Интеграция подключена',
             command: BotStepRuName[stepType],
             title: BotStepRuName[stepType],
