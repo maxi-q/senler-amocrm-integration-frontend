@@ -23,11 +23,16 @@ const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senl
     setCurrentData(data)
   }, [data])
 
+  useEffect(() => {
+    if (currentData !== data) {
+      changeData(currentData);
+    }
+  }, [currentData]);
+
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {
       const updatedData = [...prevData];
       updatedData[rowIndex] = { ...updatedData[rowIndex], [key]: newValue };
-      changeData(updatedData);
       return updatedData;
     });
   };
@@ -35,11 +40,10 @@ const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senl
   const handleAddRow = () => {
     setCurrentData((prevData) => {
       const newData = [
-        ...prevData,
+        ...(prevData || []),
         { from: '', to: '' },
-      ]
-      changeData(newData)
-      return newData
+      ];
+      return newData;
     });
   };
 
