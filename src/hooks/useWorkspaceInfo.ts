@@ -4,32 +4,30 @@ import useAccountStore from '@/store/account';
 import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo';
 import { IAmoCRMField, IAmoCRMPipeline, IAmoCRMUser } from '@/api/Backend/fields/workspaceInfo.dto';
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 минут
+const CACHE_DURATION = 5 * 60 * 1000;
 
 export const useWorkspaceInfo = () => {
   const { workspaceInfo, setWorkspaceInfo } = useAccountStore();
 
   const fetchWorkspaceInfo = useCallback(async (senlerGroupId: string, forceRefresh = false) => {
     const now = Date.now();
-    
-    // Проверяем кэш, если не принудительное обновление
-    if (!forceRefresh && 
-        workspaceInfo.lastFetched && 
+
+    if (!forceRefresh &&
+        workspaceInfo.lastFetched &&
         (now - workspaceInfo.lastFetched) < CACHE_DURATION &&
         workspaceInfo.fields.length > 0) {
       return workspaceInfo;
     }
 
-    // Если уже загружается, не запускаем повторную загрузку
     if (workspaceInfo.isLoading) {
       return workspaceInfo;
     }
 
     try {
       setWorkspaceInfo({ isLoading: true, error: null });
-      
+
       const response = await getAmoCRMWorkspaceInfo({ senlerGroupId });
-      
+
       if (!response) {
         setWorkspaceInfo({ 
           isLoading: false, 

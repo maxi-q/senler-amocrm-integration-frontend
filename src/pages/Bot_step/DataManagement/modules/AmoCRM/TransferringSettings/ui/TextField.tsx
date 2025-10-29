@@ -24,7 +24,29 @@ export const TextField = ({label, value, setValue}: ITextField) => {
   )
 }
 
-export const InputField = ({label, value, setValue}: ITextField) => {
+export const TextInputField = ({label, value, setValue}: ITextField) => {
+  return (
+    <div style={{ width: '100%', margin: 'auto' }}>
+				<label style={{ fontWeight: 'bold', marginTop: '8px', display: 'block' }}>{label}</label>
+				<input
+					value={value}
+					onChange={(e) => setValue(e.target.value)}
+					type="text"
+					style={{
+            minHeight: '46px',
+            height: '46px',
+						width: '100%',
+						padding: '10px',
+						border: '1px solid #ccc',
+						borderRadius: '4px',
+						resize: 'vertical'
+					}}
+				/>
+			</div>
+  )
+}
+
+export const NumberInputField = ({label, value, setValue}: ITextField) => {
   return (
     <div style={{ width: '100%', margin: 'auto' }}>
 				<label style={{ fontWeight: 'bold', marginTop: '8px', display: 'block' }}>{label}</label>

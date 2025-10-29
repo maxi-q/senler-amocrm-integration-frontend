@@ -31,7 +31,6 @@ export const DataManagement = () => {
 
   const [amoCrmTransferringSettings, setAmoCrmTransferringSettings] = useState<AmoCrmTransferringSettings | null>(null)
 
-  // Загружаем workspaceInfo при аутентификации
   useEffect(() => {
     if (isAmoCRMAuthenticated) {
       const { senlerGroupId } = getUrlParams()

@@ -1,8 +1,8 @@
-import { memo, useEffect, useCallback, useMemo } from 'react'
+import { memo, useEffect, useCallback, useMemo, useState } from 'react'
 
 import { AmoCrmTransferringSettings } from '../../../types'
 import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
-import { InputField } from './ui/TextField'
+import { NumberInputField, TextInputField } from './ui/TextField'
 import { SelectField } from './ui/SelectField'
 
 interface IAmoCrmTransferringSettingsProps {
@@ -10,8 +10,15 @@ interface IAmoCrmTransferringSettingsProps {
   setSettings: (settings: AmoCrmTransferringSettings | null) => void
 }
 
+enum settingsNameStatusEnum {
+  NameIsName = 'NameIsName',
+  CustomName = 'CustomName'
+}
+
 export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings }: IAmoCrmTransferringSettingsProps) => {
   const { workspaceInfo } = useWorkspaceInfo()
+
+  const [isCustomName, setIsCustomName] = useState<settingsNameStatusEnum>(settings?.name ? settingsNameStatusEnum.CustomName : settingsNameStatusEnum.NameIsName)
 
   useEffect(() => {
     if (workspaceInfo.pipelines.length > 0 && !settings) {
@@ -25,6 +32,17 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       setSettings(defaultSettings)
     }
   }, [workspaceInfo, workspaceInfo, settings, setSettings])
+
+    const handleNameTypeChange = useCallback((type: settingsNameStatusEnum)=>{
+      setIsCustomName(type)
+      if (type == settingsNameStatusEnum.NameIsName) {
+        const newSettings: AmoCrmTransferringSettings = {
+          ...settings,
+          name: ''
+        }
+        setSettings(newSettings)
+      }
+    }, [settings, setSettings])
 
   const handlePipelineChange = useCallback((pipelineId: string) => {
     console.log(pipelineId)
@@ -89,6 +107,16 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     }
   }, [settings, setSettings])
 
+  const handleNameChange = useCallback((name: string) => {
+    if (settings?.name !== name) {
+      const newSettings: AmoCrmTransferringSettings = {
+        ...settings,
+        name: name
+      }
+      setSettings(newSettings)
+    }
+  }, [settings, setSettings])
+
   const pipelinesOptions = useMemo(() => {
     const options = workspaceInfo.pipelines.map(pipeline => ({
       label: pipeline.name,
@@ -142,10 +170,6 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     return options
   }, [workspaceInfo.users])
 
-  useEffect(()=>{
-    console.log(pipelinesOptions)
-    console.log(settings?.pipelineId?.toString())
-  }, [])
 
   if (workspaceInfo.isLoading) {
     return <div>Загрузка настроек передачи...</div>
@@ -159,6 +183,24 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
   return (
     <div style={{ marginTop: '20px' }}>
       <h4 style={{ marginBottom: '15px', fontWeight: 'bold' }}>Настройки передачи в AmoCRM</h4>
+
+      <div style={{ marginBottom: '15px' }}>
+
+        <SelectField
+          label="Имя сделки"
+          value={isCustomName}
+          setValue={handleNameTypeChange }
+          options={[{ label: 'Имя клиента', value: settingsNameStatusEnum.NameIsName }, { label: 'Своё значение', value: settingsNameStatusEnum.CustomName }]}
+        />
+        {
+          isCustomName === settingsNameStatusEnum.CustomName ?
+            <TextInputField
+              label=""
+              value={settings?.name?.toString() || ''}
+              setValue={(value) => handleNameChange(typeof value === 'string' ? value : value.toString())}
+            /> : <></>
+        }
+      </div>
 
       <div style={{ marginBottom: '15px' }}>
         <SelectField
@@ -193,7 +235,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       </div>
 
       <div style={{ marginBottom: '15px' }}>
-        <InputField
+        <NumberInputField
           label="Цена"
           value={settings?.price?.toString() || '0'}
           setValue={(value) => handlePriceChange(typeof value === 'string' ? value : value.toString())}
