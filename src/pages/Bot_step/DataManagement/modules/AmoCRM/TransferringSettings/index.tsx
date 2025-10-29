@@ -135,6 +135,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       label: string;
       value: string;
     }[] = []
+
     if (settings) {
       options.push(...workspaceInfo.pipelines
         .find(p => p.id === settings.pipelineId)
@@ -142,10 +143,10 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           label: status.name,
           value: status.id.toString()
         })) || [])
-      options.unshift({
+      options[0] = {
         label: 'Не изменять',
         value: ''
-      })
+      }
     }
     else {
       options.push({
