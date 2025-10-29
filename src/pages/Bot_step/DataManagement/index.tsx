@@ -47,9 +47,7 @@ export const DataManagement = () => {
 
     if ( amoCrmTransferringSettings && settings) {
       for (const [key, value] of Object.entries(amoCrmTransferringSettings)) {
-        if (value) {
-          settings[key as keyof AmoCrmTransferringSettings] = value
-        }
+        settings[key as keyof AmoCrmTransferringSettings] = value || null
       }
 
       settings = Object.keys(settings).length === 0 ? null : settings

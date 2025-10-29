@@ -27,6 +27,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
   }, [workspaceInfo, workspaceInfo, settings, setSettings])
 
   const handlePipelineChange = useCallback((pipelineId: string) => {
+    console.log(pipelineId)
     const pipeline = workspaceInfo.pipelines.find(p => p.id.toString() === pipelineId)
     if (pipeline) {
       if (settings?.pipelineId !== pipeline.id || settings?.statusId !== pipeline.statuses[0]?.id) {
@@ -38,10 +39,19 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
         }
         setSettings(newSettings)
       }
+    } else {
+      const newSettings: AmoCrmTransferringSettings = {
+          ...settings,
+          pipelineId: undefined,
+          statusId: undefined,
+          price: settings?.price || 0
+        }
+        setSettings(newSettings)
     }
   }, [workspaceInfo, settings, setSettings])
 
   const handleStatusChange = useCallback((statusId: string) => {
+    if (!settings?.pipelineId) return
     const newStatusId = parseInt(statusId)
 
     if (settings?.statusId !== newStatusId) {
@@ -85,7 +95,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       value: pipeline.id.toString()
     }))
     options.unshift({
-      label: 'Не изменять',
+      label: 'Выберете воронку',
       value: ''
     })
     return options
@@ -126,11 +136,16 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
     options.unshift({
       label: 'Не назначать',
-      value: ''
+      value: 'none'
     })
 
     return options
   }, [workspaceInfo.users])
+
+  useEffect(()=>{
+    console.log(pipelinesOptions)
+    console.log(settings?.pipelineId?.toString())
+  }, [])
 
   if (workspaceInfo.isLoading) {
     return <div>Загрузка настроек передачи...</div>
@@ -153,14 +168,19 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           options={pipelinesOptions}
         />
       </div>
-
       <div style={{ marginBottom: '15px' }}>
-        <SelectField
-          label="Статус"
-          value={settings?.statusId?.toString() || ''}
-          setValue={handleStatusChange}
-          options={statusesOptions}
-        />
+        {
+          settings?.pipelineId ? (
+            <SelectField
+              label="Статус"
+              value={settings?.statusId?.toString() || ''}
+              setValue={handleStatusChange}
+              options={statusesOptions}
+            />
+          ) : (
+            <p>Для изменения статуса сделки выберете воронку</p>
+          )
+        }
       </div>
 
       <div style={{ marginBottom: '15px' }}>
