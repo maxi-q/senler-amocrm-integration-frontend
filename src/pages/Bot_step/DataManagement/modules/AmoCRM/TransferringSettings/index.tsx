@@ -27,7 +27,8 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
         pipelineId: firstPipeline.id,
         statusId: firstPipeline.statuses[0]?.id,
         responsibleUserId: workspaceInfo.users[0]?.id,
-        price: 0
+        price: 0,
+        name: ''
       }
       setSettings(defaultSettings)
     }
@@ -37,20 +38,20 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       setIsCustomName(type)
       if (type == settingsNameStatusEnum.NameIsName) {
         const newSettings: AmoCrmTransferringSettings = {
-          ...settings,
-          name: ''
+          ...settings!,
+          name: '',
         }
         setSettings(newSettings)
       }
     }, [settings, setSettings])
 
   const handlePipelineChange = useCallback((pipelineId: string) => {
-    console.log(pipelineId)
     const pipeline = workspaceInfo.pipelines.find(p => p.id.toString() === pipelineId)
+
     if (pipeline) {
       if (settings?.pipelineId !== pipeline.id || settings?.statusId !== pipeline.statuses[0]?.id) {
         const newSettings: AmoCrmTransferringSettings = {
-          ...settings,
+          ...settings!,
           pipelineId: pipeline.id,
           statusId: pipeline.statuses[0]?.id,
           price: settings?.price || 0
@@ -59,12 +60,12 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       }
     } else {
       const newSettings: AmoCrmTransferringSettings = {
-          ...settings,
-          pipelineId: undefined,
-          statusId: undefined,
-          price: settings?.price || 0
-        }
-        setSettings(newSettings)
+        ...settings!,
+        pipelineId: null,
+        statusId: null,
+        price: settings?.price || 0
+      }
+      setSettings(newSettings)
     }
   }, [workspaceInfo, settings, setSettings])
 
@@ -74,9 +75,9 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
     if (settings?.statusId !== newStatusId) {
       const newSettings: AmoCrmTransferringSettings = {
-        ...settings,
+        ...settings!,
         statusId: newStatusId,
-        price: settings?.price || 0
+        price: settings?.price || 0,
       }
       setSettings(newSettings)
     }
@@ -87,7 +88,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
     if (settings?.responsibleUserId !== newUserId) {
       const newSettings: AmoCrmTransferringSettings = {
-        ...settings,
+        ...settings!,
         responsibleUserId: newUserId,
         price: settings?.price || 0
       }
@@ -100,7 +101,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
     if (settings?.price !== newPrice) {
       const newSettings: AmoCrmTransferringSettings = {
-        ...settings,
+        ...settings!,
         price: newPrice
       }
       setSettings(newSettings)
@@ -110,7 +111,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
   const handleNameChange = useCallback((name: string) => {
     if (settings?.name !== name) {
       const newSettings: AmoCrmTransferringSettings = {
-        ...settings,
+        ...settings!,
         name: name
       }
       setSettings(newSettings)

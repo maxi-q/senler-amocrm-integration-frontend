@@ -27,12 +27,13 @@ export interface SenlerFieldsResponse {
 }
 
 export interface AmoCrmTransferringSettings {
-  pipelineId?: number
-  statusId?: number
-  price?: number
-  name?: string
-  responsibleUserId?: number
+  pipelineId: number | null
+  statusId: number | null
+  price: number | null
+  name: string | null
+  responsibleUserId: number | null
 }
+
 
 export enum BotStepType {
   SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
