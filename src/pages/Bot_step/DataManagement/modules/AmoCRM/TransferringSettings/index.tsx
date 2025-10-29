@@ -1,9 +1,9 @@
-import { memo, useEffect, useCallback } from 'react'
+import { memo, useEffect, useCallback, useMemo } from 'react'
 
 import { AmoCrmTransferringSettings } from '../../../types'
-import { SelectField } from '../../../components/SelectField'
-import { InputField } from '../../../components/TextField'
 import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
+import { InputField } from './ui/TextField'
+import { SelectField } from './ui/SelectField'
 
 interface IAmoCrmTransferringSettingsProps {
   settings: AmoCrmTransferringSettings | null
@@ -13,7 +13,6 @@ interface IAmoCrmTransferringSettingsProps {
 export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings }: IAmoCrmTransferringSettingsProps) => {
   const { workspaceInfo } = useWorkspaceInfo()
 
-  // Устанавливаем значения по умолчанию при первой загрузке данных
   useEffect(() => {
     if (workspaceInfo.pipelines.length > 0 && !settings) {
       const firstPipeline = workspaceInfo.pipelines[0]
@@ -25,12 +24,11 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       }
       setSettings(defaultSettings)
     }
-  }, [workspaceInfo.pipelines, workspaceInfo.users, settings, setSettings])
+  }, [workspaceInfo, workspaceInfo, settings, setSettings])
 
   const handlePipelineChange = useCallback((pipelineId: string) => {
     const pipeline = workspaceInfo.pipelines.find(p => p.id.toString() === pipelineId)
     if (pipeline) {
-      // Проверяем, действительно ли нужно обновить настройки
       if (settings?.pipelineId !== pipeline.id || settings?.statusId !== pipeline.statuses[0]?.id) {
         const newSettings: AmoCrmTransferringSettings = {
           ...settings,
@@ -41,12 +39,11 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
         setSettings(newSettings)
       }
     }
-  }, [workspaceInfo.pipelines, settings, setSettings])
+  }, [workspaceInfo, settings, setSettings])
 
   const handleStatusChange = useCallback((statusId: string) => {
     const newStatusId = parseInt(statusId)
-    
-    // Проверяем, действительно ли нужно обновить настройки
+
     if (settings?.statusId !== newStatusId) {
       const newSettings: AmoCrmTransferringSettings = {
         ...settings,
@@ -59,8 +56,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
   const handleUserChange = useCallback((userId: string) => {
     const newUserId = parseInt(userId)
-    
-    // Проверяем, действительно ли нужно обновить настройки
+
     if (settings?.responsibleUserId !== newUserId) {
       const newSettings: AmoCrmTransferringSettings = {
         ...settings,
@@ -73,8 +69,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
   const handlePriceChange = useCallback((price: string) => {
     const newPrice = parseFloat(price) || 0
-    
-    // Проверяем, действительно ли нужно обновить настройки
+
     if (settings?.price !== newPrice) {
       const newSettings: AmoCrmTransferringSettings = {
         ...settings,
@@ -84,6 +79,59 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     }
   }, [settings, setSettings])
 
+  const pipelinesOptions = useMemo(() => {
+    const options = workspaceInfo.pipelines.map(pipeline => ({
+      label: pipeline.name,
+      value: pipeline.id.toString()
+    }))
+    options.unshift({
+      label: 'Не изменять',
+      value: ''
+    })
+    return options
+  }, [workspaceInfo.pipelines])
+
+  const statusesOptions = useMemo(()=> {
+    const options: {
+      label: string;
+      value: string;
+    }[] = []
+    if (settings) {
+      options.push(...workspaceInfo.pipelines
+        .find(p => p.id === settings.pipelineId)
+        ?.statuses.map(status => ({
+          label: status.name,
+          value: status.id.toString()
+        })) || [])
+      options.unshift({
+        label: 'Не изменять',
+        value: ''
+      })
+    }
+    else {
+      options.push({
+        label: 'Выберете воронку',
+        value: ''
+      })
+    }
+
+    return options
+  }, [workspaceInfo.pipelines, settings?.pipelineId])
+
+  const usersOptions = useMemo(()=>{
+    const options = workspaceInfo.users.map(user => ({
+        label: user.name,
+        value: user.id.toString()
+      }))
+
+    options.unshift({
+      label: 'Не назначать',
+      value: ''
+    })
+
+    return options
+  }, [workspaceInfo.users])
+
   if (workspaceInfo.isLoading) {
     return <div>Загрузка настроек передачи...</div>
   }
@@ -92,19 +140,17 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     return <div style={{ color: 'red' }}>Ошибка: {workspaceInfo.error}</div>
   }
 
+
   return (
     <div style={{ marginTop: '20px' }}>
       <h4 style={{ marginBottom: '15px', fontWeight: 'bold' }}>Настройки передачи в AmoCRM</h4>
-      
+
       <div style={{ marginBottom: '15px' }}>
         <SelectField
           label="Воронка"
           value={settings?.pipelineId?.toString() || ''}
           setValue={handlePipelineChange}
-          options={workspaceInfo.pipelines.map(pipeline => ({
-            label: pipeline.name,
-            value: pipeline.id.toString()
-          }))}
+          options={pipelinesOptions}
         />
       </div>
 
@@ -113,12 +159,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           label="Статус"
           value={settings?.statusId?.toString() || ''}
           setValue={handleStatusChange}
-          options={workspaceInfo.pipelines
-            .find(p => p.id === settings?.pipelineId)
-            ?.statuses.map(status => ({
-              label: status.name,
-              value: status.id.toString()
-            })) || []}
+          options={statusesOptions}
         />
       </div>
 
@@ -127,10 +168,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           label="Ответственный"
           value={settings?.responsibleUserId?.toString() || ''}
           setValue={handleUserChange}
-          options={workspaceInfo.users.map(user => ({
-            label: user.name,
-            value: user.id.toString()
-          }))}
+          options={usersOptions}
         />
       </div>
 

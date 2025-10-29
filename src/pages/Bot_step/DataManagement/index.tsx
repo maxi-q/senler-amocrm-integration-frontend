@@ -81,6 +81,7 @@ export const DataManagement = () => {
     if (isPublicTransferData(publicPayload)) {
       const parsedPublicData = publicPayload;
 
+      setAmoCrmTransferringSettings(parsedPublicData.amoCrmTransferringSettings)
       setOAuthCode('');
       setStepType(parsedPublicData.type || BotStepType.SendDataToAmoCrm);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
