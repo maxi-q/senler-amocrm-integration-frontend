@@ -71,16 +71,12 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
 
   const handleStatusChange = useCallback((statusId: string) => {
     if (!settings?.pipelineId) return
-    const newStatusId = parseInt(statusId)
 
-    if (settings?.statusId !== newStatusId) {
-      const newSettings: AmoCrmTransferringSettings = {
-        ...settings!,
-        statusId: newStatusId,
-        price: settings?.price || 0,
-      }
-      setSettings(newSettings)
+    const newSettings: AmoCrmTransferringSettings = {
+      ...settings!,
+      statusId: +statusId,
     }
+    setSettings(newSettings)
   }, [settings, setSettings])
 
   const handleUserChange = useCallback((userId: string) => {
