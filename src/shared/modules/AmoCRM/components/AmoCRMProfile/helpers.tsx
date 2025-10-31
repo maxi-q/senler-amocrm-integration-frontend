@@ -4,11 +4,9 @@ export const RenderErrors = (errors: string) => {
   const senlerErrors = errorList.filter(e => e.toLowerCase().includes('Ошибка Сенлер'));
   const otherErrors = errorList.filter(e => !e.toLowerCase().includes('Ошибка Сенлер'));
 
-  const hasOtherErrors = otherErrors.length > 0;
-
   const displayErrors = [
     ...senlerErrors,
-    hasOtherErrors ? 'Превышен лимит запросов к amoCRM, оплатите или расширьте тариф системы' : null,
+    ...otherErrors,
   ].filter(Boolean);
 
   if (displayErrors.length > 0) {
