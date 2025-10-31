@@ -14,3 +14,4 @@ export const sendCode = async ({ code, referer, OAuthCode }: { code: string; ref
 
   return successRegistration.ok
 }
+

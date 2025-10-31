@@ -1,5 +1,5 @@
 import { IDataRow } from '.';
-import { MessageEditor } from '../../modules/Register/components/VariablesModal';
+import { MessageEditor } from '../VariablesModal';
 import { SelectField } from '../SelectField';
 
 interface MySelectProps {

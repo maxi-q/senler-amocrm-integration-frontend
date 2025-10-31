@@ -7,8 +7,8 @@ import { getUrlParams } from '@/helpers'
 
 import { SendDataToAmoCrm } from './modules/AmoCRM/SendDataToAmoCrm'
 import { SendDataToSenler } from './modules/SendDataToSenler'
-import { Loader } from './modules/Register/components/Loader'
-import { AmoCRM } from './modules/Register'
+import { Loader } from '@/shared/modules/AmoCRM/components/Loader'
+import { AmoCRM } from '@/shared/modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'

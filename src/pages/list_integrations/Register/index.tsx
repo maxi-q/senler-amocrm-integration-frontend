@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import useAccountStore from '@/store/account'
-import { AmoCRM } from './modules/AmoCRM'
+import { AmoCRM } from '@/shared/modules/AmoCRM'
 
 
 export const Register = () => {
