@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
-import useAccountStore from '@/store/account';
-import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo';
+
 import { IAmoCRMField, IAmoCRMPipeline, IAmoCRMUser } from '@/api/Backend/fields/workspaceInfo.dto';
+import { getAmoCRMWorkspaceInfo } from '@/api/Backend/fields/workspaceInfo';
+import useAccountStore from '@/store/account';
 
 const CACHE_DURATION = 5 * 60 * 1000;
 
@@ -47,17 +48,17 @@ export const useWorkspaceInfo = () => {
 
       setWorkspaceInfo(processedData);
       return processedData;
-      
+
     } catch (error) {
-      const errorMessage = isAxiosError(error) 
-        ? error.response?.data.message 
+      const errorMessage = isAxiosError(error)
+        ? error.response?.data.message
         : "Произошла ошибка при получении информации о рабочем пространстве AmoCRM";
-      
-      setWorkspaceInfo({ 
-        isLoading: false, 
-        error: errorMessage 
+
+      setWorkspaceInfo({
+        isLoading: false,
+        error: errorMessage
       });
-      
+
       console.error("Error fetching workspace info:", error);
       return workspaceInfo;
     }

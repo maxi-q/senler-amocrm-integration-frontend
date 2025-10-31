@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 
 import useAccountStore from '@/store/account'
 import { useMessage } from '@/messages/messageProvider'
@@ -13,10 +13,11 @@ import { AmoCRM } from './modules/Register'
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
 import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementRouter, IPublicTransferData, isPublicTransferData, ITransferData } from './types'
+import { deepEqual } from './helpers/helpers'
 
 
 export const DataManagement = () => {
-	const { message, sendMessage } = useMessage()
+  const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
   const { fetchWorkspaceInfo } = useWorkspaceInfo()
 
@@ -31,6 +32,21 @@ export const DataManagement = () => {
 
   const [amoCrmTransferringSettings, setAmoCrmTransferringSettings] = useState<AmoCrmTransferringSettings | null>(null)
 
+  const initialPublicDataRef = useRef<DataManagementRouter | undefined>(undefined)
+  const initialAmoCrmTransferringSettingsRef = useRef<AmoCrmTransferringSettings | null | undefined>(undefined)
+
+
+  const hasUnsavedChanges = useMemo(() => {
+    if (initialPublicDataRef.current === undefined || initialAmoCrmTransferringSettingsRef.current === undefined) {
+      return false
+    }
+
+    const publicDataChanged = !deepEqual(publicData, initialPublicDataRef.current)
+    const settingsChanged = !deepEqual(amoCrmTransferringSettings, initialAmoCrmTransferringSettingsRef.current)
+
+    return publicDataChanged || settingsChanged
+  }, [publicData, amoCrmTransferringSettings])
+
   useEffect(() => {
     if (isAmoCRMAuthenticated) {
       const { senlerGroupId } = getUrlParams()
@@ -44,7 +60,7 @@ export const DataManagement = () => {
   useEffect(() => {
     let settings = amoCrmTransferringSettings
 
-    if ( amoCrmTransferringSettings && settings) {
+    if (amoCrmTransferringSettings && settings) {
       for (const [key, value] of Object.entries(amoCrmTransferringSettings)) {
         settings[key as keyof AmoCrmTransferringSettings] = value || null
       }
@@ -84,12 +100,17 @@ export const DataManagement = () => {
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
 
       setPublicData(parsedPublicData);
+
+      initialPublicDataRef.current = JSON.parse(JSON.stringify(parsedPublicData))
+      initialAmoCrmTransferringSettingsRef.current = parsedPublicData.amoCrmTransferringSettings
+        ? JSON.parse(JSON.stringify(parsedPublicData.amoCrmTransferringSettings))
+        : null
     }
 
     setDataIsLoaded(true)
   };
 
-	useEffect(() => {
+  useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
       const syncableVariables = publicData[stepType] || [];
@@ -100,6 +121,11 @@ export const DataManagement = () => {
         syncableVariables,
         amoCrmTransferringSettings
       }
+
+      initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
+      initialAmoCrmTransferringSettingsRef.current = amoCrmTransferringSettings
+        ? JSON.parse(JSON.stringify(amoCrmTransferringSettings))
+        : null
 
       const data = {
         id: message.id,
@@ -124,17 +150,23 @@ export const DataManagement = () => {
     if (message.request?.type === 'setData') handleSetData();
   }, [message]);
 
-	return (
+  return (
     <div>
-      <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode}/>
+      <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode} />
 
       {
         isAmoCRMAuthenticated &&
         <>
-          <Margin/>
+          {hasUnsavedChanges && (
+            <div className="my-4 p-3 rounded border border-red-200 bg-red-50 text-red-800">
+              <span className="text-sm font-medium">Настройки не сохранены</span>
+            </div>
+          )}
 
-          <Templates data={transferData} setData={handleSetData}/>
-          <Margin/>
+          <Margin />
+
+          <Templates data={transferData} setData={handleSetData} />
+          <Margin />
 
           <div className='text-left'>
             <h3>Направление передачи данных</h3>
@@ -151,11 +183,11 @@ export const DataManagement = () => {
           <div className='mt-8 relative'>
             {
               dataIsLoaded ?
-              <>
-                {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} amoCrmTransferringSettings={amoCrmTransferringSettings} setAmoCrmTransferringSettings={setAmoCrmTransferringSettings} />}
-                {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
-              </> :
-              <Loader/>
+                <>
+                  {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} amoCrmTransferringSettings={amoCrmTransferringSettings} setAmoCrmTransferringSettings={setAmoCrmTransferringSettings} />}
+                  {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
+                </> :
+                <Loader />
             }
           </div>
         </>
@@ -164,4 +196,4 @@ export const DataManagement = () => {
   )
 }
 
-const Margin = () => <div className='w-full my-10'/>
+const Margin = () => <div className='w-full my-10' />
