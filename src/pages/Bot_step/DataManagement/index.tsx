@@ -101,11 +101,12 @@ export const DataManagement = () => {
 
       setPublicData(parsedPublicData);
 
-      initialPublicDataRef.current = JSON.parse(JSON.stringify(parsedPublicData))
-      initialAmoCrmTransferringSettingsRef.current = parsedPublicData.amoCrmTransferringSettings
-        ? JSON.parse(JSON.stringify(parsedPublicData.amoCrmTransferringSettings))
-        : null
     }
+
+    initialPublicDataRef.current = JSON.parse(JSON.stringify(publicPayload))
+    initialAmoCrmTransferringSettingsRef.current = publicPayload.amoCrmTransferringSettings
+      ? JSON.parse(JSON.stringify(publicPayload.amoCrmTransferringSettings))
+      : null
 
     setDataIsLoaded(true)
   };
