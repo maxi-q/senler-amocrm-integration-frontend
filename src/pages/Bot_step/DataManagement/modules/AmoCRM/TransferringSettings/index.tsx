@@ -25,7 +25,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       const firstPipeline = workspaceInfo.pipelines[0]
       const defaultSettings: AmoCrmTransferringSettings = {
         pipelineId: firstPipeline.id,
-        statusId: firstPipeline.statuses[0]?.id,
+        statusId: null,
         responsibleUserId: workspaceInfo.users[0]?.id,
         price: 0,
         name: ''
