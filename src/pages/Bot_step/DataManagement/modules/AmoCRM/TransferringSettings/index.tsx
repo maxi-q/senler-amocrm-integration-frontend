@@ -49,15 +49,13 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     const pipeline = workspaceInfo.pipelines.find(p => p.id.toString() === pipelineId)
 
     if (pipeline) {
-      if (settings?.pipelineId !== pipeline.id || settings?.statusId !== pipeline.statuses[0]?.id) {
-        const newSettings: AmoCrmTransferringSettings = {
-          ...settings!,
-          pipelineId: pipeline.id,
-          statusId: pipeline.statuses[0]?.id,
-          price: settings?.price || 0
-        }
-        setSettings(newSettings)
+      const newSettings: AmoCrmTransferringSettings = {
+        ...settings!,
+        pipelineId: pipeline.id,
+        statusId: null,
+        price: settings?.price || 0
       }
+      setSettings(newSettings)
     } else {
       const newSettings: AmoCrmTransferringSettings = {
         ...settings!,
