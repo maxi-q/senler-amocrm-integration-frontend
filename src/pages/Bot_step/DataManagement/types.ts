@@ -23,3 +23,4 @@ export interface SenlerFieldsResponse {
   count: number,
   end: boolean
 }
+
