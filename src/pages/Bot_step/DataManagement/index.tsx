@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import useAccountStore from '@/store/account'
 import { useMessage } from '@/messages/messageProvider'
@@ -10,6 +10,7 @@ import { AmoCRM } from './modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
+import { deepEqual } from './helpers/helpers'
 
 
 export enum BotStepType {
@@ -48,6 +49,19 @@ export const DataManagement = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
 
+  const initialPublicDataRef = useRef<DataManagementRouter | undefined>(undefined)
+
+
+  const hasUnsavedChanges = useMemo(() => {
+    if (initialPublicDataRef.current === undefined) {
+      return false
+    }
+
+    const publicDataChanged = !deepEqual(publicData, initialPublicDataRef.current)
+
+    return publicDataChanged 
+  }, [publicData])
+
   useEffect(()=>{
     if(!stepType) {
       setStepType(BotStepType.SendDataToAmoCrm)
@@ -82,10 +96,10 @@ export const DataManagement = () => {
       publicPayload = JSON.parse(publicPayload || '{}')
     }
 
+    const parsedPublicData = publicPayload;
+
     if (privatePayload) setPrivateData(privatePayload);
     if (publicPayload) {
-      const parsedPublicData = publicPayload;
-
       setOAuthCode('');
       setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type || BotStepType.SendDataToAmoCrm);
@@ -93,7 +107,7 @@ export const DataManagement = () => {
 
       setPublicData(parsedPublicData);
     }
-
+    initialPublicDataRef.current = JSON.parse(JSON.stringify(parsedPublicData))
     setDataIsLoaded(true)
   };
 
@@ -101,6 +115,7 @@ export const DataManagement = () => {
     const handleGetData = () => {
       if (!publicData) return;
       const syncableVariables = publicData[stepType];
+      initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
 
       const data = {
         id: message.id,
@@ -139,6 +154,11 @@ export const DataManagement = () => {
       {
         isAmoCRMAuthenticated &&
         <>
+          {hasUnsavedChanges && (
+            <div className="my-4 p-3 rounded border border-red-200 bg-red-50 text-red-800">
+              <span className="text-sm font-medium">Настройки не сохранены</span>
+            </div>
+          )}
           <Margin/>
 
           <Templates data={transferData} setData={handleSetData}/>
