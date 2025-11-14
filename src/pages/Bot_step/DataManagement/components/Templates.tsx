@@ -32,16 +32,43 @@ export const Templates = ({data, setData}: ITemplates) => {
     refreshTemplates()
   }, [])
 
+  const generateUniqueTemplateName = (baseName: string, excludeId?: string): string => {
+    // Исключаем шаблон с excludeId из проверки (для случая переименования)
+    const templatesToCheck = excludeId 
+      ? templates.filter(t => t.id !== excludeId)
+      : templates
+    const existingNames = templatesToCheck.map(t => t.name)
+    
+    // Если базовое имя не существует, возвращаем его
+    if (!existingNames.includes(baseName)) {
+      return baseName
+    }
+    
+    // Ищем следующее доступное имя с числовым суффиксом
+    let counter = 1
+    let newName = `${baseName} ${counter}`
+    
+    while (existingNames.includes(newName)) {
+      counter++
+      newName = `${baseName} ${counter}`
+    }
+    
+    return newName
+  }
+
   const saveTemplate = async () => {
     if (!senlerGroupIdW) return
-    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: 'шаблон '+(new Date()).getSeconds()})
+    const templateName = generateUniqueTemplateName('шаблон')
+    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: templateName})
     if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
   }
 
   const resaveTemplate = async (id: string) => {
     const name = prompt('Новое название шаблона', '');
     if (name) {
-      const res = await patchIntegrationStepTemplates({ name: name, settings: data }, id)
+      const finalName = generateUniqueTemplateName(name, id)
+      
+      const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
 
       if (res.ok) {
         console.log('renameTemplate')
