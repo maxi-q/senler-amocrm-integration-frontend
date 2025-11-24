@@ -1,7 +1,8 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
 import { useEffect, useState } from "react"
-import { MySelectDropdown } from "./ui/SelectFields"
+import { MySelectDropdown } from "../ui/SelectFields"
+import { generateUniqueTemplateName } from "./helpers"
 
 interface ITemplates {
   data?: any,
@@ -32,47 +33,31 @@ export const Templates = ({data, setData}: ITemplates) => {
     refreshTemplates()
   }, [])
 
-  const generateUniqueTemplateName = (baseName: string, excludeId?: string): string => {
-    // Исключаем шаблон с excludeId из проверки (для случая переименования)
-    const templatesToCheck = excludeId 
-      ? templates.filter(t => t.id !== excludeId)
-      : templates
-    const existingNames = templatesToCheck.map(t => t.name)
-    
-    // Если базовое имя не существует, возвращаем его
-    if (!existingNames.includes(baseName)) {
-      return baseName
-    }
-    
-    // Ищем следующее доступное имя с числовым суффиксом
-    let counter = 1
-    let newName = `${baseName} ${counter}`
-    
-    while (existingNames.includes(newName)) {
-      counter++
-      newName = `${baseName} ${counter}`
-    }
-    
-    return newName
-  }
-
   const saveTemplate = async () => {
     if (!senlerGroupIdW) return
-    const templateName = generateUniqueTemplateName('шаблон')
-    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: templateName})
-    if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
+    try {
+      const templateName = generateUniqueTemplateName('шаблон', templates)
+      const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: templateName})
+      if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
+    } catch (error) {
+      console.error('Error generating unique template name:', error)
+    }
   }
 
   const resaveTemplate = async (id: string) => {
     const name = prompt('Новое название шаблона', '');
     if (name) {
-      const finalName = generateUniqueTemplateName(name, id)
-      
-      const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
+      try {
+        const finalName = generateUniqueTemplateName(name, templates, id)
+        
+        const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
 
-      if (res.ok) {
-        console.log('renameTemplate')
-        refreshTemplates()
+        if (res.ok) {
+          console.log('renameTemplate')
+          refreshTemplates()
+        }
+      } catch (error) {
+        console.error('Error generating unique template name:', error)
       }
     }
   }
@@ -88,3 +73,5 @@ export const Templates = ({data, setData}: ITemplates) => {
     </div>
   )
 }
+
+
