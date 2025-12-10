@@ -116,8 +116,8 @@ export const DataManagement = () => {
     const handleGetData = () => {
       if (!publicData) return;
       const syncableVariables = publicData[stepType]?.filter(
-        (item: IDataRow) => !(item.from === '' && item.to === '')
-      );
+        (item: IDataRow) => item.from !== '' && item.to !== ''
+      )
       initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
 
       const data = {
