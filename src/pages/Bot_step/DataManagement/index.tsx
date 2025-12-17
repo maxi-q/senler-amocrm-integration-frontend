@@ -11,6 +11,7 @@ import { AmoCRM } from './modules/AmoCRM'
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
 import { deepEqual } from './helpers/helpers'
+import { type IDataRow } from './components/KeyValueInput'
 
 
 export enum BotStepType {
@@ -114,7 +115,9 @@ export const DataManagement = () => {
 	useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
-      const syncableVariables = publicData[stepType];
+      const syncableVariables = publicData[stepType]?.filter(
+        (item: IDataRow) => item.from !== '' && item.to !== ''
+      )
       initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
 
       const data = {
