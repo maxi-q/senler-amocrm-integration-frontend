@@ -58,7 +58,7 @@ type SyncableVariables = SendDataToSenlerData | SendDataToAmoCrmData
 
 export interface PublicBotStepSettingsDto {
   type: BotStepType;
-  syncableVariables: SyncableVariables;
+  syncableVariables: SyncableVariables | null;
   amoCrmTransferringSettings: AmoCrmTransferringSettings | null;
 }
 

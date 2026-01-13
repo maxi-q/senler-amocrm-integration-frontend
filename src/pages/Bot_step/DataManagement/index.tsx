@@ -14,7 +14,7 @@ import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
 import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementRouter, IPublicTransferData, isPublicTransferData, ITransferData } from './types'
 import { deepEqual } from './helpers/helpers'
-
+import { type IDataRow } from './components/KeyValueInput'
 
 export const DataManagement = () => {
   const { message, sendMessage } = useMessage()
@@ -114,7 +114,9 @@ export const DataManagement = () => {
   useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
-      const syncableVariables = publicData[stepType] || [];
+      const syncableVariables = publicData[stepType]?.filter(
+        (item: IDataRow) => item.from !== '' && item.to !== ''
+      ) || null
 
       const publicPayload: IPublicTransferData = {
         ...publicData,
@@ -122,7 +124,6 @@ export const DataManagement = () => {
         syncableVariables,
         amoCrmTransferringSettings
       }
-
       initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
       initialAmoCrmTransferringSettingsRef.current = amoCrmTransferringSettings
         ? JSON.parse(JSON.stringify(amoCrmTransferringSettings))
