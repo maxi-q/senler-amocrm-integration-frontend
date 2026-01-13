@@ -12,33 +12,39 @@ export const transformDataToListMessage = (senlerGroupId: string) => {
   return data
 }
 
-// Функция для глубокого сравнения объектов
 export const deepEqual = (obj1: any, obj2: any): boolean => {
-  if (obj1 === obj2) return true
-  if (obj1 == null || obj2 == null) return obj1 === obj2
-  if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return false
-  
-  // Обработка массивов
-  if (Array.isArray(obj1) && Array.isArray(obj2)) {
-    if (obj1.length !== obj2.length) return false
-    for (let i = 0; i < obj1.length; i++) {
-      if (!deepEqual(obj1[i], obj2[i])) return false
+  const aStack = new WeakMap<object, object>()
+
+  const equal = (a: any, b: any): boolean => {
+    if (Object.is(a, b)) return true
+    if (a == null || b == null) return a === b
+    if (typeof a !== 'object' || typeof b !== 'object') return false
+
+    const mapped = aStack.get(a)
+    if (mapped && mapped === b) return true
+    aStack.set(a, b)
+
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return false
+      for (let i = 0; i < a.length; i++) {
+        if (!equal(a[i], b[i])) return false
+      }
+      return true
     }
+
+    if (Array.isArray(a) || Array.isArray(b)) return false
+
+    const keysA = Object.keys(a)
+    const keysB = Object.keys(b)
+    if (keysA.length !== keysB.length) return false
+
+    for (const key of keysA) {
+      if (!Object.prototype.hasOwnProperty.call(b, key)) return false
+      if (!equal(a[key], b[key])) return false
+    }
+
     return true
   }
-  
-  // Если один массив, а другой нет
-  if (Array.isArray(obj1) || Array.isArray(obj2)) return false
-  
-  const keys1 = Object.keys(obj1)
-  const keys2 = Object.keys(obj2)
-  
-  if (keys1.length !== keys2.length) return false
-  
-  for (const key of keys1) {
-    if (!keys2.includes(key)) return false
-    if (!deepEqual(obj1[key], obj2[key])) return false
-  }
-  
-  return true
+
+  return equal(obj1, obj2)
 }

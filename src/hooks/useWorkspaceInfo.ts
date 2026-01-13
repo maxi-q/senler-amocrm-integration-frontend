@@ -8,20 +8,22 @@ import useAccountStore from '@/store/account';
 const CACHE_DURATION = 5 * 60 * 1000;
 
 export const useWorkspaceInfo = () => {
-  const { workspaceInfo, setWorkspaceInfo } = useAccountStore();
+  const workspaceInfo = useAccountStore(state => state.workspaceInfo);
 
   const fetchWorkspaceInfo = useCallback(async (senlerGroupId: string, forceRefresh = false) => {
     const now = Date.now();
+    const currentWorkspaceInfo = useAccountStore.getState().workspaceInfo;
+    const setWorkspaceInfo = useAccountStore.getState().setWorkspaceInfo;
 
     if (!forceRefresh &&
-        workspaceInfo.lastFetched &&
-        (now - workspaceInfo.lastFetched) < CACHE_DURATION &&
-        workspaceInfo.fields.length > 0) {
-      return workspaceInfo;
+        currentWorkspaceInfo.lastFetched &&
+        (now - currentWorkspaceInfo.lastFetched) < CACHE_DURATION &&
+        currentWorkspaceInfo.fields.length > 0) {
+      return currentWorkspaceInfo;
     }
 
-    if (workspaceInfo.isLoading) {
-      return workspaceInfo;
+    if (currentWorkspaceInfo.isLoading) {
+      return currentWorkspaceInfo;
     }
 
     try {
@@ -34,7 +36,7 @@ export const useWorkspaceInfo = () => {
           isLoading: false, 
           error: 'Не удалось получить данные рабочего пространства' 
         });
-        return workspaceInfo;
+        return useAccountStore.getState().workspaceInfo;
       }
 
       const processedData = {
@@ -60,9 +62,9 @@ export const useWorkspaceInfo = () => {
       });
 
       console.error("Error fetching workspace info:", error);
-      return workspaceInfo;
+      return useAccountStore.getState().workspaceInfo;
     }
-  }, [workspaceInfo, setWorkspaceInfo]);
+  }, []);
 
   const clearCache = useCallback(() => {
     useAccountStore.getState().clearWorkspaceInfo();

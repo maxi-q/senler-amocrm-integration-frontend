@@ -1,7 +1,8 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
 import { useEffect, useState } from "react"
-import { MySelectDropdown } from "./ui/SelectFields"
+import { MySelectDropdown } from "../ui/SelectFields"
+import { generateUniqueTemplateName } from "./helpers"
 
 interface ITemplates {
   data?: any,
@@ -34,18 +35,29 @@ export const Templates = ({data, setData}: ITemplates) => {
 
   const saveTemplate = async () => {
     if (!senlerGroupIdW) return
-    const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: 'шаблон '+(new Date()).getSeconds()})
-    if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
+    try {
+      const templateName = generateUniqueTemplateName('шаблон', templates)
+      const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: templateName})
+      if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
+    } catch (error) {
+      console.error('Error generating unique template name:', error)
+    }
   }
 
   const resaveTemplate = async (id: string) => {
     const name = prompt('Новое название шаблона', '');
     if (name) {
-      const res = await patchIntegrationStepTemplates({ name: name, settings: data }, id)
+      try {
+        const finalName = generateUniqueTemplateName(name, templates, id)
+        
+        const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
 
-      if (res.ok) {
-        console.log('renameTemplate')
-        refreshTemplates()
+        if (res.ok) {
+          console.log('renameTemplate')
+          refreshTemplates()
+        }
+      } catch (error) {
+        console.error('Error generating unique template name:', error)
       }
     }
   }
@@ -61,3 +73,5 @@ export const Templates = ({data, setData}: ITemplates) => {
     </div>
   )
 }
+
+

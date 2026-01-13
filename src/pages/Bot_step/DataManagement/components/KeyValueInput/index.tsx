@@ -48,7 +48,11 @@ const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senl
   };
 
   const handleDeleteRow = (rowIndex: number) => {
-    setCurrentData((prevData) => prevData.filter((_, index) => index !== rowIndex));
+    setCurrentData((prevData) => {
+      const newData = prevData.filter((_, index) => index !== rowIndex)
+      changeData(newData)
+      return newData
+    });
   };
 
   return (
