@@ -118,7 +118,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       value: pipeline.id.toString()
     }))
     options.unshift({
-      label: 'Выберете воронку',
+      label: 'Выберите воронку',
       value: ''
     })
     return options
@@ -137,14 +137,14 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           label: status.name,
           value: status.id.toString()
         })) || [])
-      options[0] = {
+      options.unshift({
         label: 'Не изменять',
         value: ''
-      }
+      })
     }
     else {
       options.push({
-        label: 'Выберете воронку',
+        label: 'Выберите воронку',
         value: ''
       })
     }
@@ -216,7 +216,7 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
               options={statusesOptions}
             />
           ) : (
-            <p>Для изменения статуса сделки выберете воронку</p>
+            <p>Для изменения статуса сделки Выберите воронку</p>
           )
         }
       </div>

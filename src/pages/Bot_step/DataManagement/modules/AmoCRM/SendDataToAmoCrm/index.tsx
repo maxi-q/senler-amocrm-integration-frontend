@@ -49,15 +49,11 @@ import { AmoCrmTransferringSettingsComponent } from '../TransferringSettings'
       setData(p => ({...p, [BotStepType.SendDataToAmoCrm]: data }))
     }
 
-    const clearError = () => {
-      // Ошибка теперь управляется через workspaceInfo
-    }
-
     return (
       <>
         {workspaceInfo.error && (
           <div className="mb-4">
-            <ServerMessage message={workspaceInfo.error} onClose={clearError} />
+            <ServerMessage message={workspaceInfo.error} />
           </div>
         )}
         <AmoCrmTransferringSettingsComponent

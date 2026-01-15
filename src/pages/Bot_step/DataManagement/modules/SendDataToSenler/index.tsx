@@ -49,15 +49,11 @@ const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
     setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
   }
 
-  const clearError = () => {
-    // Ошибка теперь управляется через workspaceInfo
-  }
-
 	return (
     <>
       {workspaceInfo.error && (
         <div className="mb-4">
-          <ServerMessage message={workspaceInfo.error} onClose={clearError} />
+          <ServerMessage message={workspaceInfo.error} />
         </div>
       )}
       <EditableTable
