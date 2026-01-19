@@ -2,10 +2,9 @@ import React from 'react';
 
 interface ServerMessageProps {
   message: string;
-  onClose?: () => void;
 }
 
-export const ServerMessage: React.FC<ServerMessageProps> = ({ message, onClose }) => {
+export const ServerMessage: React.FC<ServerMessageProps> = ({ message }) => {
   return (
     <div
       style={{
@@ -25,15 +24,12 @@ export const ServerMessage: React.FC<ServerMessageProps> = ({ message, onClose }
           <h4 className="font-semibold mb-2">Ошибка</h4>
           <p className="text-sm">{message}</p>
         </div>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="ml-4 text-gray-500 hover:text-gray-700 text-xl font-bold"
-            style={{ fontSize: '18px', lineHeight: '1' }}
-          >
-            ×
-          </button>
-        )}
+        <button
+          className="ml-4 text-gray-500 hover:text-gray-700 text-xl font-bold"
+          style={{ fontSize: '18px', lineHeight: '1' }}
+        >
+          ×
+        </button>
       </div>
     </div>
   );

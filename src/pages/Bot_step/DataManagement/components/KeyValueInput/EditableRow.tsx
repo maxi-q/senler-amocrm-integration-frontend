@@ -1,6 +1,6 @@
 import { IDataRow } from '.';
 import MySelect, { MySelectOldV } from './SelectField';
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto';
 
 import styles from './styles.module.css';
 import { useEffect } from 'react';

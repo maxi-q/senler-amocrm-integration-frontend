@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import EditableRow from './EditableRow';
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto';
+import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto';
 
 
 export interface IDataRow {
@@ -16,18 +16,23 @@ interface IEditableTableProps {
   type?: 'no-senler' | 'senler'
 }
 
-const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
+const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
 
   useEffect(() => {
     setCurrentData(data)
   }, [data])
 
+  useEffect(() => {
+    if (currentData !== data) {
+      changeData(currentData);
+    }
+  }, [currentData]);
+
   const handleValueChange = (rowIndex: number, key: keyof IDataRow, newValue: string) => {
     setCurrentData((prevData) => {
       const updatedData = [...prevData];
       updatedData[rowIndex] = { ...updatedData[rowIndex], [key]: newValue };
-      changeData(updatedData);
       return updatedData;
     });
   };
@@ -35,11 +40,10 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
   const handleAddRow = () => {
     setCurrentData((prevData) => {
       const newData = [
-        ...prevData,
+        ...(prevData || []),
         { from: '', to: '' },
-      ]
-      changeData(newData)
-      return newData
+      ];
+      return newData;
     });
   };
 
@@ -66,8 +70,8 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
           Добавить
         </button>
       </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <tbody>
+      <div style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div>
           {currentData?.map((row, rowIndex) => (
             <EditableRow
               key={rowIndex}
@@ -80,8 +84,8 @@ const EditableTable = memo(({ data = [], changeData, toFields, fromFields, type=
               type={type}
             />
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 });

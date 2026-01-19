@@ -1,47 +1,25 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 
 import { useMessage } from '@/messages/messageProvider'
 import { getUrlParams } from '@/helpers'
-import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/fields.dto'
-import { getAmoCRMFields } from '@/api/Backend/fields'
+import { ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto'
+import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
 
 import EditableTable from '../../components/KeyValueInput'
 import { ServerMessage } from '../../components/ServerMessage'
 
-import { BotStepType } from '../..'
-
 import { SendDataToSenlerData, ISendDataToSenler } from './index.types'
 import { transformDataToListMessage } from '../../helpers/helpers'
-import { SenlerFieldsResponse } from '../../types'
+import { BotStepType, SenlerFieldsResponse } from '../../types'
 
 
-const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
-  const [amoCRMFields, setAmoCRMFields] = useState<IAmoCRMField[]>([])
+const SendDataToSenler = memo(({ data, setData }: ISendDataToSenler) => {
+  const renderData = useMemo(() => data ? data[BotStepType.SendDataToSenler] : [], [data])
+
+  const { workspaceInfo } = useWorkspaceInfo()
   const [senlerFields, setSenlerFields] = useState<ISenlerField[]>([])
-  const [error, setError] = useState<string | null>(null)
 
 	const { message, sendMessage } = useMessage()
-
-  const getOrThrowAmoCRMFields = async (senlerGroupId: string) => {
-    try {
-      const amoFields = await getAmoCRMFields({ senlerGroupId })
-
-      // Проверяем, является ли ответ ошибкой
-      if ('error' in amoFields) {
-        setError(amoFields.error.message)
-        return
-      }
-
-      if (!Array.isArray(amoFields)) {
-        throw new Error('amoFields is not an array')
-      }
-
-      setAmoCRMFields(amoFields.map(field => new IAmoCRMField(field)))
-    } catch (error) {
-      console.error("Error fetching amoCRM fields:", error)
-      setError("Произошла ошибка при получении полей AmoCRM")
-    }
-  };
 
   useEffect(() => {
     console.log('Rerender SendDataToSenler', data)
@@ -53,7 +31,6 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
       return
     }
 
-    getOrThrowAmoCRMFields(senlerGroupId)
     const _data = transformDataToListMessage(senlerGroupId)
     sendMessage(_data, window.parent)
   }, [])
@@ -72,27 +49,23 @@ const SendDataToSenler = ({ data, setData }: ISendDataToSenler) => {
     setData(p => ({...p, [BotStepType.SendDataToSenler]: data }))
   }
 
-  const clearError = () => {
-    setError(null)
-  }
-
 	return (
     <>
-      {error && (
+      {workspaceInfo.error && (
         <div className="mb-4">
-          <ServerMessage message={error} onClose={clearError} />
+          <ServerMessage message={workspaceInfo.error} />
         </div>
       )}
       <EditableTable
-        data={data && data[BotStepType.SendDataToSenler]}
+        data={renderData}
         changeData={setSendDataToSenlerData}
         toFields={senlerFields}
-        fromFields={amoCRMFields}
+        fromFields={workspaceInfo.fields}
         type='no-senler'
       />
     </>
   )
-}
+})
 
 export { SendDataToSenler }
 export type { SendDataToSenlerData }

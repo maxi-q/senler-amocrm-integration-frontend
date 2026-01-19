@@ -1,138 +1,140 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 
 import useAccountStore from '@/store/account'
 import { useMessage } from '@/messages/messageProvider'
+import { useWorkspaceInfo } from '@/hooks/useWorkspaceInfo'
+import { getUrlParams } from '@/helpers'
 
-import { SendDataToAmoCrm, type SendDataToAmoCrmData } from './modules/SendDataToAmoCrm'
-import { SendDataToSenler, type SendDataToSenlerData } from './modules/SendDataToSenler'
-import { Loader } from './modules/AmoCRM/components/Loader'
-import { AmoCRM } from './modules/AmoCRM'
+import { SendDataToAmoCrm } from './modules/AmoCRM/SendDataToAmoCrm'
+import { SendDataToSenler } from './modules/SendDataToSenler'
+import { Loader } from '@/shared/modules/AmoCRM/components/Loader'
+import { AmoCRM } from '@/shared/modules/AmoCRM'
 
 import { SelectField } from './components/SelectField'
 import { Templates } from './components/Templates'
+import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementRouter, IPublicTransferData, isPublicTransferData, ITransferData } from './types'
 import { deepEqual } from './helpers/helpers'
 import { type IDataRow } from './components/KeyValueInput'
 
-
-export enum BotStepType {
-  SendDataToAmoCrm = 'SEND_DATA_TO_AMO_CRM',
-  SendDataToSenler = 'SEND_DATA_TO_SENLER',
-}
-
-let BotStepRuName = {
-  [BotStepType.SendDataToAmoCrm]: 'Отправка данных в amoCRM',
-  [BotStepType.SendDataToSenler]: 'Отправка данных в senler',
-}
-
-export type DataManagementRouter = {
-  [key in BotStepType]?
-    : key extends BotStepType.SendDataToAmoCrm
-    ? SendDataToAmoCrmData
-    : key extends BotStepType.SendDataToSenler
-    ? SendDataToSenlerData
-    : never;
-};
-
 export const DataManagement = () => {
-	const { message, sendMessage } = useMessage()
+  const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
+  const { fetchWorkspaceInfo } = useWorkspaceInfo()
 
   const [OAuthCode, setOAuthCode] = useState('')
-  const [vkGroupId, setVkGroupId] = useState('')
 
   const [stepType, setStepType] = useState<BotStepType>(BotStepType.SendDataToAmoCrm)
 
   const [publicData, setPublicData] = useState<DataManagementRouter>()
-  const [privateData, setPrivateData] = useState<object>()
 
-  const [transferData, setTransferData] = useState<any>()
-
+  const [transferData, setTransferData] = useState<ITransferData>()
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
 
+  const [amoCrmTransferringSettings, setAmoCrmTransferringSettings] = useState<AmoCrmTransferringSettings | null>(null)
 
   const initialPublicDataRef = useRef<DataManagementRouter | undefined>(undefined)
+  const initialAmoCrmTransferringSettingsRef = useRef<AmoCrmTransferringSettings | null | undefined>(undefined)
 
 
   const hasUnsavedChanges = useMemo(() => {
-    if (initialPublicDataRef.current === undefined) {
+    if (initialPublicDataRef.current === undefined || initialAmoCrmTransferringSettingsRef.current === undefined) {
       return false
     }
 
     const publicDataChanged = !deepEqual(publicData, initialPublicDataRef.current)
+    const settingsChanged = !deepEqual(amoCrmTransferringSettings, initialAmoCrmTransferringSettingsRef.current)
 
-    return publicDataChanged 
-  }, [publicData])
-
-  useEffect(()=>{
-    if(!stepType) {
-      setStepType(BotStepType.SendDataToAmoCrm)
-    }
-  }, [stepType])
+    return publicDataChanged || settingsChanged
+  }, [publicData, amoCrmTransferringSettings])
 
   useEffect(() => {
-    console.log('set publicData in DataManagement', publicData)
+    if (isAmoCRMAuthenticated) {
+      const { senlerGroupId } = getUrlParams()
+      if (senlerGroupId) {
+        fetchWorkspaceInfo(senlerGroupId)
+      }
+    }
+  }, [isAmoCRMAuthenticated, fetchWorkspaceInfo])
+
+
+  useEffect(() => {
+    let settings = amoCrmTransferringSettings
+
+    if (amoCrmTransferringSettings && settings) {
+      for (const [key, value] of Object.entries(amoCrmTransferringSettings)) {
+        settings[key as keyof AmoCrmTransferringSettings] = value || null
+      }
+
+      settings = Object.keys(settings).length === 0 ? null : settings
+    }
+
     setTransferData(
       {
-        private: { ...privateData },
         public: {
           ...publicData,
-          // token: OAuthCode,
-          vkGroupId,
           type: stepType,
-          syncableVariables: publicData && publicData[stepType] ,
+          syncableVariables: publicData && publicData[stepType] || [],
+          amoCrmTransferringSettings: settings
         }
       }
     )
-  }, [publicData, privateData])
+  }, [publicData, stepType, amoCrmTransferringSettings])
 
-  const handleSetData = (mockMessage?: { private: any, public: any }) => {
-    let { private: privatePayload, public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
-
-    console.log('mockMessage', mockMessage)
-    console.log('publicPayload', publicPayload)
-    console.log('publicData', publicData)
+  const handleSetData = (mockMessage?: ITransferData) => {
+    let { public: publicPayload } = mockMessage ? mockMessage : message.request.payload;
 
     if (!mockMessage) {
-      privatePayload = JSON.parse(privatePayload || '{}')
-      publicPayload = JSON.parse(publicPayload || '{}')
+      try {
+        publicPayload = JSON.parse(publicPayload || '{}')
+      } catch (error) {
+        publicPayload = {}
+      }
     }
 
-    const parsedPublicData = publicPayload;
+    if (isPublicTransferData(publicPayload)) {
+      const parsedPublicData = publicPayload;
 
-    if (privatePayload) setPrivateData(privatePayload);
-    if (publicPayload) {
+      setAmoCrmTransferringSettings(parsedPublicData.amoCrmTransferringSettings)
       setOAuthCode('');
-      setVkGroupId(parsedPublicData.vkGroupId);
       setStepType(parsedPublicData.type || BotStepType.SendDataToAmoCrm);
       if (!parsedPublicData[BotStepType.SendDataToSenler]) { parsedPublicData[BotStepType.SendDataToSenler] = [] }
 
       setPublicData(parsedPublicData);
+
     }
-    initialPublicDataRef.current = JSON.parse(JSON.stringify(parsedPublicData))
+
+    initialPublicDataRef.current = JSON.parse(JSON.stringify(publicPayload))
+    initialAmoCrmTransferringSettingsRef.current = publicPayload.amoCrmTransferringSettings
+      ? JSON.parse(JSON.stringify(publicPayload.amoCrmTransferringSettings))
+      : null
+
     setDataIsLoaded(true)
   };
 
-	useEffect(() => {
+  useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
       const syncableVariables = publicData[stepType]?.filter(
         (item: IDataRow) => item.from !== '' && item.to !== ''
-      )
+      ) || null
+
+      const publicPayload: IPublicTransferData = {
+        ...publicData,
+        type: stepType,
+        syncableVariables,
+        amoCrmTransferringSettings
+      }
       initialPublicDataRef.current = JSON.parse(JSON.stringify(publicData))
+      initialAmoCrmTransferringSettingsRef.current = amoCrmTransferringSettings
+        ? JSON.parse(JSON.stringify(amoCrmTransferringSettings))
+        : null
 
       const data = {
         id: message.id,
         request: message.request,
         response: {
           payload: {
-            private: { ...privateData },
-            public: {
-              ...publicData,
-              token: '',
-              vkGroupId,
-              type: stepType,
-              syncableVariables,
-            },
+            public: publicPayload,
             description: 'Интеграция подключена',
             command: BotStepRuName[stepType],
             title: BotStepRuName[stepType],
@@ -150,9 +152,9 @@ export const DataManagement = () => {
     if (message.request?.type === 'setData') handleSetData();
   }, [message]);
 
-	return (
+  return (
     <div>
-      <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode}/>
+      <AmoCRM OAuthCode={OAuthCode} setOAuthCode={setOAuthCode} />
 
       {
         isAmoCRMAuthenticated &&
@@ -162,10 +164,11 @@ export const DataManagement = () => {
               <span className="text-sm font-medium">Настройки не сохранены</span>
             </div>
           )}
-          <Margin/>
 
-          <Templates data={transferData} setData={handleSetData}/>
-          <Margin/>
+          <Margin />
+
+          <Templates data={transferData} setData={handleSetData} />
+          <Margin />
 
           <div className='text-left'>
             <h3>Направление передачи данных</h3>
@@ -182,11 +185,11 @@ export const DataManagement = () => {
           <div className='mt-8 relative'>
             {
               dataIsLoaded ?
-              <>
-                {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} />}
-                {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
-              </> :
-              <Loader/>
+                <>
+                  {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} amoCrmTransferringSettings={amoCrmTransferringSettings} setAmoCrmTransferringSettings={setAmoCrmTransferringSettings} />}
+                  {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
+                </> :
+                <Loader />
             }
           </div>
         </>
@@ -195,4 +198,4 @@ export const DataManagement = () => {
   )
 }
 
-const Margin = () => <div className='w-full my-10'/>
+const Margin = () => <div className='w-full my-10' />
