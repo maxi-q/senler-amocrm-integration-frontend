@@ -55,6 +55,21 @@ const SenlerAuthLink = ({
 				)
 				return
 			}
+
+			try {
+				const urlParams = new URLSearchParams(popup.location.search)
+				const code = urlParams.get('code')
+
+				if (code) {
+					onAuthSuccess({ code })
+          popupRef.current?.close()
+					clearInterval(timer)
+				}
+
+			} catch (error) {
+        console.error(error)
+			}
+
 		}, 500)
 	}
 
