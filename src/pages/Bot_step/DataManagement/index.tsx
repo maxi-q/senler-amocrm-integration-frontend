@@ -15,12 +15,11 @@ import { Templates } from './components/Templates'
 import { AmoCrmTransferringSettings, BotStepRuName, BotStepType, DataManagementRouter, IPublicTransferData, isPublicTransferData, ITransferData } from './types'
 import { deepEqual } from './helpers/helpers'
 import { type IDataRow } from './components/KeyValueInput'
-import { hasDataValidationErrors } from './components/KeyValueInput/helpers'
 
 export const DataManagement = () => {
   const { message, sendMessage } = useMessage()
   const { isAmoCRMAuthenticated } = useAccountStore()
-  const { workspaceInfo, fetchWorkspaceInfo } = useWorkspaceInfo()
+  const { fetchWorkspaceInfo } = useWorkspaceInfo()
 
   const [OAuthCode, setOAuthCode] = useState('')
 
@@ -115,15 +114,7 @@ export const DataManagement = () => {
   useEffect(() => {
     const handleGetData = () => {
       if (!publicData) return;
-
-      const currentData = publicData[stepType] || [];
-      const toFields = stepType === BotStepType.SendDataToAmoCrm ? workspaceInfo.fields : undefined;
-
-      if (hasDataValidationErrors(currentData, toFields)) {
-        return;
-      }
-
-      const syncableVariables = currentData.filter(
+      const syncableVariables = publicData[stepType]?.filter(
         (item: IDataRow) => item.from !== '' && item.to !== ''
       ) || null
 
