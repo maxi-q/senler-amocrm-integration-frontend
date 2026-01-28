@@ -10,16 +10,3 @@
 .delete-button:hover {
   background-color: #025aa5;
 }
-
-.error-field :global(.ant-select-selector),
-.error-field :global(select) {
-  border-color: #ff4d4f !important;
-  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
-}
-
-.error-message {
-  display: block;
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-top: 4px;
-}
