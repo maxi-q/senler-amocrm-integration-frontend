@@ -1,6 +1,7 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import EditableRow from './EditableRow';
 import { IAmoCRMField, ISenlerField } from '@/api/Backend/fields/workspaceInfo.dto';
+import { getDuplicateToValues, isValueInFields } from './helpers';
 
 
 export interface IDataRow {
@@ -18,6 +19,8 @@ interface IEditableTableProps {
 
 const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senler' }: IEditableTableProps) => {
   const [currentData, setCurrentData] = useState<IDataRow[]>(data);
+
+  const duplicateToValues = useMemo(() => getDuplicateToValues(currentData), [currentData]);
 
   useEffect(() => {
     setCurrentData(data)
@@ -82,6 +85,8 @@ const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senl
               toFields={toFields}
               fromFields={fromFields}
               type={type}
+              isDuplicateTo={row.to !== '' && duplicateToValues.has(row.to)}
+              isInvalidTo={!isValueInFields(row.to, toFields)}
             />
           ))}
         </div>
