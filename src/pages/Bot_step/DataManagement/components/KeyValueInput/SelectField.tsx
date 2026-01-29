@@ -35,25 +35,6 @@ export const MySelectOldV = ({ value, rowIndex, onValueChange, options, sourceKe
       options={options || []}
       disabled={!isLoad}
     />
-    // <select
-    //   onChange={(e) => onValueChange(rowIndex, sourceKey, e.target.value)}
-    //   className={`w-full p-2 border border-gray-300 rounded ${styles.selectField}`}
-    //   value={value}
-    //   disabled={!isLoad}
-    // >
-    //   {!isLoad ? (
-    //     <option value="">Загрузка...</option>
-    //   ) : (
-    //     <>
-    //       <option value="">Выберите значение</option>
-    //       {options?.map((item, index) => (
-    //         <option key={index} value={item.value}>
-    //           {item.label}
-    //         </option>
-    //       ))}
-    //     </>
-    //   )}
-    // </select>
   );
 };
 
