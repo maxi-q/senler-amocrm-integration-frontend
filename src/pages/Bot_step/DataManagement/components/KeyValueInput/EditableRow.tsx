@@ -21,8 +21,8 @@ const EditableRow = ({ row, rowIndex, onValueChange, onDelete, toFields = [], fr
     return field instanceof ISenlerField ? field.text : field.name;
   };
 
-  const amoCRMFieldsOptions = toFields.map(field => ({ value: field.id, label: getLabel(field) }));
-  const senlerFieldsOptions = fromFields.map(field => ({ value: field.id, label: getLabel(field) }));
+  const amoCRMFieldsOptions = toFields.map(field => ({ value: ''+field.id, label: getLabel(field) }));
+  const senlerFieldsOptions = fromFields.map(field => ({ value: ''+field.id, label: getLabel(field) }));
 
   useEffect(()=>{
     console.log('EditableRow', row)

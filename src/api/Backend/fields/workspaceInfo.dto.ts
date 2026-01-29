@@ -1,11 +1,11 @@
 export class IAmoCRMField {
-  id: string;
+  id: number;
   name: string;
   type: string;
   is_api_only: boolean;
 
   constructor(data: {
-    id: string;
+    id: number;
     name: string;
     type: string;
     is_api_only: boolean;
