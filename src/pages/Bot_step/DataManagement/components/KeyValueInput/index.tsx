@@ -63,7 +63,7 @@ const EditableTable = memo(({ data, changeData, toFields, fromFields, type='senl
       <div className='flex w-full justify-between items-center'>
         <div className='text-start'>
           <h3>Передача значений</h3>
-          <p className="mt-1 text-[0.7rem]">Максимум 2000 символов, подробнее в (документации)</p>
+          <p className="mt-1 text-[0.7rem]">Максимум 2000 символов ⚠️ подробнее в <a className='text-blue-700 hover:text-blue-800 underline' href='https://help.senler.ru/senler/kanaly/vkontakte/integracii/integraciya-s-amocrm'>документации</a></p>
         </div>
 
         <button
