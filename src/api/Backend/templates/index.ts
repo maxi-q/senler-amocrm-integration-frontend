@@ -8,6 +8,7 @@ export type integrationStepTemplate = {
   settings: {
     private: any;
     public: any;
+    listIndex?: number;
   }
 }
 type getSenlerGroupTemplatesResponse = {

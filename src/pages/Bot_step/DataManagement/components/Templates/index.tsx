@@ -1,8 +1,8 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { MySelectDropdown } from "../ui/SelectFields"
-import { generateUniqueTemplateName } from "./helpers"
+import { generateUniqueTemplateName, normalizeAndSortTemplates } from "./helpers"
 
 interface ITemplates {
   data?: any,
@@ -24,10 +24,56 @@ export const Templates = ({data, setData}: ITemplates) => {
     const result = await getSenlerGroupTemplates({ senlerGroupId })
       console.log('result', result)
       if(result.ok){
-        setTemplates(result.templates || [])
+        const list = result.templates || []
+        const sorted = normalizeAndSortTemplates(list)
+        setTemplates(sorted)
         setSenlerGroupIdW(result.senlerGroupId)
+
+        // Для старых шаблонов
+        const hadNoIndex = (t: integrationStepTemplate) => {
+          const orig = list.find((x) => x.id === t.id)
+          return orig && typeof (orig.settings as { listIndex?: number })?.listIndex !== "number"
+        }
+        const toPersist = sorted.filter(hadNoIndex)
+
+        if (toPersist.length > 0) {
+          Promise.all(
+            toPersist.map((t) =>
+              patchIntegrationStepTemplates(
+                { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
+                t.id
+              )
+            )
+          ).catch((e) => console.error("Failed to persist listIndex", e))
+        }
       }
   }
+
+  const reorderTemplates = useCallback(async (orderedIds: string[]) => {
+    const idToTemplate = new Map(templates.map((t) => [t.id, t]))
+    const reordered = orderedIds
+      .map((id) => idToTemplate.get(id))
+      .filter(Boolean) as integrationStepTemplate[]
+    if (reordered.length !== templates.length) return
+    const withNewIndex = reordered.map((t, i) => ({
+      ...t,
+      settings: { ...t.settings, listIndex: i },
+    }))
+    setTemplates(withNewIndex)
+    try {
+      await Promise.all(
+        withNewIndex.map((t) =>
+          patchIntegrationStepTemplates(
+            { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
+            t.id
+          )
+        )
+      )
+    } catch (e) {
+      console.error("Failed to save template order", e)
+      refreshTemplates()
+    }
+  }, [templates])
 
   useEffect(()=>{
     refreshTemplates()
@@ -37,8 +83,13 @@ export const Templates = ({data, setData}: ITemplates) => {
     if (!senlerGroupIdW) return
     try {
       const templateName = generateUniqueTemplateName('шаблон', templates)
-      const newTemplate = await createIntegrationStepTemplates({settings: data, senlerGroupId: senlerGroupIdW, name: templateName})
-      if (newTemplate.ok) setTemplates(p => [...p, newTemplate.data!])
+      const listIndex = templates.length
+      const newTemplate = await createIntegrationStepTemplates({
+        settings: { ...data, listIndex },
+        senlerGroupId: senlerGroupIdW,
+        name: templateName,
+      })
+      if (newTemplate.ok) setTemplates((p) => normalizeAndSortTemplates([...p, { ...newTemplate.data!, settings: { ...newTemplate.data!.settings, listIndex } }]))
     } catch (error) {
       console.error('Error generating unique template name:', error)
     }
@@ -66,7 +117,7 @@ export const Templates = ({data, setData}: ITemplates) => {
     <div className="text-left">
       <h3>Шаблон настроек</h3>
       <div className="flex items-center gap-3 my-3">
-        <MySelectDropdown refreshTemplates={refreshTemplates} resaveTemplate={resaveTemplate} onValueChange={onChangeTemplate} options={templates.map(el => ({ value: el.id, label: el.name, id: el.id }))} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <MySelectDropdown refreshTemplates={refreshTemplates} resaveTemplate={resaveTemplate} onValueChange={onChangeTemplate} onReorder={reorderTemplates} options={templates.map(el => ({ value: el.id, label: el.name, id: el.id }))} isOpen={isOpen} setIsOpen={setIsOpen} />
         <button onClick={saveTemplate} className="px-4 py-2 bg-[#428BCA] hover:bg-[#025aa5] text-white rounded-md transition-colors duration-200">+</button>
       </div>
       <p className="ms-2 text-xs">Сохраняя настройки с выбранным шаблоном,<br/>вы изменяете шаблон, применяя настройку только на этот шаг</p>

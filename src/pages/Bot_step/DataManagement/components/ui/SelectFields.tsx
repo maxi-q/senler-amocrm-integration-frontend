@@ -1,4 +1,15 @@
 import { deleteIntegrationStepTemplates } from "@/api/Backend/templates";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
@@ -6,16 +17,92 @@ interface MySelectProps {
   value?: string;
   onValueChange: (newValue: string) => void;
   options: { value: string; label: string; id: string }[];
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  refreshTemplates: () => Promise<void>
-  resaveTemplate: (id: string) => Promise<void>
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  refreshTemplates: () => Promise<void>;
+  resaveTemplate: (id: string) => Promise<void>;
+  onReorder?: (orderedIds: string[]) => void;
 }
 
-export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsOpen, refreshTemplates, resaveTemplate }: MySelectProps) => {
+function SortableOptionRow({
+  item,
+  isSelected,
+  onSelect,
+  onResave,
+  onDelete,
+}: {
+  item: { value: string; label: string; id: string };
+  isSelected: boolean;
+  onSelect: () => void;
+  onResave: () => void;
+  onDelete: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`px-4 py-2 cursor-pointer transition-colors flex items-center min-h-10
+        ${isSelected ? "bg-blue-50 text-blue-600 font-medium" : ""}
+        ${isDragging ? "opacity-50 shadow-md bg-white" : ""}`}
+      onClick={onSelect}
+    >
+      <div
+        className="hover:bg-blue-50 mr-2 cursor-grab active:cursor-grabbing touch-none flex items-center shrink-0"
+        onClick={(e) => e.stopPropagation()}
+        {...attributes}
+        {...listeners}
+        title="Перетащите для изменения порядка"
+      >
+        <FontAwesomeIcon icon="grip-vertical" className="text-gray-400" />
+      </div>
+      <span className="truncate mr-auto">{item.label}</span>
+      <div
+        className="hover:bg-blue-50 mr-1 shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          onResave();
+        }}
+      >
+        <FontAwesomeIcon icon="pencil" />
+      </div>
+      <div
+        className="hover:bg-blue-50 shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+      >
+        <FontAwesomeIcon icon="trash" style={{ color: "#dc3545" }} />
+      </div>
+    </div>
+  );
+}
+
+export const MySelectDropdown = ({
+  value,
+  onValueChange,
+  options,
+  isOpen,
+  setIsOpen,
+  refreshTemplates,
+  resaveTemplate,
+  onReorder,
+}: MySelectProps) => {
   const isLoaded = Boolean(options);
 
   const [selectedLabel, setSelectedLabel] = useState("Выберите шаблон");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor)
+  );
 
   const handleDocumentClick = () => {
     setIsOpen(false);
@@ -27,12 +114,23 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
   };
 
   const deleteTemplate = async (id: string) => {
-    const res = await deleteIntegrationStepTemplates(id)
+    const res = await deleteIntegrationStepTemplates(id);
     if (res.ok) {
-      console.log('template is delete')
-      refreshTemplates()
+      console.log("template is delete");
+      refreshTemplates();
     }
-  }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id || !onReorder) return;
+    const ids = options.map((o) => o.id);
+    const oldIndex = ids.indexOf(active.id as string);
+    const newIndex = ids.indexOf(over.id as string);
+    if (oldIndex === -1 || newIndex === -1) return;
+    const reordered = arrayMove(ids, oldIndex, newIndex);
+    onReorder(reordered);
+  };
 
   return (
     <div className="relative w-full">
@@ -55,39 +153,24 @@ export const MySelectDropdown = ({ value, onValueChange, options, isOpen, setIsO
       {isOpen && isLoaded && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg top-full">
           <div className="max-h-60 overflow-auto">
-            {options?.map((item) => (
-              <div
-                key={item.value}
-                className={`px-4 py-2 cursor-pointer transition-colors
-                  ${value === item.value ? "bg-blue-50 text-blue-600 font-medium" : ""}
-                  flex items-center min-h-10`}
-                  onClick={() => {
-                    onValueChange(item.value);
-                    setSelectedLabel(item.label);
-                    setIsOpen(false);
-                  }}
-              >
-                <span className="truncate mr-auto">{item.label}</span>
-                <div
-                  className="hover:bg-blue-50 mr-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    resaveTemplate(item.id);
-                  }}
-                  >
-                    <FontAwesomeIcon icon="pencil" />
-                </div>
-                <div
-                  className="hover:bg-blue-50"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteTemplate(item.id);
-                  }}
-                  >
-                    <FontAwesomeIcon icon="trash" style={{ color: '#dc3545' }} />
-                </div>
-              </div>
-            ))}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={options.map((o) => o.id)} strategy={verticalListSortingStrategy}>
+                {options?.map((item) => (
+                  <SortableOptionRow
+                    key={item.id}
+                    item={item}
+                    isSelected={value === item.value}
+                    onSelect={() => {
+                      onValueChange(item.value);
+                      setSelectedLabel(item.label);
+                      setIsOpen(false);
+                    }}
+                    onResave={() => resaveTemplate(item.id)}
+                    onDelete={() => deleteTemplate(item.id)}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           </div>
         </div>
       )}
