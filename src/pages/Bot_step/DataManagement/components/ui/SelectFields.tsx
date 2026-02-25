@@ -13,7 +13,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
-interface MySelectProps {
+interface TemplatesDropdownProps {
   value?: string;
   onValueChange: (newValue: string) => void;
   options: { value: string; label: string; id: string }[];
@@ -24,7 +24,7 @@ interface MySelectProps {
   onReorder?: (orderedIds: string[]) => void;
 }
 
-function SortableOptionRow({
+function SortableTemplateRow({
   item,
   isSelected,
   onSelect,
@@ -85,7 +85,7 @@ function SortableOptionRow({
   );
 }
 
-export const MySelectDropdown = ({
+export const TemplatesDropdown = ({
   value,
   onValueChange,
   options,
@@ -94,7 +94,7 @@ export const MySelectDropdown = ({
   refreshTemplates,
   resaveTemplate,
   onReorder,
-}: MySelectProps) => {
+}: TemplatesDropdownProps) => {
   const isLoaded = Boolean(options);
 
   const [selectedLabel, setSelectedLabel] = useState("Выберите шаблон");
@@ -156,7 +156,7 @@ export const MySelectDropdown = ({
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <SortableContext items={options.map((o) => o.id)} strategy={verticalListSortingStrategy}>
                 {options?.map((item) => (
-                  <SortableOptionRow
+                  <SortableTemplateRow
                     key={item.id}
                     item={item}
                     isSelected={value === item.value}

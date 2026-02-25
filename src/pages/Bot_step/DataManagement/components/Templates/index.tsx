@@ -1,7 +1,7 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
 import { useEffect, useState, useCallback } from "react"
-import { MySelectDropdown } from "../ui/SelectFields"
+import { TemplatesDropdown } from "../ui/SelectFields"
 import { generateUniqueTemplateName, normalizeAndSortTemplates } from "./helpers"
 
 interface ITemplates {
@@ -50,30 +50,32 @@ export const Templates = ({data, setData}: ITemplates) => {
   }
 
   const reorderTemplates = useCallback(async (orderedIds: string[]) => {
-    const idToTemplate = new Map(templates.map((t) => [t.id, t]))
-    const reordered = orderedIds
-      .map((id) => idToTemplate.get(id))
-      .filter(Boolean) as integrationStepTemplate[]
-    if (reordered.length !== templates.length) return
-    const withNewIndex = reordered.map((t, i) => ({
-      ...t,
-      settings: { ...t.settings, listIndex: i },
-    }))
-    setTemplates(withNewIndex)
-    try {
-      await Promise.all(
-        withNewIndex.map((t) =>
-          patchIntegrationStepTemplates(
-            { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
-            t.id
+    setTemplates((prev) => {
+      const idToTemplate = new Map(prev.map((t) => [t.id, t]))
+      const reordered = orderedIds
+        .map((id) => idToTemplate.get(id))
+        .filter(Boolean) as integrationStepTemplate[]
+      if (reordered.length !== prev.length) return prev
+      const withNewIndex = reordered.map((t, i) => ({
+        ...t,
+        settings: { ...t.settings, listIndex: i },
+      }))
+      queueMicrotask(() => { // для сохранения синхронности функции
+        Promise.all(
+          withNewIndex.map((t) =>
+            patchIntegrationStepTemplates(
+              { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
+              t.id
+            )
           )
-        )
-      )
-    } catch (e) {
-      console.error("Failed to save template order", e)
-      refreshTemplates()
-    }
-  }, [templates])
+        ).catch((e) => {
+          console.error("Failed to save template order", e)
+          refreshTemplates()
+        })
+      })
+      return withNewIndex
+    })
+  }, [])
 
   useEffect(()=>{
     refreshTemplates()
@@ -117,7 +119,7 @@ export const Templates = ({data, setData}: ITemplates) => {
     <div className="text-left">
       <h3>Шаблон настроек</h3>
       <div className="flex items-center gap-3 my-3">
-        <MySelectDropdown refreshTemplates={refreshTemplates} resaveTemplate={resaveTemplate} onValueChange={onChangeTemplate} onReorder={reorderTemplates} options={templates.map(el => ({ value: el.id, label: el.name, id: el.id }))} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <TemplatesDropdown refreshTemplates={refreshTemplates} resaveTemplate={resaveTemplate} onValueChange={onChangeTemplate} onReorder={reorderTemplates} options={templates.map(el => ({ value: el.id, label: el.name, id: el.id }))} isOpen={isOpen} setIsOpen={setIsOpen} />
         <button onClick={saveTemplate} className="px-4 py-2 bg-[#428BCA] hover:bg-[#025aa5] text-white rounded-md transition-colors duration-200">+</button>
       </div>
       <p className="ms-2 text-xs">Сохраняя настройки с выбранным шаблоном,<br/>вы изменяете шаблон, применяя настройку только на этот шаг</p>
