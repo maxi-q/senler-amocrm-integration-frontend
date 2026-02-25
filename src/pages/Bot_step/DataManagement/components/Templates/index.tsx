@@ -1,7 +1,7 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
 import { getUrlParams } from "@/helpers"
 import { useEffect, useState, useCallback } from "react"
-import { TemplatesDropdown } from "../ui/SelectFields"
+import { TemplatesDropdown } from "./ui/TemplateDropdown"
 import { generateUniqueTemplateName, normalizeAndSortTemplates } from "./helpers"
 
 interface ITemplates {
