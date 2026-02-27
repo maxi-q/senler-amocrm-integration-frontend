@@ -1,6 +1,6 @@
 import { getSenlerGroupTemplates, integrationStepTemplate, createIntegrationStepTemplates, patchIntegrationStepTemplates } from "@/api/Backend/templates"
-import { getUrlParams } from "@/helpers"
-import { useEffect, useState, useCallback } from "react"
+import { getUrlParams, useDebounceCallback } from "@/helpers"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { TemplatesDropdown } from "./ui/TemplateDropdown"
 import { generateUniqueTemplateName, normalizeAndSortTemplates } from "./helpers"
 
@@ -11,6 +11,9 @@ interface ITemplates {
 
 export const Templates = ({data, setData}: ITemplates) => {
   const [ templates, setTemplates ] = useState<integrationStepTemplate[]>([])
+  const templatesRef = useRef(templates)
+  templatesRef.current = templates
+
   const [ senlerGroupIdW, setSenlerGroupIdW ] = useState<string>()
   const { senlerGroupId } = getUrlParams()
   const [isOpen, setIsOpen] = useState(false);
@@ -20,66 +23,75 @@ export const Templates = ({data, setData}: ITemplates) => {
     setData(template?.settings)
   }
 
-  const refreshTemplates = async () => {
+  const refreshTemplates = useCallback(async () => {
     const result = await getSenlerGroupTemplates({ senlerGroupId })
-      console.log('result', result)
-      if(result.ok){
-        const list = result.templates || []
-        const sorted = normalizeAndSortTemplates(list)
-        setTemplates(sorted)
-        setSenlerGroupIdW(result.senlerGroupId)
 
-        // Для старых шаблонов
-        const hadNoIndex = (t: integrationStepTemplate) => {
-          const orig = list.find((x) => x.id === t.id)
-          return orig && typeof (orig.settings as { listIndex?: number })?.listIndex !== "number"
-        }
-        const toPersist = sorted.filter(hadNoIndex)
+    if (result.ok) {
+      const list = result.templates || []
+      const sorted = normalizeAndSortTemplates(list)
+      setTemplates(sorted)
+      setSenlerGroupIdW(result.senlerGroupId)
 
-        if (toPersist.length > 0) {
-          Promise.all(
-            toPersist.map((t) =>
-              patchIntegrationStepTemplates(
-                { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
-                t.id
-              )
-            )
-          ).catch((e) => console.error("Failed to persist listIndex", e))
-        }
+      const hadNoIndex = (t: integrationStepTemplate) => {
+        const orig = list.find((x) => x.id === t.id)
+        return orig && typeof (orig.settings as { listIndex?: number })?.listIndex !== "number"
       }
-  }
-
-  const reorderTemplates = useCallback(async (orderedIds: string[]) => {
-    setTemplates((prev) => {
-      const idToTemplate = new Map(prev.map((t) => [t.id, t]))
-      const reordered = orderedIds
-        .map((id) => idToTemplate.get(id))
-        .filter(Boolean) as integrationStepTemplate[]
-      if (reordered.length !== prev.length) return prev
-      const withNewIndex = reordered.map((t, i) => ({
-        ...t,
-        settings: { ...t.settings, listIndex: i },
-      }))
-      queueMicrotask(() => { // для сохранения синхронности функции
+      const toPersist = sorted.filter(hadNoIndex)
+      if (toPersist.length > 0) {
         Promise.all(
-          withNewIndex.map((t) =>
+          toPersist.map((t) =>
             patchIntegrationStepTemplates(
               { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
               t.id
             )
           )
-        ).catch((e) => {
-          console.error("Failed to save template order", e)
-          refreshTemplates()
-        })
+        ).catch((e) => console.error("Failed to persist listIndex", e))
+      }
+    }
+  }, [senlerGroupId])
+
+  const persistOrderToBackend = useCallback(
+    (withNewIndex: integrationStepTemplate[]) => {
+      Promise.all(
+        withNewIndex.map((t) =>
+          patchIntegrationStepTemplates(
+            { name: t.name, settings: { ...t.settings, listIndex: t.settings.listIndex } },
+            t.id
+          )
+        )
+      ).catch((e) => {
+        console.error("Failed to save template order", e)
+        refreshTemplates()
       })
-      return withNewIndex
-    })
+    },
+    [refreshTemplates]
+  )
+
+  const debouncedPersistOrder = useDebounceCallback(persistOrderToBackend, 1500)
+  const debouncedPersistOrderRef = useRef(debouncedPersistOrder)
+  debouncedPersistOrderRef.current = debouncedPersistOrder
+
+  const reorderTemplates = useCallback((orderedIds: string[]) => {
+    const prev = templatesRef.current
+    const idToTemplate = new Map(prev.map((t) => [t.id, t]))
+    const reordered = orderedIds
+      .map((id) => idToTemplate.get(id))
+      .filter(Boolean) as integrationStepTemplate[]
+    if (reordered.length !== prev.length) return
+
+    const withNewIndex = reordered.map((t, i) => ({
+      ...t,
+      settings: { ...t.settings, listIndex: i },
+    }))
+    setTemplates(withNewIndex)
+    templatesRef.current = withNewIndex
+
+    debouncedPersistOrderRef.current(withNewIndex)
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     refreshTemplates()
-  }, [])
+  }, [refreshTemplates])
 
   const saveTemplate = async () => {
     if (!senlerGroupIdW) return
@@ -102,7 +114,7 @@ export const Templates = ({data, setData}: ITemplates) => {
     if (name) {
       try {
         const finalName = generateUniqueTemplateName(name, templates, id)
-        
+
         const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
 
         if (res.ok) {
