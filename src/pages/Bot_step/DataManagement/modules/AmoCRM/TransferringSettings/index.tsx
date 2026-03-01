@@ -28,7 +28,8 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
         statusId: null,
         responsibleUserId: workspaceInfo.users[0]?.id,
         price: 0,
-        name: ''
+        name: '',
+        createContact: false,
       }
       setSettings(defaultSettings)
     }
@@ -107,6 +108,16 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
       const newSettings: AmoCrmTransferringSettings = {
         ...settings!,
         name: name
+      }
+      setSettings(newSettings)
+    }
+  }, [settings, setSettings])
+
+  const handleCreateContactChange = useCallback((checked: boolean) => {
+    if (settings?.createContact !== checked) {
+      const newSettings: AmoCrmTransferringSettings = {
+        ...settings!,
+        createContact: checked
       }
       setSettings(newSettings)
     }
@@ -236,6 +247,42 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
           value={settings?.price?.toString() || '0'}
           setValue={(value) => handlePriceChange(typeof value === 'string' ? value : value.toString())}
         />
+      </div>
+
+      <div style={{ marginBottom: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+        <span style={{ userSelect: 'none' }}>Создать контакт при создании сделки</span>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={settings?.createContact ?? false}
+          onClick={() => handleCreateContactChange(!(settings?.createContact ?? false))}
+          style={{
+            position: 'relative',
+            width: 44,
+            height: 24,
+            borderRadius: 12,
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: (settings?.createContact ?? false) ? '#428BCA' : '#ccc',
+            transition: 'background-color 0.2s',
+            padding: 0,
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              top: 2,
+              left: (settings?.createContact ?? false) ? 22 : 2,
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              backgroundColor: '#fff',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+              transition: 'left 0.2s',
+            }}
+          />
+        </button>
       </div>
     </div>
   )
