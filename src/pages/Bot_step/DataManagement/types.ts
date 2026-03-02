@@ -32,7 +32,6 @@ export interface AmoCrmTransferringSettings {
   price: number | null
   name: string | null
   responsibleUserId: number | null
-  createContact?: boolean
 }
 
 
