@@ -11,7 +11,7 @@ import {
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 interface TemplatesDropdownProps {
   value?: string;
@@ -86,7 +86,6 @@ function SortableTemplateRow({
 }
 
 export const TemplatesDropdown = ({
-  value,
   onValueChange,
   options,
   isOpen,
@@ -97,7 +96,18 @@ export const TemplatesDropdown = ({
 }: TemplatesDropdownProps) => {
   const isLoaded = Boolean(options);
 
+  const [selectedValue, setSelectedValue] = useState<string | "">("");
   const [selectedLabel, setSelectedLabel] = useState("Выберите шаблон");
+
+  // Сброс выбора, если выбранный шаблон удалён (после refreshTemplates список обновился)
+  const optionIds = useMemo(() => options.map((o) => o.id), [options]);
+  useEffect(() => {
+    if (selectedValue && !optionIds.includes(selectedValue)) {
+      setSelectedValue("");
+      setSelectedLabel("Выберите шаблон");
+      onValueChange("");
+    }
+  }, [optionIds, selectedValue]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -159,9 +169,10 @@ export const TemplatesDropdown = ({
                   <SortableTemplateRow
                     key={item.id}
                     item={item}
-                    isSelected={value === item.value}
+                    isSelected={selectedValue === item.value}
                     onSelect={() => {
                       onValueChange(item.value);
+                      setSelectedValue(item.value);
                       setSelectedLabel(item.label);
                       setIsOpen(false);
                     }}

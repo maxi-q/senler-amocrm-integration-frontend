@@ -111,19 +111,26 @@ export const Templates = ({data, setData}: ITemplates) => {
 
   const resaveTemplate = async (id: string) => {
     const name = prompt('Новое название шаблона', '');
-    if (name) {
-      try {
-        const finalName = generateUniqueTemplateName(name, templates, id)
+    if (!name?.trim()) return
 
-        const res = await patchIntegrationStepTemplates({ name: finalName, settings: data }, id)
+    try {
+      const prev = templatesRef.current
+      const template = prev.find((t) => t.id === id)
+      if (!template) return
 
-        if (res.ok) {
-          console.log('renameTemplate')
-          refreshTemplates()
-        }
-      } catch (error) {
-        console.error('Error generating unique template name:', error)
+      const finalName = generateUniqueTemplateName(name.trim(), prev, id)
+      const res = await patchIntegrationStepTemplates(
+        { name: finalName, settings: { ...(template.settings ?? {}) } },
+        id
+      )
+
+      if (res.ok) {
+        setTemplates((current) =>
+          current.map((t) => (t.id === id ? { ...t, name: finalName } : t))
+        )
       }
+    } catch (error) {
+      console.error('Error generating unique template name:', error)
     }
   }
 
