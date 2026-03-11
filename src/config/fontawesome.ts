@@ -14,7 +14,8 @@ import {
   faUser,
   faHome,
   faArrowRight,
-  faArrowLeft
+  faArrowLeft,
+  faGripVertical,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Добавляем иконки в библиотеку
@@ -33,7 +34,8 @@ library.add(
   faUser,
   faHome,
   faArrowRight,
-  faArrowLeft
+  faArrowLeft,
+  faGripVertical
 );
 
 export default library;

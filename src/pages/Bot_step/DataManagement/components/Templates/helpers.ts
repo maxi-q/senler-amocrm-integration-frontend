@@ -1,5 +1,29 @@
 import { integrationStepTemplate } from "@/api/Backend/templates"
 
+/**
+ * Присваивает listIndex тем шаблонам, у которых его нет, и сортирует по listIndex.
+ */
+export function normalizeAndSortTemplates(
+  list: integrationStepTemplate[]
+): integrationStepTemplate[] {
+  const withIndex = list.map((t, i) => {
+    const current = t.settings?.listIndex;
+    const hasIndex = typeof current === "number" && Number.isInteger(current);
+    return {
+      ...t,
+      settings: {
+        ...t.settings,
+        private: t.settings?.private,
+        public: t.settings?.public,
+        listIndex: hasIndex ? (current as number) : i,
+      },
+    };
+  });
+  return withIndex
+    .slice()
+    .sort((a, b) => (a.settings.listIndex ?? 0) - (b.settings.listIndex ?? 0));
+}
+
 export const generateUniqueTemplateName = (
   baseName: string,
   templates: integrationStepTemplate[],
