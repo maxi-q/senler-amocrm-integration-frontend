@@ -19,8 +19,8 @@ import { hasDataValidationErrors } from './components/KeyValueInput/helpers'
 
 export const DataManagement = () => {
   const { message, sendMessage } = useMessage()
-  const { isAmoCRMAuthenticated } = useAccountStore()
-  const { workspaceInfo, fetchWorkspaceInfo } = useWorkspaceInfo()
+  const { isAmoCRMAuthenticated, senlerGroup } = useAccountStore()
+  const { workspaceInfo, syncWorkspaceForAmoAccount } = useWorkspaceInfo()
 
   const [OAuthCode, setOAuthCode] = useState('')
 
@@ -49,13 +49,9 @@ export const DataManagement = () => {
   }, [publicData, amoCrmTransferringSettings])
 
   useEffect(() => {
-    if (isAmoCRMAuthenticated) {
-      const { senlerGroupId } = getUrlParams()
-      if (senlerGroupId) {
-        fetchWorkspaceInfo(senlerGroupId)
-      }
-    }
-  }, [isAmoCRMAuthenticated, fetchWorkspaceInfo])
+    const { senlerGroupId } = getUrlParams()
+    syncWorkspaceForAmoAccount(senlerGroupId, senlerGroup.amoCrmDomainName, isAmoCRMAuthenticated)
+  }, [isAmoCRMAuthenticated, senlerGroup.amoCrmDomainName, syncWorkspaceForAmoAccount])
 
 
   useEffect(() => {
@@ -195,8 +191,18 @@ export const DataManagement = () => {
             {
               dataIsLoaded ?
                 <>
-                  {stepType == BotStepType.SendDataToAmoCrm && <SendDataToAmoCrm data={publicData} setData={setPublicData} amoCrmTransferringSettings={amoCrmTransferringSettings} setAmoCrmTransferringSettings={setAmoCrmTransferringSettings} />}
-                  {stepType == BotStepType.SendDataToSenler && <SendDataToSenler data={publicData} setData={setPublicData} />}
+                  {stepType == BotStepType.SendDataToAmoCrm && (
+                    <SendDataToAmoCrm
+                      key={senlerGroup.amoCrmDomainName}
+                      data={publicData}
+                      setData={setPublicData}
+                      amoCrmTransferringSettings={amoCrmTransferringSettings}
+                      setAmoCrmTransferringSettings={setAmoCrmTransferringSettings}
+                    />
+                  )}
+                  {stepType == BotStepType.SendDataToSenler && (
+                    <SendDataToSenler key={senlerGroup.amoCrmDomainName} data={publicData} setData={setPublicData} />
+                  )}
                 </> :
                 <Loader />
             }

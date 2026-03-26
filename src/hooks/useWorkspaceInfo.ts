@@ -7,6 +7,8 @@ import useAccountStore from '@/store/account';
 
 const CACHE_DURATION = 5 * 60 * 1000;
 
+let lastSyncedAmoDomain: string | null = null;
+
 export const useWorkspaceInfo = () => {
   const workspaceInfo = useAccountStore(state => state.workspaceInfo);
 
@@ -70,9 +72,31 @@ export const useWorkspaceInfo = () => {
     useAccountStore.getState().clearWorkspaceInfo();
   }, []);
 
+  const syncWorkspaceForAmoAccount = useCallback(
+    (senlerGroupId: string | undefined, amoCrmDomainName: string | undefined, isAuthenticated: boolean) => {
+      if (!isAuthenticated) {
+        lastSyncedAmoDomain = null;
+        return;
+      }
+      if (!senlerGroupId || !amoCrmDomainName) return;
+
+      if (lastSyncedAmoDomain === amoCrmDomainName) return;
+
+      const previous = lastSyncedAmoDomain;
+      if (previous !== null && previous !== amoCrmDomainName) {
+        useAccountStore.getState().clearWorkspaceInfo();
+      }
+      lastSyncedAmoDomain = amoCrmDomainName;
+      const forceRefresh = previous !== null && previous !== amoCrmDomainName;
+      void fetchWorkspaceInfo(senlerGroupId, forceRefresh);
+    },
+    [fetchWorkspaceInfo]
+  );
+
   return {
     workspaceInfo,
     fetchWorkspaceInfo,
-    clearCache
+    clearCache,
+    syncWorkspaceForAmoAccount
   };
 };
