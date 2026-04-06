@@ -9,6 +9,8 @@ export type integrationStepTemplate = {
     private: any;
     public: any;
     listIndex?: number;
+    /** Привязка шаблона к аккаунту amoCRM (домен, как в senlerGroup). */
+    amoCrmDomainName?: string;
   }
 }
 type getSenlerGroupTemplatesResponse = {
@@ -27,7 +29,12 @@ export const getSenlerGroupTemplates = async ({ senlerGroupId }: CheckRegistrati
       }
     );
 
-    return {ok: true, templates: result.data.integrationStepTemplates, senlerGroupId: result.data.id};
+    return {
+      ok: true,
+      templates: result.data.integrationStepTemplates,
+      senlerGroupId: result.data.id,
+      amoCrmDomainName: result.data.amoCrmDomainName,
+    };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       console.warn("Registration not found, 404 received.");
@@ -41,7 +48,9 @@ export const getSenlerGroupTemplates = async ({ senlerGroupId }: CheckRegistrati
 interface saveTemplate {
   settings: {
     private: any,
-    public: any
+    public: any,
+    listIndex?: number,
+    amoCrmDomainName?: string,
   },
   senlerGroupId: string,
   name: string
