@@ -144,7 +144,9 @@ export const AmoCrmTransferringSettingsComponent = memo(({ settings, setSettings
     if (settings) {
       options.push(...workspaceInfo.pipelines
         .find(p => p.id === settings.pipelineId)
-        ?.statuses.map(status => ({
+        ?.statuses
+        .filter(status => status.name !== 'Неразобранное')
+        .map(status => ({
           label: status.name,
           value: status.id.toString()
         })) || [])
