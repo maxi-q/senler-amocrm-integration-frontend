@@ -3,4 +3,5 @@ interface ImportMetaEnv {
   VITE_FRONT_URL: string
   VITE_API_URL: string
   VITE_SENLER_INTEGRATION_ID: string
+  VITE_SENLER_DOMAIN: string
 }
