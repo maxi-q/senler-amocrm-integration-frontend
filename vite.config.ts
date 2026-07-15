@@ -16,6 +16,5 @@ export default defineConfig({
     'process.env.VITE_FRONT_URL': JSON.stringify(process.env.VITE_FRONT_URL),
     'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL),
     'process.env.VITE_SENLER_INTEGRATION_ID': JSON.stringify(process.env.VITE_SENLER_INTEGRATION_ID),
-    'process.env.VITE_SENLER_DOMAIN': JSON.stringify(process.env.VITE_SENLER_DOMAIN),
   }
 })

@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Root from './Root'
+import App from './App.tsx'
 import './index.css'
 import './config/fontawesome.ts'
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<Root />
+		<App />
 	</StrictMode>
 )
