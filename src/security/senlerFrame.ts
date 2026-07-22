@@ -1,4 +1,4 @@
-const SENLER_DOMAIN = (import.meta.env.VITE_SENLER_DOMAIN ?? '').trim().toLowerCase()
+const SENLER_DOMAIN = (import.meta.env.VITE_SENLER_DOMAIN ?? '').trim().toLowerCase() || 'senler.ru'
 
 export const isAllowedSenlerOrigin = (origin: string) => {
 	try {
