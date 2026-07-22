@@ -1,4 +1,4 @@
-const SENLER_DOMAIN = import.meta.env.VITE_SENLER_DOMAIN.trim().toLowerCase()
+const SENLER_DOMAIN = (import.meta.env.VITE_SENLER_DOMAIN ?? '').trim().toLowerCase()
 
 export const isAllowedSenlerOrigin = (origin: string) => {
 	try {
@@ -15,6 +15,11 @@ export const isAllowedSenlerOrigin = (origin: string) => {
 export const getDefaultSenlerOrigin = () => `https://${SENLER_DOMAIN}`
 
 export const isOpenedInAllowedSenlerFrame = () => {
+	if (!SENLER_DOMAIN) {
+		console.warn('VITE_SENLER_DOMAIN is not set — iframe protection is disabled')
+		return true
+	}
+
 	try {
 		if (window.self === window.top) return false
 
