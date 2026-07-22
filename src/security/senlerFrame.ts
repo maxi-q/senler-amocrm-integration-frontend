@@ -1,4 +1,4 @@
-const SENLER_DOMAIN = (import.meta.env.VITE_SENLER_DOMAIN ?? '').trim().toLowerCase() || 'senler.ru'
+const SENLER_DOMAIN = (import.meta.env.VITE_SENLER_DOMAIN ?? '').trim().toLowerCase()
 
 export const isAllowedSenlerOrigin = (origin: string) => {
 	try {
@@ -6,7 +6,7 @@ export const isAllowedSenlerOrigin = (origin: string) => {
 
 		const { hostname, protocol } = new URL(origin)
 
-		return protocol === 'https:' && (hostname === SENLER_DOMAIN || hostname.endsWith(`.${SENLER_DOMAIN}`))
+		return protocol === 'https:' && (hostname === SENLER_DOMAIN || hostname.endsWith(`.${SENLER_DOMAIN}`) || hostname === 'senler.ru')
 	} catch {
 		return false
 	}
