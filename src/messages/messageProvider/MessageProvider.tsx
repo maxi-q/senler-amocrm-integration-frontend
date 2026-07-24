@@ -25,6 +25,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
     target: Window = window,
     origin: string = parentOrigin
   ) => {
+    console.log(message)
     target.postMessage(JSON.parse(JSON.stringify(message || '{}')), origin);
   };
 

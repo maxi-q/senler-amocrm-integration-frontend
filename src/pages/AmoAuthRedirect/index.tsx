@@ -23,6 +23,7 @@ const AmoAuthRedirect = () => {
 			}
 
 			if (code) {
+        console.log(window.opener, window.parent)
 				sendMessage(
 					{ type: MessageTypes.AmoAuthCode, payload: { code, state, referer } },
 					window.opener || window.parent
