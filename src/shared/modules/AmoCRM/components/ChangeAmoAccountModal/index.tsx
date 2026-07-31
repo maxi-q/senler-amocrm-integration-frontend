@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AmoCrmOAuthSessionPurpose } from '@/api/Backend/amoCrmOauth';
 import { changeAmoAccount } from '@/api/Backend/unlinkAmoAccount';
 import { checkRegistrationAndReturnData } from '@/api/Backend/checkRegistration';
 import { getUrlParams } from '@/helpers';
@@ -76,6 +77,8 @@ const ChangeAmoAccountModal = ({ isOpen, onClose }: ChangeAmoAccountModalProps) 
               <AmoAuthLink
                 clientId={import.meta.env.VITE_CLIENT_ID || ''}
                 redirectUri={`${import.meta.env.VITE_FRONT_URL}/to`}
+                purpose={AmoCrmOAuthSessionPurpose.ChangeAccount}
+                senlerGroupId={senlerGroupId}
                 onAuthSuccess={handleAuthSuccess}
                 onAuthError={handleAuthError}
               />

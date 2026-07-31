@@ -9,6 +9,7 @@ import { Loader } from './components/Loader';
 import { sendCode } from './helpers/sendCode';
 
 import styles from './styles.module.css';
+import { AmoCrmOAuthSessionPurpose } from '@/api/Backend/amoCrmOauth';
 import AmoAuthLink, { IOnAuthSuccess } from '@/shared/modules/AmoCRM/components/AmoAuthButton';
 import { Senler } from '@/shared/modules/Senler';
 
@@ -43,6 +44,8 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
   }
 
   const renderAuthLink = () => {
+    const { senlerGroupId } = getUrlParams();
+
     return (
       <>
         {
@@ -51,6 +54,9 @@ export const AmoCRM = ({ OAuthCode, setOAuthCode }: { OAuthCode: string; setOAut
             : <AmoAuthLink
                 clientId={import.meta.env.VITE_CLIENT_ID || ''}
                 redirectUri={`${import.meta.env.VITE_FRONT_URL}/to`}
+                purpose={AmoCrmOAuthSessionPurpose.Register}
+                senlerGroupId={senlerGroupId}
+                senlerAuthorizationCode={OAuthCode}
                 onAuthSuccess={registerAndCheckAccess}
               />
         }

@@ -13,6 +13,18 @@ export const getUrlParams = () => {
   };
 };
 
+/**
+ * Страница интеграции в кабинете Senler, которая встраивает это приложение в iframe.
+ * Используется как URL возврата после мобильной full-page авторизации amoCRM, когда
+ * исходный iframe уже потерян (пользователь ушёл в отдельную вкладку/окно на amoCRM.ru).
+ */
+export const buildSenlerIntegrationUrl = (senlerGroupId: string | number) => {
+  const domain = import.meta.env.VITE_SENLER_DOMAIN;
+  const integrationId = import.meta.env.VITE_SENLER_INTEGRATION_ID;
+
+  return `https://${domain}/cabinet/integrations/${senlerGroupId}/${integrationId}`;
+};
+
 type Procedure = (...args: any[]) => void
 
 export const useDebounceCallback = <F extends Procedure>(

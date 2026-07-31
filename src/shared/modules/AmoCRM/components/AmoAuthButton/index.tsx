@@ -5,6 +5,8 @@ export interface IOnAuthSuccess {
 }
 
 import { useEffect, useRef } from 'react'
+import { AmoCrmOAuthSessionPurpose, createAmoCrmOAuthSession } from '@/api/Backend/amoCrmOauth'
+import { isMobileDevice } from '@/helpers/isMobile'
 import { useMessage } from '@/messages/messageProvider'
 import { MessageTypes } from '@/messages/types/messages.enum'
 
@@ -12,6 +14,9 @@ interface AmoAuthPopupProps {
 	clientId: string
 	redirectUri: string
 	state?: string
+	purpose: AmoCrmOAuthSessionPurpose
+	senlerGroupId: string | number
+	senlerAuthorizationCode?: string
 	onAuthSuccess: ({
 		code,
 		state,
@@ -23,6 +28,9 @@ interface AmoAuthPopupProps {
 const AmoAuthLink = ({
 	clientId,
 	redirectUri,
+	purpose,
+	senlerGroupId,
+	senlerAuthorizationCode,
 	onAuthSuccess,
 	onAuthError,
 }: AmoAuthPopupProps) => {
@@ -61,6 +69,37 @@ const AmoAuthLink = ({
 		}, 500)
 	}
 
+	// Popup ненадёжен на мобильных браузерах: параметры width/height игнорируются
+	// (открывается новая вкладка), а после редиректа `window.opener` часто недоступен.
+	// Поэтому на мобильных устройствах используется full-page переход и завершение
+	// авторизации на backend (см. AmoAuthRedirect, /to).
+	const openMobileAuth = async () => {
+		const session = await createAmoCrmOAuthSession({
+			purpose,
+			senlerGroupId,
+			senlerAuthorizationCode,
+		})
+
+		if (!session) {
+			onAuthError?.(
+				'Не удалось начать авторизацию amoCRM. Попробуйте ещё раз.'
+			)
+			return
+		}
+
+		const topWindow = window.top || window
+		topWindow.location.href = session.authorizeUrl
+	}
+
+	const openAuth = () => {
+		if (isMobileDevice()) {
+			openMobileAuth()
+			return
+		}
+
+		openAuthPopup()
+	}
+
 	useEffect(() => {
 		if (!message) return
 		if (message.type === MessageTypes.AmoAuthCode) {
@@ -80,7 +119,7 @@ const AmoAuthLink = ({
 	}, [message])
 
 	return (
-		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
+		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuth}>
 			<div className="flex items-center ">
 				<div className="ms-2">
 					<span data-role="header_account_text">Подключить amoCRM</span>

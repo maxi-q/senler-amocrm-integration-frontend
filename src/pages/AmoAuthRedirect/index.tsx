@@ -1,18 +1,49 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { sendAmoCrmOAuthCallback } from '@/api/Backend/amoCrmOauth'
+import { buildSenlerIntegrationUrl } from '@/helpers'
 import { useMessage } from '@/messages/messageProvider'
 import { MessageTypes } from '@/messages/types/messages.enum'
 
+type Status = 'processing' | 'success' | 'error'
+
 const AmoAuthRedirect = () => {
 	const { sendMessage } = useMessage()
+	const [status, setStatus] = useState<Status>('processing')
+	const [errorMessage, setErrorMessage] = useState('')
+	const [returnUrl, setReturnUrl] = useState('')
 
 	useEffect(() => {
-		try {
-			const params = new URLSearchParams(window.location.search)
-			const code = params.get('code') || ''
-			const state = params.get('state') || ''
-			const referer = params.get('referer') || ''
-			const error = params.get('error') || ''
+		const params = new URLSearchParams(window.location.search)
+		const code = params.get('code') || ''
+		const state = params.get('state') || ''
+		const referer = params.get('referer') || ''
+		const error = params.get('error') || ''
 
+		// Мобильная ветка: `state` присутствует только для сессий, созданных через
+		// POST /oauth/amocrm/sessions (см. AmoAuthButton). Desktop popup-flow не передаёт
+		// `state`, поэтому его поведение (postMessage + window.close) ниже не меняется.
+		if (state) {
+			const completeMobileAuth = async () => {
+				const result = await sendAmoCrmOAuthCallback({ state, code, referer, error })
+
+				if (!result || result.status === 'failed') {
+					setStatus('error')
+					setErrorMessage(result?.error || 'Не удалось завершить авторизацию amoCRM')
+					if (result?.senlerGroupId) {
+						setReturnUrl(buildSenlerIntegrationUrl(result.senlerGroupId))
+					}
+					return
+				}
+
+				setStatus('success')
+				window.location.replace(buildSenlerIntegrationUrl(result.senlerGroupId))
+			}
+
+			completeMobileAuth()
+			return
+		}
+
+		try {
 			if (error) {
 				sendMessage(
 					{ type: MessageTypes.AmoAuthCodeError, payload: { error } },
@@ -23,7 +54,6 @@ const AmoAuthRedirect = () => {
 			}
 
 			if (code) {
-        console.log(window.opener, window.parent)
 				sendMessage(
 					{ type: MessageTypes.AmoAuthCode, payload: { code, state, referer } },
 					window.opener || window.parent
@@ -38,6 +68,16 @@ const AmoAuthRedirect = () => {
 			window.close()
 		}
 	}, [])
+
+	if (status === 'error') {
+		return (
+			<div style={{ padding: 24, textAlign: 'center' }}>
+				<h2>Не удалось подключить amoCRM</h2>
+				<p>{errorMessage}</p>
+				{returnUrl && <a href={returnUrl}>Вернуться в Senler</a>}
+			</div>
+		)
+	}
 
 	return <h2>Завершение авторизации...</h2>
 }
