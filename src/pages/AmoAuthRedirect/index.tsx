@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { sendAmoCrmOAuthCallback } from '@/api/Backend/amoCrmOauth'
 import { buildSenlerIntegrationUrl } from '@/helpers'
+import { isMobileDevice } from '@/helpers/isMobile'
 import { useMessage } from '@/messages/messageProvider'
 import { MessageTypes } from '@/messages/types/messages.enum'
 
@@ -19,10 +20,11 @@ const AmoAuthRedirect = () => {
 		const referer = params.get('referer') || ''
 		const error = params.get('error') || ''
 
-		// Мобильная ветка: `state` присутствует только для сессий, созданных через
-		// POST /oauth/amocrm/sessions (см. AmoAuthButton). Desktop popup-flow не передаёт
-		// `state`, поэтому его поведение (postMessage + window.close) ниже не меняется.
-		if (state) {
+		// Мобильная ветка определяется по устройству, а не по наличию `state`: desktop popup
+		// сейчас не передаёт `state`, но полагаться только на это хрупко (см. Senler-flow,
+		// где desktop свой `state` всё же отправляет). AmoAuthButton на мобильных всегда создаёт
+		// серверную сессию, поэтому именно на этом устройстве стоит вызывать backend-callback.
+		if (isMobileDevice()) {
 			const completeMobileAuth = async () => {
 				const result = await sendAmoCrmOAuthCallback({ state, code, referer, error })
 

@@ -3,6 +3,8 @@ export interface IOnAuthSuccess {
 }
 
 import { useEffect, useRef } from 'react'
+import { createSenlerOAuthSession } from '@/api/Backend/senlerOauth'
+import { isMobileDevice } from '@/helpers/isMobile'
 import { useMessage } from '@/messages/messageProvider'
 import { MessageTypes } from '@/messages/types/messages.enum'
 
@@ -73,6 +75,31 @@ const SenlerAuthLink = ({
 		}, 500)
 	}
 
+	// Popup ненадёжен на мобильных браузерах (см. AmoAuthButton). Регистрация продолжится
+	// на backend через цепочку Senler -> amoCRM (см. SenlerAuthRedirect, /get_senler_code).
+	const openMobileAuth = async () => {
+		const session = await createSenlerOAuthSession({ senlerGroupId: group_id })
+
+		if (!session) {
+			onAuthError?.(
+				'Не удалось начать авторизацию Senler. Попробуйте ещё раз.'
+			)
+			return
+		}
+
+		const topWindow = window.top || window
+		topWindow.location.href = session.authorizeUrl
+	}
+
+	const openAuth = () => {
+		if (isMobileDevice()) {
+			openMobileAuth()
+			return
+		}
+
+		openAuthPopup()
+	}
+
 	useEffect(() => {
 		if (!message) return
 		if (message.type === MessageTypes.SenlerAuthCode) {
@@ -92,7 +119,7 @@ const SenlerAuthLink = ({
 	}, [message])
 
 	return (
-		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuthPopup}>
+		<div className="accounts_dropdown flex justify-start p-3 flex-row" onClick={openAuth}>
 			<div className="flex items-center ">
 				<div className="ms-2">
 					<span data-role="header_account_text">Получить токен Senler</span>
