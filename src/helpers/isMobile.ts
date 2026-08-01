@@ -10,9 +10,19 @@ interface NavigatorWithUserAgentData extends Navigator {
 export const isMobileDevice = (): boolean => {
 	const nav = navigator as NavigatorWithUserAgentData
 
-	if (typeof nav.userAgentData?.mobile === 'boolean') {
-		return nav.userAgentData.mobile
+	if (nav.userAgentData?.mobile === true) {
+		return true
 	}
 
-	return /Android|iPhone|iPad|iPod|Mobile/i.test(nav.userAgent)
+	if (/Android|iPhone|iPad|iPod|Mobile/i.test(nav.userAgent)) {
+		return true
+	}
+
+	// Некоторые встроенные браузеры и webview передают desktop User-Agent.
+	// Coarse pointer + touch + небольшой экран покрывают этот случай.
+	return (
+		nav.maxTouchPoints > 0 &&
+		window.matchMedia?.('(pointer: coarse)').matches === true &&
+		Math.min(window.screen.width, window.screen.height) <= 1024
+	)
 }

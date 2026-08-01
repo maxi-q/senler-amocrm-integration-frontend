@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { sendSenlerOAuthCallback } from '@/api/Backend/senlerOauth'
 import { buildSenlerIntegrationUrl } from '@/helpers'
-import { isMobileDevice } from '@/helpers/isMobile'
+import { isServerOAuthState } from '@/helpers/isServerOAuthState'
 import { useMessage } from '@/messages/messageProvider'
 import { MessageTypes } from '@/messages/types/messages.enum'
 
@@ -19,9 +19,9 @@ const SenlerAuthRedirect = () => {
 		const state = params.get('state') || ''
 		const error = params.get('error') || ''
 
-		// Мобильная ветка определяется по устройству, а не по наличию `state`: desktop popup
-		// тоже отправляет свой `state` (см. generateAuthUrl ниже), просто backend его не хранит.
-		if (isMobileDevice()) {
+		// Серверную ветку определяет сам state. Проверка устройства здесь может отличаться
+		// от результата внутри iframe и ошибочно отправить desktop state на backend.
+		if (isServerOAuthState(state)) {
 			const completeMobileStep = async () => {
 				const result = await sendSenlerOAuthCallback({ state, code, error })
 
