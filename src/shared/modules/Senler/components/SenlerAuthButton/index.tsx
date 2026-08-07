@@ -26,6 +26,7 @@ const SenlerAuthLink = ({
 }: AmoAuthPopupProps) => {
 	const { message } = useMessage()
 	const popupRef = useRef<Window | null>(null)
+	const authSettledRef = useRef(false)
 
 	const generateAuthUrl = () => {
 		const authUrl = new URL('https://senler.ru/cabinet/OAuth2authorize')
@@ -39,6 +40,7 @@ const SenlerAuthLink = ({
 
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
+		authSettledRef.current = false
 		const popup = window.open(authUrl, 'senlerAuthPopup', 'width=600,height=600')
 		popupRef.current = popup
 
@@ -52,9 +54,11 @@ const SenlerAuthLink = ({
 		const timer = setInterval(() => {
 			if (popup.closed) {
 				clearInterval(timer)
-				console.error(
-					'Авторизация отменена пользователем или всплывающее окно было закрыто.'
-				)
+				if (!authSettledRef.current) {
+					console.error(
+						'Авторизация отменена пользователем или всплывающее окно было закрыто.'
+					)
+				}
 				return
 			}
 
@@ -63,6 +67,7 @@ const SenlerAuthLink = ({
 				const code = urlParams.get('code')
 
 				if (code) {
+					authSettledRef.current = true
 					onAuthSuccess({ code })
           popupRef.current?.close()
 					clearInterval(timer)
@@ -105,6 +110,7 @@ const SenlerAuthLink = ({
 		if (message.type === MessageTypes.SenlerAuthCode) {
 			const { code } = message.payload || {}
 			if (code) {
+				authSettledRef.current = true
 				onAuthSuccess({ code })
 				popupRef.current?.close()
 			}
@@ -112,6 +118,7 @@ const SenlerAuthLink = ({
 		if (message.type === MessageTypes.SenlerAuthCodeError) {
 			const { error } = message.payload || {}
 			if (error) {
+				authSettledRef.current = true
 				onAuthError?.(error)
 				popupRef.current?.close()
 			}

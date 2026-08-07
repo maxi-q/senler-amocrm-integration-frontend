@@ -46,7 +46,8 @@ const SenlerAuthRedirect = () => {
 			if (error) {
 				sendMessage(
 					{ type: MessageTypes.SenlerAuthCodeError, payload: { error } },
-					window.opener || window.parent
+					window.opener || window.parent,
+					window.location.origin
 				)
 				window.close()
 				return
@@ -55,14 +56,16 @@ const SenlerAuthRedirect = () => {
 			if (code) {
 				sendMessage(
 					{ type: MessageTypes.SenlerAuthCode, payload: { code } },
-					window.opener || window.parent
+					window.opener || window.parent,
+					window.location.origin
 				)
 				window.close()
 			}
 		} catch (e) {
 			sendMessage(
 				{ type: MessageTypes.SenlerAuthCodeError, payload: { error: 'Failed to parse auth params' } },
-				window.opener || window.parent
+				window.opener || window.parent,
+				window.location.origin
 			)
 			window.close()
 		}

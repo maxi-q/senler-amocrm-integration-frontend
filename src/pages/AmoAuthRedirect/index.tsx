@@ -47,7 +47,8 @@ const AmoAuthRedirect = () => {
 			if (error) {
 				sendMessage(
 					{ type: MessageTypes.AmoAuthCodeError, payload: { error } },
-					window.opener || window.parent
+					window.opener || window.parent,
+					window.location.origin
 				)
 				window.close()
 				return
@@ -56,14 +57,16 @@ const AmoAuthRedirect = () => {
 			if (code) {
 				sendMessage(
 					{ type: MessageTypes.AmoAuthCode, payload: { code, state, referer } },
-					window.opener || window.parent
+					window.opener || window.parent,
+					window.location.origin
 				)
 				window.close()
 			}
 		} catch (e) {
 			sendMessage(
 				{ type: MessageTypes.AmoAuthCodeError, payload: { error: 'Failed to parse auth params' } },
-				window.opener || window.parent
+				window.opener || window.parent,
+				window.location.origin
 			)
 			window.close()
 		}

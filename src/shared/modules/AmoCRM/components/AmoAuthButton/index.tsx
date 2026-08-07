@@ -36,6 +36,7 @@ const AmoAuthLink = ({
 }: AmoAuthPopupProps) => {
 	const { message } = useMessage()
 	const popupRef = useRef<Window | null>(null)
+	const authSettledRef = useRef(false)
 
 	const generateAuthUrl = () => {
 		const authUrl = new URL('https://www.amocrm.ru/oauth')
@@ -48,6 +49,7 @@ const AmoAuthLink = ({
 
 	const openAuthPopup = () => {
 		const authUrl = generateAuthUrl()
+		authSettledRef.current = false
 		const popup = window.open(authUrl, 'amoAuthPopup', 'width=600,height=600')
 		popupRef.current = popup
 
@@ -61,9 +63,11 @@ const AmoAuthLink = ({
 		const timer = setInterval(() => {
 			if (popup.closed) {
 				clearInterval(timer)
-				console.error(
-					'Авторизация отменена пользователем или всплывающее окно было закрыто.'
-				)
+				if (!authSettledRef.current) {
+					console.error(
+						'Авторизация отменена пользователем или всплывающее окно было закрыто.'
+					)
+				}
 				return
 			}
 		}, 500)
@@ -105,6 +109,7 @@ const AmoAuthLink = ({
 		if (message.type === MessageTypes.AmoAuthCode) {
 			const { code, state, referer } = message.payload || {}
 			if (code) {
+				authSettledRef.current = true
 				onAuthSuccess({ code, state, referer })
 				popupRef.current?.close()
 			}
@@ -112,6 +117,7 @@ const AmoAuthLink = ({
 		if (message.type === MessageTypes.AmoAuthCodeError) {
 			const { error } = message.payload || {}
 			if (error) {
+				authSettledRef.current = true
 				onAuthError?.(error)
 				popupRef.current?.close()
 			}

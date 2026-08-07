@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MessageContext, MessageType } from './MessageContext';
 import { ignoreSource } from './source.ignore';
-import { getDefaultSenlerOrigin, isAllowedSenlerOrigin } from '@/security/senlerFrame';
+import { getDefaultSenlerOrigin, isAllowedMessageOrigin } from '@/security/senlerFrame';
 
 const messageBuffer: MessageEvent[] = [];
 
 const bufferMessages = (event: MessageEvent) => {
-  if (!isAllowedSenlerOrigin(event.origin)) return;
+  if (!isAllowedMessageOrigin(event.origin)) return;
   if (!ignoreSource.includes(event.data.source)) {
     messageBuffer.push(event);
   }
@@ -31,13 +31,17 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (!isAllowedSenlerOrigin(event.origin)) return;
+      if (!isAllowedMessageOrigin(event.origin)) return;
       if (ignoreSource.includes(event.data.source)) return;
       console.log(
         `(in parent) message from ${event.origin} with data: `,
         event.data
       );
-      setParentOrigin(event.origin);
+      // Origin родителя Senler нужен для ответов в iframe.
+      // Origin OAuth-popup (= фронт приложения) в parentOrigin не сохраняем.
+      if (event.origin !== window.location.origin) {
+        setParentOrigin(event.origin);
+      }
       setMessage(event.data);
     };
 

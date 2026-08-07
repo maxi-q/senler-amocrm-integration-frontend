@@ -12,6 +12,28 @@ export const isAllowedSenlerOrigin = (origin: string) => {
 	}
 }
 
+const getAppOrigins = () => {
+	const origins = new Set<string>([window.location.origin])
+	const frontUrl = import.meta.env.VITE_FRONT_URL
+
+	if (frontUrl) {
+		try {
+			origins.add(new URL(frontUrl).origin)
+		} catch {
+			// ignore invalid VITE_FRONT_URL
+		}
+	}
+
+	return origins
+}
+
+/** Senler parent + same-app OAuth popup (VITE_FRONT_URL / current origin). */
+export const isAllowedMessageOrigin = (origin: string) => {
+	if (isAllowedSenlerOrigin(origin)) return true
+
+	return getAppOrigins().has(origin)
+}
+
 export const getDefaultSenlerOrigin = () => `https://${SENLER_DOMAIN}`
 
 export const isOpenedInAllowedSenlerFrame = () => {
